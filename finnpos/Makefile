@@ -10,7 +10,12 @@ OBJS=$(MODULES:%=%.o)
 all:train
 
 clean:
-	rm -f $(OBJS) $(TESTS)
+	rm -f $(OBJS) $(TESTS) train
+
+doc: html
+
+html:
+	doxygen Doxyfile
 
 test:$(TESTS)
 	for t in $(TESTS); \
