@@ -1,0 +1,9 @@
+The	WORD=The	the	DT	_
+dog	WORD=dog	dog	NN	_
+.	WORD=.	.	.	_
+
+The	WORD=The	the	DT	_
+dog	WORD=dog	dog	NN	_
+.	WORD=.	.	.	_
+
+.	WORD=.	.	.	_
