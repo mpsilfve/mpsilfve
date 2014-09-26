@@ -153,7 +153,7 @@ void PerceptronTrainer::train_lemmatizer(const Data &train_data,
 	  lemmatizer_update(w, sys_class, gold_class, lemma_e, label_e);
 	}
       float acc = correct / total;
-      std::cerr << "TRAIN ACC: " << acc << std::endl;
+
       // Average.
       set_avg_params();
 
@@ -175,8 +175,6 @@ void PerceptronTrainer::train_lemmatizer(const Data &train_data,
 	}
 
       acc = (total == 0 ? 0 : correct / total);
-
-      std::cerr << "ACC: " << acc << std::endl;
 
       if (acc > best_dev_acc)
 	{
