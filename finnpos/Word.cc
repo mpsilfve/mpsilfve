@@ -146,6 +146,8 @@ int main(void)
   assert(word.get_feature_template(1) == 1);
 
   SillyLabelExtractor la_getter;
+  static_cast<void>(la_getter.get_label("FOO"));
+
   SillyLemmaExtractor le_getter;
 
   word.set_label_guesses(la_getter, 5);

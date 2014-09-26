@@ -223,18 +223,22 @@ void PerceptronTrainer::lemmatizer_update(const Word &w,
 {
   ++iter;
 
-  std::string word_form = w.get_word_form();
-  std::string pos_label = label_e.get_label_string(w.get_label());
-  
-  Word * lemma_feature_word = lemma_e.extract_feats(word_form, pos_label);
-  
-  pos_params.update_all_unstruct(*lemma_feature_word, gold_class, 1);
-  neg_params.update_all_unstruct(*lemma_feature_word, gold_class, -iter);
+  static_cast<void>(lemma_e);
+  static_cast<void>(label_e);
 
-  pos_params.update_all_unstruct(*lemma_feature_word, sys_class, -1);
-  neg_params.update_all_unstruct(*lemma_feature_word, sys_class, iter);
+  //  std::string word_form = w.get_word_form();
+  //  std::cerr << word_form << ' ' << w.get_label() << std::endl;
+  // std::string pos_label = label_e.get_label_string(w.get_label());
+  
+  //Word * lemma_feature_word = lemma_e.extract_feats(word_form, pos_label);
+  
+  pos_params.update_all_unstruct(w, gold_class, 1);
+  neg_params.update_all_unstruct(w, gold_class, -iter);
 
-  delete lemma_feature_word;
+  pos_params.update_all_unstruct(w, sys_class, -1);
+  neg_params.update_all_unstruct(w, sys_class, iter);
+
+  //delete lemma_feature_word;
 }
 
 void PerceptronTrainer::set_avg_params(void)

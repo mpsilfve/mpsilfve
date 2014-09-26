@@ -1,1 +1,4 @@
 html/*
+*.o
+TEST_*
+latex/*

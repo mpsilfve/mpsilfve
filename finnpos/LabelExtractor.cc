@@ -191,10 +191,10 @@ void LabelExtractor::set_label_candidates(const std::string &word_form,
 
 const std::string &LabelExtractor::get_label_string(unsigned int label) const
 {
-  if (label > string_map.size())
+  if (label >= string_map.size())
     { throw IllegalLabel(); }
 
-  return string_map[label];
+  return string_map.at(label);
 }
 
 #else // TEST_LabelExtractor_cc
