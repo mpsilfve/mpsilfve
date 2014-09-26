@@ -21,6 +21,8 @@ typedef std::vector<unsigned int> LemmaVector;
 class Word;
 class PerceptronTrainer;
 
+std::string lowercase(const std::string &word);
+
 class LemmaExtractor
 {
  public:
@@ -35,13 +37,13 @@ class LemmaExtractor
 
   virtual bool is_known_wf(const std::string &word_form) const;
 
+  bool print_stuff;
 protected:
   typedef std::pair<std::string, std::string> StringPair;
   typedef std::unordered_map<std::string, unsigned int> ClassIDMap;
   typedef std::unordered_map<unsigned int, StringPair> IDClassMap;
 
-  typedef std::unordered_map<std::string, 
-			     std::unordered_map<unsigned int, std::string> > 
+  typedef std::unordered_map<std::string, std::string>
   LemmaLexicon;
   
   typedef std::unordered_map<std::string, ClassIDMap> SuffixMap;
@@ -52,6 +54,10 @@ protected:
   SuffixMap suffix_map;
   IDClassMap id_map;
   ClassIDMap feat_dict;
+
+  void extract_classes(const Data &data, const LabelExtractor &le);
+
+  unsigned int get_feat_id(const std::string &feat_string);
 
   unsigned int get_class_number(const std::string &word, 
 				const std::string &lemma);

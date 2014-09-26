@@ -99,7 +99,7 @@ void PerceptronTrainer::train_lemmatizer(const Data &train_data,
 
 	  ww->set_label(lemma_e.get_class_number(w.get_word_form(), 
 						 w.get_lemma()));
-
+	  
 	  train_words.push_back(*ww);
 
 	  delete ww;
@@ -133,25 +133,33 @@ void PerceptronTrainer::train_lemmatizer(const Data &train_data,
 	{ break; }
 
       // Train pass.
+      float correct = 0;
+      float total = 0; 
+
       for (unsigned int j = 0; j < train_words.size(); ++j)
 	{
 	  Word &w = train_words.at(j);
 
 	  unsigned int gold_class = w.get_label();
 
-
 	  unsigned int sys_class = 
 	    lemma_e.get_lemma_candidate_class(w, &pos_params);
 
+	  if (gold_class == sys_class)
+	    { ++correct; }
+
+	  ++total;
+
 	  lemmatizer_update(w, sys_class, gold_class, lemma_e, label_e);
 	}
-
+      float acc = correct / total;
+      std::cerr << "TRAIN ACC: " << acc << std::endl;
       // Average.
       set_avg_params();
 
       // Tag dev data.
-      float correct = 0;
-      float total = 0; 
+      correct = 0;
+      total = 0; 
 
       for (unsigned int j = 0; j < dev_words.size(); ++j)
 	{
@@ -166,7 +174,9 @@ void PerceptronTrainer::train_lemmatizer(const Data &train_data,
 	  ++total;
 	}
 
-      float acc = (total == 0 ? 0 : correct / total);
+      acc = (total == 0 ? 0 : correct / total);
+
+      std::cerr << "ACC: " << acc << std::endl;
 
       if (acc > best_dev_acc)
 	{

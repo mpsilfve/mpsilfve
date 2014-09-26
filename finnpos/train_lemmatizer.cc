@@ -33,11 +33,10 @@ int main(int argc, char * argv[])
 	  std::string gold_lemma = w.get_lemma();
 	  std::string sys_lemma = lemma_e.get_lemma_candidate(word, label);
 
-	  std::cout << word << ' ' << gold_lemma << ' ' << sys_lemma << std::endl;
-
-	  if (gold_lemma == sys_lemma)
+	  if (lowercase(gold_lemma) == lowercase(sys_lemma))
 	    { ++corr; }
-
+	  else
+	    { std::cout << word << ' ' << lowercase(sys_lemma) << std::endl; }
 	  ++total;
 	}
     }

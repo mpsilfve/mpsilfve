@@ -1,6 +1,5 @@
 #include "LemmaExtractor.hh"
 
-std::string lowercase(const std::string &word);
 
 std::string uppercase(const std::string &word);
 
@@ -32,6 +31,7 @@ bool has_upper(const std::string &word);
 std::locale loc;
 
 LemmaExtractor::LemmaExtractor(void):
+  print_stuff(0),
   class_count(1)
 {}
 
@@ -47,7 +47,9 @@ bool LemmaExtractor::is_known_wf(const std::string &word_form) const
 
 void LemmaExtractor::train(const Data &train_data, const Data &dev_data, const LabelExtractor &le)
 {
-  PerceptronTrainer trainer(20, 20, param_table, -1, *this);
+  extract_classes(train_data, le);
+
+  PerceptronTrainer trainer(20, 3, param_table, -1, *this);
   trainer.train_lemmatizer(train_data, dev_data, *this, le);
 }
 
@@ -121,15 +123,15 @@ std::string init_uppercase(const std::string &word)
 {
   std::string uc_word = word;
 
-  if (uc_word.find("å") != std::string::npos)
+  if (uc_word.find("å") == 0)
     { 
       uc_word.replace(0, 2, "Å");
     }
-  else if (uc_word.find("ä") != std::string::npos)
+  else if (uc_word.find("ä") == 0)
     { 
       uc_word.replace(0, 2, "Ä");
     }
-  else if (uc_word.find("ö") != std::string::npos)
+  else if (uc_word.find("ö") == 0)
     { 
       uc_word.replace(0, 2, "Ö");
     }
@@ -213,6 +215,23 @@ unsigned int LemmaExtractor::get_class_number(const std::string &word,
   return suffix_map.find(wf_suffix)->second.find(lemma_suffix)->second;
 }
 
+void LemmaExtractor::extract_classes(const Data &data,
+				     const LabelExtractor &e)
+{
+  for (unsigned int i = 0; i < data.size(); ++i)
+    {
+      for (unsigned int j = 0; j < data.at(i).size(); ++j)
+	{
+	  const Word &word = data.at(i).at(j);
+
+	  static_cast<void>(get_class_number(word.get_word_form(),
+					     word.get_lemma()));
+	  
+	  lemma_lexicon[word.get_word_form() + "<W+LA>" + e.get_label_string(word.get_label())] = word.get_lemma();
+	}
+    }
+}
+
 void LemmaExtractor::set_class_candidates(const std::string &word,
 					  LabelVector &class_vector) const
 {
@@ -220,7 +239,7 @@ void LemmaExtractor::set_class_candidates(const std::string &word,
   
   std::string lc_word = lowercase(word);
 
-  for (unsigned int i = 0; i < lc_word.size() + 1; ++i)
+  for (unsigned int i = 1; i < lc_word.size() + 1; ++i)
     {
       std::string substr = lc_word.substr(i);
 
@@ -231,7 +250,9 @@ void LemmaExtractor::set_class_candidates(const std::string &word,
 	  for (ClassIDMap::const_iterator it = clm.begin(); 
 	       it != clm.end(); 
 	       ++it)
-	    { potential_classes.insert(it->second); }
+	    { 	      
+	      potential_classes.insert(it->second);
+	    }
 	}
     }
 
@@ -263,49 +284,82 @@ bool has_digit(const std::string &word)
   return digit_pt - c_word < static_cast<long>(word.size());
 }
 
+std::string get_main_label(const std::string &label)
+{
+  if (label.find('|') == std::string::npos)
+    { return label; }
+  else
+    { return label.substr(0, label.find('|')); }
+}
+
 Word * LemmaExtractor::extract_feats(const std::string &word_form, 
 				     const std::string &label)
 {
   FeatureTemplateVector feats;
-
-  feats.push_back( feat_dict["WORD=" + word_form] );
+  
+  feats.push_back( get_feat_id("WORD=" + word_form) );
 
   std::string padded_word_form = PADDING + word_form;
+
+  std::string main_label = get_main_label(label);
 
   for (unsigned int i = padded_word_form.size() - 10; 
        i <= padded_word_form.size();
        ++i)
     {
-      feats.push_back( feat_dict["SUFFIX=" + padded_word_form.substr(i)] );
+      feats.push_back( get_feat_id("SUFFIX=" + padded_word_form.substr(i)) );
+      feats.push_back( get_feat_id("SUFFIX=" + padded_word_form.substr(i) + " LABEL=" + label) );
+      feats.push_back( get_feat_id("SUFFIX=" + padded_word_form.substr(i) + " MAIN_LABEL=" + main_label) );
     }
 
-  feats.push_back( feat_dict["LABEL=" + label] );
+  feats.push_back( get_feat_id("LABEL=" + label) );
+
+  feats.push_back( get_feat_id("MAIN_LABEL=" + get_main_label(label)) );
 
   if (has_upper(word_form))
-    { feats.push_back( feat_dict["UC"] ); }
+    { feats.push_back( get_feat_id("UC") ); }
 
   if (has_digit(word_form))
-    { feats.push_back( feat_dict["DIGIT"] ); }
+    { feats.push_back( get_feat_id("DIGIT") ); }
 
   return new Word(word_form, feats, LabelVector(), "");
+  static_cast<void>(label);
+}
+
+unsigned int LemmaExtractor::get_feat_id(const std::string &feat_string)
+{
+  if (feat_dict.count(feat_string) == 0)
+    { feat_dict[feat_string] = feat_dict.size(); }
+
+  return feat_dict[feat_string];
 }
 
 std::string LemmaExtractor::get_lemma(const std::string &word_form, 
 				      unsigned int klass) const
 {
+  std::string lc_word_form = lowercase(word_form);
+  
   if (id_map.count(klass) == 0)
-    { throw UnknownClass(); }
+    { 
+      std::cerr << klass << ' ' << id_map.size() << std::endl;
+      throw UnknownClass(); 
+    }
 
   const StringPair &word_and_lemma_suffixes = id_map.find(klass)->second;
 
   const std::string &word_suffix = word_and_lemma_suffixes.first;
   const std::string &lemma_suffix = word_and_lemma_suffixes.second;
   
-  size_t pos = word_form.rfind(word_suffix);
+  size_t pos = lc_word_form.rfind(word_suffix);
 
   assert(pos != std::string::npos);
   
-  return word_form.substr(0, pos) + lemma_suffix;
+  std::string lemma = lc_word_form.substr(0, pos) + lemma_suffix;
+
+  if (has_upper(word_form))
+    { return init_uppercase(lemma); }
+  
+  return lemma;
 }
 
 unsigned int LemmaExtractor::get_lemma_candidate_class(const Word &w,
@@ -317,13 +371,13 @@ unsigned int LemmaExtractor::get_lemma_candidate_class(const Word &w,
   LabelVector lemma_class_candidates;
   set_class_candidates(w.get_word_form(), lemma_class_candidates);
 
-  unsigned int max_score = -FLT_MAX;
+  float max_score = -FLT_MAX;
   unsigned int max_class = -1;
 
   for (unsigned int i = 0; i < lemma_class_candidates.size(); ++i)
     {
       unsigned int klass = lemma_class_candidates[i];
-
+      
       float score = pt->get_all_unstruct(w, klass);
 
       if (score > max_score)
@@ -332,7 +386,7 @@ unsigned int LemmaExtractor::get_lemma_candidate_class(const Word &w,
 	  max_class = klass;
 	}
     }
-  
+ 
   return max_class;
 }
 
@@ -352,6 +406,11 @@ unsigned int LemmaExtractor::get_lemma_candidate_class
 std::string LemmaExtractor::get_lemma_candidate(const std::string &word_form, 
 						const std::string &label)
 {
+  std::string lexicon_entry = word_form + "<W+LA>" + label;
+
+  if (lemma_lexicon.count(lexicon_entry) != 0)
+    { return lemma_lexicon[lexicon_entry]; }
+
   return get_lemma(word_form, 
 		   get_lemma_candidate_class(word_form, 
 					     label)); 
