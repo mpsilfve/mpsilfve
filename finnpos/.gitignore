@@ -1,4 +1,7 @@
 html/*
 *.o
 TEST_*
+train_lemmatizer
 latex/*
+temp_stuff/*
+*~
