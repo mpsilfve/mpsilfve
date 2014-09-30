@@ -147,10 +147,11 @@ void LabelExtractor::train(Data &data)
 }
 
 void LabelExtractor::set_label_candidates(const std::string &word_form, 
+					  bool use_lexicon,
 					  unsigned int count, 
 					  LabelVector &target) const
 {
-  if (lexicon.count(word_form) != 0)
+  if (use_lexicon and lexicon.count(word_form) != 0)
     {
       std::unordered_set<unsigned int> label_set(target.begin(), target.end());
       SubstringLabelMap::const_iterator it = lexicon.find(word_form);
@@ -237,10 +238,10 @@ int main(void)
   LabelVector labels3;
   LabelVector labels4;
 
-  le.set_label_candidates("hog", 1, labels1);
-  le.set_label_candidates("hog", 2, labels2);
-  le.set_label_candidates("hog", 3, labels3);
-  le.set_label_candidates("hog", 4, labels4);
+  le.set_label_candidates("hog", 0, 1, labels1);
+  le.set_label_candidates("hog", 0, 2, labels2);
+  le.set_label_candidates("hog", 0, 3, labels3);
+  le.set_label_candidates("hog", 0, 4, labels4);
 
   assert(labels1.size() == 1);
   std::unordered_set<unsigned int> labelS1(labels1.begin(), labels1.end());
@@ -272,7 +273,7 @@ int main(void)
   assert(labelS4 == labelSS4);
 
   LabelVector dog_labels;
-  le.set_label_candidates("dog", 5, dog_labels);
+  le.set_label_candidates("dog", 1, 5, dog_labels);
   assert(dog_labels.size() == 1);
 }
 

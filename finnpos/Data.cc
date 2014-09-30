@@ -76,11 +76,12 @@ unsigned int Data::size(void) const
 { return data.size(); }
 
 void Data::set_label_guesses(const LabelExtractor &g, 
+			     bool use_label_dict,
 			     unsigned int count)
 {
   for (unsigned int i = 0; i < data.size(); ++i)
     {
-      data[i].set_label_guesses(g, count);
+      data[i].set_label_guesses(g, use_label_dict, count);
     }
 }
 
@@ -195,10 +196,12 @@ public:
   {}
 
   void set_label_candidates(const std::string &word_form, 
+			    bool use_lexicon,
 			    unsigned int count, 
 			    LabelVector &target) const
   {
     static_cast<void>(word_form);
+    static_cast<void>(use_lexicon);
 
     int prev_size = target.size();
 

@@ -2,6 +2,7 @@
 #define HEADER_PerceptronTrainer_hh
 
 #include <exception>
+#include <iostream>
 
 #include "Trainer.hh"
 #include "ParamTable.hh"
@@ -18,7 +19,8 @@ public:
 		    unsigned int max_useless_passes,
 		    ParamTable &pt,
 		    unsigned int boundary_label,
-		    const LemmaExtractor &le);
+		    const LemmaExtractor &le,
+		    std::ostream &msg_out);
   
   void train(const Data &train_data, const Data &dev_data, 
 	     unsigned int beam = -1);

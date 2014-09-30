@@ -30,6 +30,7 @@ class Sentence
   unsigned int size(void) const;
   unsigned int get_max_label_count(void) const;
   void set_label_guesses(const LabelExtractor &g, 
+			 bool use_label_dict,
 			 unsigned int count);
   void predict_lemma(LemmaExtractor &g, const LabelExtractor &e);
 

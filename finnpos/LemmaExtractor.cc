@@ -45,11 +45,14 @@ bool LemmaExtractor::is_known_wf(const std::string &word_form) const
   return 0;
 }
 
-void LemmaExtractor::train(const Data &train_data, const Data &dev_data, const LabelExtractor &le)
+void LemmaExtractor::train(const Data &train_data, 
+			   const Data &dev_data, 
+			   const LabelExtractor &le,
+			   std::ostream &msg_out)
 {
   extract_classes(train_data, le);
 
-  PerceptronTrainer trainer(20, 3, param_table, -1, *this);
+  PerceptronTrainer trainer(20, 3, param_table, -1, *this, msg_out);
   trainer.train_lemmatizer(train_data, dev_data, *this, le);
 }
 
@@ -341,7 +344,6 @@ std::string LemmaExtractor::get_lemma(const std::string &word_form,
   
   if (id_map.count(klass) == 0)
     { 
-      std::cerr << klass << ' ' << id_map.size() << std::endl;
       throw UnknownClass(); 
     }
 
@@ -581,8 +583,8 @@ int main(void)
   Data dev_data(train_data);
 
   LemmaExtractor lemma_extractor;
-  
-  lemma_extractor.train(train_data, dev_data, label_extractor);
+  std::ostringstream null_stream;
+  lemma_extractor.train(train_data, dev_data, label_extractor, null_stream);
 
   //assert(lemma_extractor.get_lemma_candidate("hog", "NN") == "hog");
   assert(lemma_extractor.get_lemma_candidate("hogs", "NN") == "hog");

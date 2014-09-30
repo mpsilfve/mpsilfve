@@ -103,11 +103,11 @@ unsigned int Sentence::get_max_label_count(void) const
   return max_count;
 }
 
-void Sentence::set_label_guesses(const LabelExtractor &g, unsigned int count)
+void Sentence::set_label_guesses(const LabelExtractor &g, bool use_label_dict, unsigned int count)
 {
   for (unsigned int i = 0; i < sentence.size(); ++i)
     { 
-      sentence[i].set_label_guesses(g, count); 
+      sentence[i].set_label_guesses(g, use_label_dict, count); 
     }
 }
 
@@ -150,10 +150,12 @@ public:
   {}
 
   void set_label_candidates(const std::string &word_form, 
+			    bool use_lexicon,
 			    unsigned int count, 
 			    LabelVector &target) const
   {
     static_cast<void>(word_form);
+    static_cast<void>(use_lexicon);
 
     int prev_size = target.size();
 
@@ -217,7 +219,7 @@ int main(void)
   assert(s.size() == 3 + 2*2);
   assert(s.get_max_label_count() == 2);
 
-  s.set_label_guesses(label_extractor, 5);
+  s.set_label_guesses(label_extractor, 0, 5);
   assert(s.get_max_label_count() == 5);
 
   const Word &dog = s.at(3);

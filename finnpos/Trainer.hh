@@ -1,6 +1,8 @@
 #ifndef HEADER_Trainer_hh
 #define HEADER_Trainer_hh
 
+#include <iostream>
+
 #include "Trainer.hh"
 #include "Data.hh"
 #include "ParamTable.hh"
@@ -12,7 +14,8 @@ public:
 	  unsigned int max_useless_passes,
 	  ParamTable &pt,
 	  unsigned int boundary_label,
-	  const LemmaExtractor &lemma_extractor);
+	  const LemmaExtractor &lemma_extractor,
+	  std::ostream &msg_out);
   
   virtual void train(const Data &train_data, 
 		     const Data &dev_data,
@@ -31,6 +34,8 @@ protected:
 
   unsigned int boundary_label;
   const LemmaExtractor &lemma_extractor;
+
+  std::ostream &msg_out;
 };
 
 #endif // HEADER_Trainer_hh

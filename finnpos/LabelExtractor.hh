@@ -24,8 +24,10 @@ class LabelExtractor
   LabelExtractor(unsigned int max_suffix_len);
   virtual ~LabelExtractor(void);
 
-  virtual void set_label_candidates(const std::string &word_form, 
-				    unsigned int count, LabelVector &target) const;
+  virtual void set_label_candidates(const std::string &word_form,
+				    bool use_lexicon,
+				    unsigned int count, 
+				    LabelVector &target) const;
   void train(Data &data);
   unsigned int get_boundary_label(void) const;
   unsigned int get_label(const std::string &label_string);

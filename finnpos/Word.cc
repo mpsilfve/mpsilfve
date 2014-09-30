@@ -23,8 +23,15 @@ Word::Word(const std::string &word_form,
   feature_templates(feature_templates)
 {}
 
-void Word::set_label_guesses(const LabelExtractor &g, unsigned int count)
-{ g.set_label_candidates(word_form, count, label_candidates); }
+void Word::set_label_guesses(const LabelExtractor &g, 
+			     bool use_label_dict,
+			     unsigned int count)
+{ 
+  g.set_label_candidates(word_form, 
+			 use_label_dict, 
+			 count, 
+			 label_candidates); 
+}
 
 void Word::predict_lemma(LemmaExtractor &g, const LabelExtractor &e)
 { 
@@ -84,10 +91,13 @@ public:
     LabelExtractor(1)
   {}
 
-  void set_label_candidates(const std::string &word_form, unsigned int count, 
+  void set_label_candidates(const std::string &word_form, 
+			    bool use_lexicon,
+			    unsigned int count, 
 			    LabelVector &target) const
   {
     static_cast<void>(word_form);
+    static_cast<void>(use_lexicon);
 
     int prev_size = target.size();
 
@@ -150,7 +160,7 @@ int main(void)
 
   SillyLemmaExtractor le_getter;
 
-  word.set_label_guesses(la_getter, 5);
+  word.set_label_guesses(la_getter, 0, 5);
   assert(word.get_label_count() == 5);
   assert(word.get_label(0) == 0);
   assert(word.get_label(1) == 1);

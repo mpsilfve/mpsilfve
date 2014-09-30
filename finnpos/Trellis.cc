@@ -293,10 +293,12 @@ public:
   {}
 
   void set_label_candidates(const std::string &word_form, 
+			    bool use_lexicon,
 			    unsigned int count, 
 			    LabelVector &target) const
   {
     static_cast<void>(word_form);
+    static_cast<void>(use_lexicon);
 
     int prev_size = target.size();
 

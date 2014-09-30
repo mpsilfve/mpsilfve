@@ -6,6 +6,7 @@
 #include <string>
 #include <utility>
 #include <exception>
+#include <iostream>
 
 #include "LabelExtractor.hh"
 #include "ParamTable.hh"
@@ -30,7 +31,10 @@ class LemmaExtractor
 
   ~LemmaExtractor(void);
 
-  void train(const Data &train_data, const Data &dev_data, const LabelExtractor &le);
+  void train(const Data &train_data, 
+	     const Data &dev_data, 
+	     const LabelExtractor &le,
+	     std::ostream &msg_out);
 
   virtual std::string get_lemma_candidate(const std::string &word_form, 
 					  const std::string &label);

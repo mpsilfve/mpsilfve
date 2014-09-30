@@ -4,8 +4,6 @@
 #include "Trainer.hh"
 
 class SGDTrainer : public Trainer
-{
-  
-};
+{};
 
 #endif // HEADER_SGDTrainer_hh

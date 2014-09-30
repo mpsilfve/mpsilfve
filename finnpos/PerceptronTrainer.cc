@@ -10,8 +10,9 @@ PerceptronTrainer::PerceptronTrainer(unsigned int max_passes,
 				     unsigned int max_useless_passes,
 				     ParamTable &pt,
 				     unsigned int boundary_label,
-				     const LemmaExtractor &lemma_extractor):  
-  Trainer(max_passes, max_useless_passes, pt, boundary_label, lemma_extractor),
+				     const LemmaExtractor &lemma_extractor,
+				     std::ostream &msg_out):  
+  Trainer(max_passes, max_useless_passes, pt, boundary_label, lemma_extractor, msg_out),
   iter(0)
 {}
 
@@ -45,6 +46,8 @@ void PerceptronTrainer::train(const Data &train_data,
       if (useless_passes >= max_useless_passes)
 	{ break; }
 
+      msg_out << "  Train pass " << i + 1 << std::endl;
+
       // Train pass.
       for (unsigned int j = 0; j < train_trellises.size(); ++j)
 	{
@@ -65,6 +68,8 @@ void PerceptronTrainer::train(const Data &train_data,
 
       float acc = dev_data.get_acc(dev_data_copy, lemma_extractor).label_acc;
 
+      msg_out << "  Dev acc: " << acc * 100.00 << "%" << std::endl;
+
       if (acc > best_dev_acc)
 	{
 	  useless_passes = 0;
@@ -76,7 +81,10 @@ void PerceptronTrainer::train(const Data &train_data,
 	  ++useless_passes;
 	}
     }
-  
+
+  msg_out << std::endl;
+  msg_out << "Final dev acc: " << best_dev_acc * 100.00 << "%" << std::endl;
+
   pt = best_params;
 }
 
@@ -132,6 +140,8 @@ void PerceptronTrainer::train_lemmatizer(const Data &train_data,
       if (useless_passes >= max_useless_passes)
 	{ break; }
 
+      msg_out << "  Train pass " << i + 1 << ":" << std::endl;
+
       // Train pass.
       float correct = 0;
       float total = 0; 
@@ -153,6 +163,8 @@ void PerceptronTrainer::train_lemmatizer(const Data &train_data,
 	  lemmatizer_update(w, sys_class, gold_class, lemma_e, label_e);
 	}
       float acc = correct / total;
+
+      msg_out << "  Dev acc: " << acc * 100.00 << "%" << std::endl;
 
       // Average.
       set_avg_params();
@@ -187,6 +199,9 @@ void PerceptronTrainer::train_lemmatizer(const Data &train_data,
 	  ++useless_passes;
 	}
     }
+
+  msg_out << std::endl;
+  msg_out << "Final dev acc: " << best_dev_acc * 100.0 << "%" << std::endl;
   
   pt = best_params;
 }
@@ -234,12 +249,6 @@ void PerceptronTrainer::lemmatizer_update(const Word &w,
   static_cast<void>(lemma_e);
   static_cast<void>(label_e);
 
-  //  std::string word_form = w.get_word_form();
-  //  std::cerr << word_form << ' ' << w.get_label() << std::endl;
-  // std::string pos_label = label_e.get_label_string(w.get_label());
-  
-  //Word * lemma_feature_word = lemma_e.extract_feats(word_form, pos_label);
-  
   pos_params.update_all_unstruct(w, gold_class, 1);
   neg_params.update_all_unstruct(w, gold_class, -iter);
 
@@ -301,9 +310,12 @@ public:
   {}
 
   void set_label_candidates(const std::string &word_form, 
+			    bool use_label_dict,
 			    unsigned int count, 
 			    LabelVector &target) const
   {
+    static_cast<void>(use_label_dict);
+
     if (word_form == BOUNDARY_WF)
       { 
 	target.push_back(get_boundary_label());
@@ -365,15 +377,24 @@ int main(void)
 
   Data train_data(in, 1, label_extractor, pt, 2);
   train_data.set_label_guesses(label_extractor, 
+			       0,
 			       label_extractor.label_count());
 
   Data dev_data(train_data);
-  dev_data.set_label_guesses(label_extractor,
-			     label_extractor.label_count());
   Data dev_data_copy(dev_data);
+
+  dev_data.set_label_guesses(label_extractor,
+			     0,
+			     label_extractor.label_count());
+
   dev_data_copy.unset_label();
 
-  PerceptronTrainer trainer(5,1,pt, label_extractor.get_boundary_label(), SillyLemmaExtractor());
+  dev_data_copy.set_label_guesses(label_extractor, 
+				  0, 
+				  label_extractor.label_count());
+
+  std::ostringstream null_out;
+  PerceptronTrainer trainer(5,3,pt, label_extractor.get_boundary_label(), SillyLemmaExtractor(), null_out);
   trainer.train(train_data, dev_data);
 
   for (unsigned int i = 0; i < dev_data_copy.size(); ++i)

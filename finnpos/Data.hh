@@ -68,6 +68,7 @@ class Data
   unsigned int size(void) const;
 
   void set_label_guesses(const LabelExtractor &g, 
+			 bool use_label_dict,
 			 unsigned int count);
 
   void predict_lemma(LemmaExtractor &g, const LabelExtractor &e);

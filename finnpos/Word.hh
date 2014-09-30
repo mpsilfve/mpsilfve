@@ -29,7 +29,10 @@ public:
        const LabelVector &labels,
        const std::string &annotations);
 
-  void set_label_guesses(const LabelExtractor &g, unsigned int count);
+  void set_label_guesses(const LabelExtractor &g, 
+			 bool use_label_dict,
+			 unsigned int count);
+
   void predict_lemma(LemmaExtractor &g, const LabelExtractor &e);
 
   void set_lemma(const std::string &lemma);
