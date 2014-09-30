@@ -1,6 +1,8 @@
 #ifndef HEADER_TaggerOptions_hh
 #define HEADER_TaggerOptions_hh
 
+#include <iostream>
+
 enum Estimator
   { AVG_PERC, ML };
 
@@ -23,6 +25,8 @@ struct TaggerOptions
 		Regularization regularization = NONE,
 		float delta = -1,
 		float sigma = -1);
+  
+  TaggerOptions(std::istream &in, unsigned int &counter);
 
   Estimator estimator;
   Inference inference;

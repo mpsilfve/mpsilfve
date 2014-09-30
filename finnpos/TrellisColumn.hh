@@ -2,16 +2,13 @@
 #define HEADER_TrellisColumn_hh
 
 #include <vector>
-#include <exception>
 
 #include "ParamTable.hh"
 #include "Word.hh"
 #include "TrellisCell.hh"
+#include "exceptions.hh"
 
 float expsumlog(float x, float y);
-
-struct WordNotSet : public std::exception
-{};
 
 class TrellisColumn
 {

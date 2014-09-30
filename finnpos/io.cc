@@ -1,4 +1,5 @@
 #include "io.hh"
+#include "exceptions.hh"
 
 #ifndef TEST_io_cc
 

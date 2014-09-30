@@ -5,17 +5,11 @@
 #include <unordered_map>
 #include <string>
 #include <utility>
-#include <exception>
 #include <iostream>
 
 #include "LabelExtractor.hh"
 #include "ParamTable.hh"
-
-struct UnknownSuffixPair : public std::exception
-{};
-
-struct UnknownClass : public std::exception
-{};
+#include "exceptions.hh"
 
 typedef std::vector<unsigned int> LemmaVector;
 

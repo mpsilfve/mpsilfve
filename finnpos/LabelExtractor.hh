@@ -4,17 +4,12 @@
 #include <string>
 #include <vector>
 #include <unordered_map>
-#include <exception>
+
 
 #include "io.hh"
+#include "exceptions.hh"
 
 typedef std::vector<unsigned int> LabelVector;
-
-struct IllegalLabel : public std::exception
-{};
-
-struct LabelNotSet : public std::exception
-{};
 
 class Data;
 

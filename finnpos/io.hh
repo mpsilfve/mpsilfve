@@ -3,16 +3,9 @@
 
 #include <string>
 #include <vector>
-#include <exception>
 #include <iostream>
 
 typedef std::vector<std::string> StringVector;
-
-struct SyntaxError : public std::exception
-{};
-
-struct EmptyLine : public std::exception
-{};
 
 struct Entry
 {

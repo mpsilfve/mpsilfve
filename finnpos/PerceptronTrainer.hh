@@ -1,16 +1,14 @@
 #ifndef HEADER_PerceptronTrainer_hh
 #define HEADER_PerceptronTrainer_hh
 
-#include <exception>
+
 #include <iostream>
 
 #include "Trainer.hh"
 #include "ParamTable.hh"
 #include "Sentence.hh"
 #include "Data.hh"
-
-struct UnlabeledData : public std::exception
-{};
+#include "exceptions.hh"
 
 class PerceptronTrainer : public Trainer
 {

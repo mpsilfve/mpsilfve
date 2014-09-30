@@ -3,19 +3,16 @@
 
 #include <vector>
 #include <string>
-#include <exception>
 
 #include "LabelExtractor.hh"
 #include "LemmaExtractor.hh"
 #include "ParamTable.hh"
+#include "exceptions.hh"
 
 #define BOUNDARY_WF "_#_"
 
 #define NO_STRING ""
 #define NO_LABEL -1
-
-struct NoLabel : public std::exception
-{};
 
 class Word
 {
