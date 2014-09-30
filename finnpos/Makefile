@@ -4,7 +4,7 @@ CXXFLAGS=-Wall -Wextra -g -O3 -Wfatal-errors -Werror -std=c++0x
 
 MODULES=io Word LemmaExtractor LabelExtractor Sentence ParamTable \
 Data TrellisColumn Trellis Trainer PerceptronTrainer SGDTrainer \
-TrellisCell Tagger
+TrellisCell Tagger TaggerOptions
 
 TESTS=$(MODULES:%=TEST_%)
 OBJS=$(MODULES:%=%.o)
