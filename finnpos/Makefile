@@ -22,7 +22,7 @@ html:
 test:$(TESTS)
 	for t in $(TESTS); \
 	do                 \
-	echo $$t && ./$$t; \
+	echo $$t && ./$$t || echo "FAILED"; \
 	done
 
 TEST_%:$(OBJS) %.cc
