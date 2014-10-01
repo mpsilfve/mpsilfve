@@ -20,6 +20,8 @@ public:
   Tagger(const TaggerOptions &tagger_options,
 	 std::ostream &msg_out);
 
+  Tagger(std::istream &tagger_opt_in, std::ostream &msg_out);
+
   Tagger(std::istream &in);
 
   void train(std::istream &train_in,
@@ -27,6 +29,8 @@ public:
 
   StringVector label(std::istream &in);
   StringVector label(Sentence &s);
+
+  void store(std::ostream &out) const;
 
 private:
   unsigned int line_counter;

@@ -28,6 +28,30 @@ Tagger::Tagger(const TaggerOptions &tagger_options,
     }
 }
 
+Tagger::Tagger(std::istream &tagger_opt_in, std::ostream &msg_out):
+  line_counter(0),
+  tagger_options(tagger_opt_in, line_counter),
+  label_extractor(tagger_options.suffix_length),
+  msg_out(msg_out)
+{
+  if (tagger_options.estimator == AVG_PERC)
+    {
+      if (tagger_options.regularization != NONE or 
+	  tagger_options.delta != -1            or 
+	  tagger_options.sigma != -1)
+	{ 
+	  msg_out << "Warning! Averaged perceptron doesn't utilize delta," 
+		  << std::endl
+		  << "sigma or regularization. Options will be discarded." 
+		  << std::endl 
+		  << std::endl;
+	}
+    }
+
+  line_counter = 0;
+}
+
+
 void Tagger::train(std::istream &train_in,
 		   std::istream &dev_in)
 {
@@ -107,6 +131,15 @@ StringVector Tagger::labels_to_strings(const LabelVector &v)
     }
 
   return res;
+}
+
+#include <cassert>
+
+void Tagger::store(std::ostream &out) const
+{
+  // FIXME
+  static_cast<void>(out);
+  assert(0);
 }
 
 #else // TEST_Tagger_cc

@@ -74,6 +74,40 @@ Entry get_next_line(std::istream &in)
   return res;
 }
 
+bool check(std::string &fn, std::ostream &out, std::ostream &msg_out)
+{
+  out << "";
+
+  if (out.fail())
+    {
+      msg_out <<  "Output file " << fn << " can't be opened for writing."
+	      << std::endl;
+      
+      return 0;
+    }
+  else
+    {
+      return 1;
+    }
+}
+
+bool check(std::string &fn, std::istream &in, std::ostream &msg_out)
+{
+  static_cast<void>(in.peek());
+
+  if (in.fail())
+    {
+      msg_out <<  "Input file " << fn << " can't be opened for reading."
+	      << std::endl;
+      
+      return 0;
+    }
+  else
+    {
+      return 1;
+    }
+}
+
 #else // TEST_io_cc
 
 #include <cassert>

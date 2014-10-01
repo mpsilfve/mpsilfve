@@ -1,54 +1,39 @@
 #include <iostream>
+#include <cstdlib>
+#include <string>
+#include <fstream>
 
-#include "Data.hh"
-#include "PerceptronTrainer.hh"
-#include "ParamTable.hh"
-#include "LabelExtractor.hh"
-#include "LemmaExtractor.hh"
-#include "Trellis.hh"
+#include "io.hh"
+#include "Tagger.hh"
 
 int main(int argc, char * argv[])
 {
-  static_cast<void>(argc);
+  if (argc != 5)
+    {
+      std::cerr <<  "USAGE: " << argv[0] << " config_file train_file dev_file"
+		<< std::endl;
 
-  ParamTable param_table;
-  LabelExtractor label_extractor(10);
-  LemmaExtractor lemma_extractor;
+      exit(1);
+    }
 
-  Data train_data(argv[1], 1, label_extractor, param_table, 2);
-  label_extractor.train(train_data);
+  std::string config_fn = argv[1];  
+  std::string train_fn  = argv[2];  
+  std::string dev_fn    = argv[3];  
+  std::string output_fn = argv[4];  
 
-  train_data.set_label_guesses(label_extractor, 5);
+  std::ifstream config_in(config_fn);
+  std::ifstream train_in(train_fn);
+  std::ifstream dev_in(dev_fn);
 
-  Data   dev_data(argv[2], 1, label_extractor, param_table, 2);
-  dev_data.set_label_guesses(label_extractor, 5);
+  std::ofstream out(output_fn);
 
-  Data  gold_test_data(argv[3], 1, label_extractor, param_table, 2);
-  gold_test_data.set_label_guesses(label_extractor, 5);
+  if (not check(config_fn, config_in, std::cerr) or
+      not check(train_fn,   train_in, std::cerr) or
+      not check(dev_fn,       dev_in, std::cerr) or
+      not check(output_fn,       out, std::cerr))
+    { exit(1); }
 
-  Data test_data(gold_test_data);
-  test_data.unset_label();
-  std::cerr << gold_test_data.at(0).at(3).get_label_count() << std::endl;
-
-  TrellisVector test_trellises;
-  populate(test_data, test_trellises, label_extractor.get_boundary_label(), 5);
-
-  for (unsigned int i = 0; i < test_trellises.size(); ++i)
-    { test_trellises.at(i).set_maximum_a_posteriori_assignment(param_table); }
-
-  std::cerr << test_data.get_acc(gold_test_data, lemma_extractor).label_acc 
-	    << std::endl;
-
-  PerceptronTrainer trainer(50, 3, param_table, 
-			    label_extractor.get_boundary_label(), 
-			    lemma_extractor);
-
-  trainer.train(train_data, dev_data, 5);
-
-  for (unsigned int i = 0; i < test_trellises.size(); ++i)
-    { test_trellises.at(i).set_maximum_a_posteriori_assignment(param_table); }
-
-  std::cerr << test_data.get_acc(gold_test_data, lemma_extractor).label_acc 
-	    << std::endl;
-
+  Tagger tagger(config_in, std::cerr);
+  tagger.train(train_in, dev_in);
+  tagger.store(out);
 }
