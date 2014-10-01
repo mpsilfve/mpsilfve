@@ -1,8 +1,8 @@
-///////////////////////////////////////////////////////////////////////////////
-// @file    TrellisCell.cc                                                   //
-// @Author  Miikka Silfverberg                                               //
-// @brief   Represents one TrellisColumn-cell.                               //
-///////////////////////////////////////////////////////////////////////////////
+/**
+ * @file    TrellisCell.cc                                                   
+ * @Author  Miikka Silfverberg                                               
+ * @brief   Represents one entry in a TrellisColumn.                        
+ */
 
 ///////////////////////////////////////////////////////////////////////////////
 //                                                                           //

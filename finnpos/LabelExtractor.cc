@@ -1,8 +1,8 @@
-///////////////////////////////////////////////////////////////////////////////
-// @file    LabelExtractor.cc                                                //
-// @Author  Miikka Silfverberg                                               //
-// @brief   Suffix-based Label guesser                                       //
-///////////////////////////////////////////////////////////////////////////////
+/**
+ * @file    LabelExtractor.cc                                                
+ * @Author  Miikka Silfverberg                                               
+ * @brief   Suffix-based label guesser                                       
+ */
 
 ///////////////////////////////////////////////////////////////////////////////
 //                                                                           //

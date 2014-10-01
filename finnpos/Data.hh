@@ -1,8 +1,8 @@
-///////////////////////////////////////////////////////////////////////////////
-// @file    Data.hh                                                          //
-// @Author  Miikka Silfverberg                                               //
-// @brief   Container for Sentence-objects.                                  //
-///////////////////////////////////////////////////////////////////////////////
+/**
+ * @file    Data.hh                                                          
+ * @Author  Miikka Silfverberg                                               
+ * @brief   Container for Sentence-objects.                                  
+ */
 
 ///////////////////////////////////////////////////////////////////////////////
 //                                                                           //

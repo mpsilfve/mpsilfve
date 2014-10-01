@@ -1,8 +1,8 @@
-///////////////////////////////////////////////////////////////////////////////
-// @file    finnpos-train.cc                                                 //
-// @Author  Miikka Silfverberg                                               //
-// @brief   Train a Tagger and store it.                                     //
-///////////////////////////////////////////////////////////////////////////////
+/**
+ * @file    finnpos-train.cc                                                 
+ * @Author  Miikka Silfverberg                                               
+ * @brief   Train a Tagger and store it.                                     
+ */
 
 ///////////////////////////////////////////////////////////////////////////////
 //                                                                           //

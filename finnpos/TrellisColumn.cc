@@ -1,8 +1,8 @@
-///////////////////////////////////////////////////////////////////////////////
-// @file    TrellisColumn.hh                                                 //
-// @Author  Miikka Silfverberg                                               //
-// @brief   A class for representing the columns of a Trellis-object.        //
-///////////////////////////////////////////////////////////////////////////////
+/**
+ * @file    TrellisColumn.hh                                                 
+ * @Author  Miikka Silfverberg                                               
+ * @brief   A class for representing the columns of a Trellis.        
+ */
 
 ///////////////////////////////////////////////////////////////////////////////
 //                                                                           //

@@ -1,8 +1,8 @@
-///////////////////////////////////////////////////////////////////////////////
-// @file    Tagger.hh                                                        //
-// @Author  Miikka Silfverberg                                               //
-// @brief   Class that can label sentences.                                  //
-///////////////////////////////////////////////////////////////////////////////
+/**
+ * @file    Tagger.hh                                                        
+ * @Author  Miikka Silfverberg                                               
+ * @brief   Class that can label a Sentence.                                  
+ */
 
 ///////////////////////////////////////////////////////////////////////////////
 //                                                                           //

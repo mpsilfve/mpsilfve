@@ -1,8 +1,8 @@
-///////////////////////////////////////////////////////////////////////////////
-// @file    Trainer.hh                                                       //
-// @Author  Miikka Silfverberg                                               //
-// @brief   Base class for parameter estimation classes.                     //
-///////////////////////////////////////////////////////////////////////////////
+/**
+ * @file    Trainer.hh                                                       
+ * @Author  Miikka Silfverberg                                               
+ * @brief   Base class for parameter estimation classes.                     
+ */
 
 ///////////////////////////////////////////////////////////////////////////////
 //                                                                           //

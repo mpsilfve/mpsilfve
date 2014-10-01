@@ -1,9 +1,9 @@
-///////////////////////////////////////////////////////////////////////////////
-// @file    ParameterTable.cc                                                //
-// @Author  Miikka Silfverberg                                               //
-// @brief   Parameter table for structured and unstructured parameters. Used //
-//          by both Tagger and Lemmatizer.                                   //
-///////////////////////////////////////////////////////////////////////////////
+/**
+ * @file    ParamTable.cc                                                
+ * @Author  Miikka Silfverberg                                               
+ * @brief   Parameter table for structured and unstructured parameters. Used 
+ *          by both Tagger and LemmaExtractor.                                 
+ */
 
 ///////////////////////////////////////////////////////////////////////////////
 //                                                                           //

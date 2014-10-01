@@ -1,8 +1,8 @@
-///////////////////////////////////////////////////////////////////////////////
-// @file    SGDTrainer.hh                                                    //
-// @Author  Miikka Silfverberg                                               //
-// @brief   An instance of Trainer that performs SGD.                        //
-///////////////////////////////////////////////////////////////////////////////
+/**
+ * @file    SGDTrainer.hh                                                    
+ * @Author  Miikka Silfverberg                                               
+ * @brief   An instance of Trainer that performs SGD.                        
+ */
 
 ///////////////////////////////////////////////////////////////////////////////
 //                                                                           //

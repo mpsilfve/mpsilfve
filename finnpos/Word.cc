@@ -1,8 +1,8 @@
-///////////////////////////////////////////////////////////////////////////////
-// @file    Word.cc                                                          //
-// @Author  Miikka Silfverberg                                               //
-// @brief   A class that represents one word.                                //
-///////////////////////////////////////////////////////////////////////////////
+/**
+ * @file    Word.cc                                                          
+ * @Author  Miikka Silfverberg                                               
+ * @brief   A class that represents one word.                                
+ */
 
 ///////////////////////////////////////////////////////////////////////////////
 //                                                                           //

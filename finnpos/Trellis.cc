@@ -1,9 +1,9 @@
-///////////////////////////////////////////////////////////////////////////////
-// @file    Trellis.cc                                                       //
-// @Author  Miikka Silfverberg                                               //
-// @brief   A class that knows the Viterbi algorithm and the forward         //
-//          backward algorithm.                                              //
-///////////////////////////////////////////////////////////////////////////////
+/**
+ * @file    Trellis.cc                                                       
+ * @Author  Miikka Silfverberg                                               
+ * @brief   A class that knows the Viterbi algorithm and the forward-backward
+ * algorithm.                                              
+ */
 
 ///////////////////////////////////////////////////////////////////////////////
 //                                                                           //

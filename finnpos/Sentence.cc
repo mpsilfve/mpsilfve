@@ -1,8 +1,8 @@
-///////////////////////////////////////////////////////////////////////////////
-// @file    Sentence.cc                                                      //
-// @Author  Miikka Silfverberg                                               //
-// @brief   Container for Word-objects.                                      //
-///////////////////////////////////////////////////////////////////////////////
+/**
+ * @file    Sentence.cc                                                      
+ * @Author  Miikka Silfverberg                                               
+ * @brief   Container for Word objects.                                      
+ */
 
 ///////////////////////////////////////////////////////////////////////////////
 //                                                                           //

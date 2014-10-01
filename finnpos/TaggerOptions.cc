@@ -1,8 +1,8 @@
-///////////////////////////////////////////////////////////////////////////////
-// @file    TaggerOptions.cc                                                 //
-// @Author  Miikka Silfverberg                                               //
-// @brief   Class for reading config files.                                  //
-///////////////////////////////////////////////////////////////////////////////
+/**
+ * @file    TaggerOptions.cc                                                 
+ * @Author  Miikka Silfverberg                                               
+ * @brief   Class for reading config files.                                  
+ */
 
 ///////////////////////////////////////////////////////////////////////////////
 //                                                                           //

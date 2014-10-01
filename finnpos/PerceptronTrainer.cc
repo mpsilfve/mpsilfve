@@ -1,8 +1,8 @@
-///////////////////////////////////////////////////////////////////////////////
-// @file    PerceptronTrainer.cc                                             //
-// @Author  Miikka Silfverberg                                               //
-// @brief   An instance of Trainer that performs averaged perceptron.        //
-///////////////////////////////////////////////////////////////////////////////
+/**
+ * @file    PerceptronTrainer.cc                                             
+ * @Author  Miikka Silfverberg                                               
+ * @brief   An instance of Trainer that performs averaged perceptron.        
+ */
 
 ///////////////////////////////////////////////////////////////////////////////
 //                                                                           //
