@@ -28,6 +28,9 @@ from os  import linesep
 EXIT_FAIL    = 1
 EXIT_SUCCESS = 0
 
+# Boundary word.
+BOUNDARY = "_#_"
+
 # Read input from ifile and write extracted features to ofile. This function 
 # doesn't check its argument streams.
 def main(ifname, ifile, ofname, ofile, olog):
@@ -46,15 +49,16 @@ def main(ifname, ifile, ofname, ofile, olog):
             if len(fields) != 3:
                 olog.write(("Line %u in file %s: Incorrect field count %u. " +
                            "Should be 3." + linesep) 
-                           % (i + 1, ifname, len(fields)))
+                           % 
+                           (i + 1, ifname, len(fields)))
 
                 return EXIT_FAIL
 
             sentences[-1].append(fields)
 
     for sentence in filter(None, sentences):
-        for i in range(len(sentence)):
-            wf, lemma, label = sentence[i]
+        for i, line in enumerate(sentence):
+            wf, lemma, label = line
             
             features = []
 
@@ -82,7 +86,7 @@ def main(ifname, ifile, ofname, ofile, olog):
     return EXIT_SUCCESS
 
 def get_wf(i, sentence):
-    return "_#_" if i < 0 or i + 1 > len(sentence) else sentence[i][0]
+    return BOUNDARY if i < 0 or i + 1 > len(sentence) else sentence[i][0]
 
 def get_suffixes(wf):
     return [ "%u-SUFFIX=%s" % (i, wf[-i:]) for i in range(1, 11) ]
