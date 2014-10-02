@@ -173,6 +173,12 @@ void LabelExtractor::set_label_candidates(const std::string &word_form,
 					  unsigned int count, 
 					  LabelVector &target) const
 {
+  if (word_form == BOUNDARY_WF)
+    { 
+      target.push_back(get_boundary_label());
+      return;
+    }
+
   if (use_lexicon and lexicon.count(word_form) != 0)
     {
       std::unordered_set<unsigned int> label_set(target.begin(), target.end());

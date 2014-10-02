@@ -50,6 +50,7 @@ class Sentence
   Word &at(unsigned int i);
   unsigned int size(void) const;
   unsigned int get_max_label_count(void) const;
+  void clear_label_guesses(void);
   void set_label_guesses(const LabelExtractor &g, 
 			 bool use_label_dict,
 			 unsigned int count);

@@ -106,6 +106,12 @@ void Data::set_label_guesses(const LabelExtractor &g,
     }
 }
 
+void Data::clear_label_guesses(void)
+{
+  for (unsigned int i = 0; i < data.size(); ++i)
+    { data[i].clear_label_guesses(); }
+}
+
 void Data::predict_lemma(LemmaExtractor &g, const LabelExtractor &e)
 {
   for (unsigned int i = 0; i < data.size(); ++i)
@@ -129,6 +135,9 @@ void Data::unset_label(void)
       data[i].unset_label();
     }
 }
+
+#include <cassert>
+
 Acc Data::get_acc(const Data &other, 
 		  const LemmaExtractor &lemma_extractor) const
 {
@@ -158,8 +167,8 @@ Acc Data::get_acc(const Data &other,
       
       for (unsigned int j = 0; j < data.at(i).size(); ++j)
 	{
-	  const Word word1 = data[i].at(j);
-	  const Word word2 = other.data[i].at(j);
+	  const Word &word1 = data[i].at(j);
+	  const Word &word2 = other.data[i].at(j);
 
 	  if (word1.get_word_form() != word2.get_word_form())
 	    {
@@ -168,6 +177,9 @@ Acc Data::get_acc(const Data &other,
 	  
 	  if (word1.get_word_form() == BOUNDARY_WF)
 	    { continue; }
+
+	  assert(word1.get_label() != static_cast<unsigned int>(-1));
+	  assert(word2.get_label() != static_cast<unsigned int>(-1));
 
 	  label_match += (word1.get_label() == word2.get_label());
 	  lemma_match += (word1.get_lemma() == word2.get_lemma());

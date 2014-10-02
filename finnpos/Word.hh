@@ -50,6 +50,8 @@ public:
   void set_label_guesses(const LabelExtractor &g, 
 			 bool use_label_dict,
 			 unsigned int count);
+  
+  void clear_label_guesses(void);
 
   void predict_lemma(LemmaExtractor &g, const LabelExtractor &e);
 

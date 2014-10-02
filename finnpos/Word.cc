@@ -44,6 +44,11 @@ Word::Word(const std::string &word_form,
   feature_templates(feature_templates)
 {}
 
+void Word::clear_label_guesses(void)
+{
+  label_candidates.clear();
+}
+
 void Word::set_label_guesses(const LabelExtractor &g, 
 			     bool use_label_dict,
 			     unsigned int count)

@@ -78,7 +78,7 @@ Sentence::Sentence(std::istream &ifile,
 	      unsigned int label = label_extractor.get_label(entry.labels[0]);
 
 	      sentence.back().set_lemma(entry.lemma);
-	      sentence.back().set_label(label);
+	      sentence.back().set_label(label);	     
 	    }
 	}
       catch (EmptyLine &e)
@@ -122,6 +122,12 @@ unsigned int Sentence::get_max_label_count(void) const
     }
 
   return max_count;
+}
+
+void Sentence::clear_label_guesses(void)
+{
+  for (unsigned int i = 0; i < sentence.size(); ++i)
+    { sentence[i].clear_label_guesses(); }
 }
 
 void Sentence::set_label_guesses(const LabelExtractor &g, bool use_label_dict, unsigned int count)

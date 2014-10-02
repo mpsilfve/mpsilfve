@@ -78,19 +78,21 @@ void Tagger::train(std::istream &train_in,
 {
   msg_out << "Reading training data." << std::endl;
   Data train_data(train_in, 1, label_extractor, param_table, tagger_options.degree);
-  
+  train_data.clear_label_guesses(); 
+    
   msg_out << "Training label guesser." << std::endl;
   label_extractor.train(train_data);
 
   msg_out << "Reading development data." << std::endl;
   Data dev_data(dev_in, 1, label_extractor, param_table, tagger_options.degree);
+  dev_data.clear_label_guesses(); 
 
   msg_out << "Setting label guesses." << std::endl;
   train_data.set_label_guesses(label_extractor, 0, tagger_options.guess_count);
   dev_data.set_label_guesses(label_extractor, 0, tagger_options.guess_count);
   
   msg_out << "Estimating lemmatizer parameters." << std::endl;
-  lemma_extractor.train(train_data, dev_data, label_extractor, msg_out);
+  //lemma_extractor.train(train_data, dev_data, label_extractor, msg_out);
 
   msg_out << "Estimating tagger parameters." << std::endl;
 
@@ -102,7 +104,7 @@ void Tagger::train(std::istream &train_in,
 				label_extractor.get_boundary_label(), 
 				lemma_extractor,
 				msg_out);
-
+      
       trainer.train(train_data, dev_data, tagger_options.beam);
     }
   else

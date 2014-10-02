@@ -45,23 +45,23 @@ void normalize(std::vector<float> &v)
     }
 }
 
-Trellis::Trellis(Sentence &s, 
+Trellis::Trellis(Sentence &sent, 
 		 unsigned int boundary_label,
 		 unsigned int beam):
-  s(&s),
+  s(&sent),
   marginals_set(0),
   bw(boundary_label),
   beam(beam)
 {
-  reserve(s.size(), boundary_label);
+  reserve(sent.size(), boundary_label);
 
-  for (unsigned int i = 0; i < s.size() - 1; ++i)
+  for (unsigned int i = 0; i < sent.size() - 1; ++i)
     { 
-      trellis[i].set_word(s.at(i));
+      trellis[i].set_word(sent.at(i));
       trellis[i].set_ncol(&trellis[i+1]); 
     }
 
-  trellis.back().set_word(s.at(s.size() - 1));
+  trellis.back().set_word(sent.at(sent.size() - 1));
 }
 
 LabelVector Trellis::get_maximum_a_posteriori_assignment(const ParamTable &pt)
@@ -99,14 +99,17 @@ LabelVector Trellis::get_marginalized_max_assignment(const ParamTable &pt)
 
   return res;
 }
-
+#include <cassert>
 void Trellis::set_maximum_a_posteriori_assignment(const ParamTable &pt)
 {
   LabelVector labels = get_maximum_a_posteriori_assignment(pt);
 
+  assert(labels.size() == s->size());
+
   for (unsigned int i = 0; i < labels.size(); ++i)
     {
       s->at(i).set_label(labels[i]);
+      assert(s->at(i).get_label() != static_cast<unsigned int>(-1));
     }
 }
 
@@ -302,7 +305,7 @@ void populate(Data &data,
 	      unsigned int beam)
 {
   for (unsigned int i = 0; i < data.size(); ++i)
-    { v.push_back(Trellis(data.at(i), boundary_label, beam)); }
+    { v.push_back(new Trellis(data.at(i), boundary_label, beam)); }
 }
 
 #else // TEST_Trellis_cc

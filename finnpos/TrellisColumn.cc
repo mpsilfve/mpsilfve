@@ -250,6 +250,8 @@ void set_labels(LabelVector &res, TrellisCell * c, unsigned int boundary_label)
     }
 }
 
+#include <cassert>
+
 void TrellisColumn::set_labels(LabelVector &res)
 {
   if (word == 0)
@@ -257,10 +259,14 @@ void TrellisColumn::set_labels(LabelVector &res)
 
   TrellisCell * c = &get_cell(0,0);
 
+  assert(c != 0);
+  assert(c->pcell != 0); 
+
   ::set_labels(res, c, boundary_label);
 
   std::reverse(res.begin(), res.end());
 }
+
 
 void TrellisColumn::compute_viterbi(const ParamTable &pt)
 { 
@@ -303,7 +309,10 @@ void TrellisColumn::compute_viterbi(const ParamTable &pt)
 	  for (unsigned int j = 0; j < beam_width; ++j)
 	    {
 	      if (j >= pcol->beam_cell_count())
-		{ break; }
+		{ 
+		  assert(j != 0);
+		  break; 
+		}
 
 	      TrellisCell * pcell = pcol->get_beam_cell(j);
 	      
@@ -322,7 +331,8 @@ void TrellisColumn::compute_viterbi(const ParamTable &pt)
 		  cells_in_beam.push_back(&get_cell(pcell->label_index, i));
 		}
 
-	      if (score > get_cell(pcell->label_index, i).viterbi)
+	      if (score > get_cell(pcell->label_index, i).viterbi or 
+		  get_cell(pcell->label_index, i).pcell == 0)
 		{
 		  get_cell(pcell->label_index, i).viterbi = score;
 		  get_cell(pcell->label_index, i).pcell = pcell;
