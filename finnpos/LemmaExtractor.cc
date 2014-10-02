@@ -352,7 +352,10 @@ Word * LemmaExtractor::extract_feats(const std::string &word_form,
 unsigned int LemmaExtractor::get_feat_id(const std::string &feat_string)
 {
   if (feat_dict.count(feat_string) == 0)
-    { feat_dict[feat_string] = feat_dict.size(); }
+    { 
+      unsigned int id = feat_dict.size();
+      feat_dict[feat_string] = id; 
+    }
 
   return feat_dict[feat_string];
 }
@@ -604,12 +607,10 @@ int main(void)
 
   LemmaExtractor lemma_extractor;
   std::ostringstream null_stream;
+
   lemma_extractor.train(train_data, dev_data, label_extractor, null_stream);
 
-  //assert(lemma_extractor.get_lemma_candidate("hog", "NN") == "hog");
   assert(lemma_extractor.get_lemma_candidate("hogs", "NN") == "hog");
-  //  assert(lemma_extractor.get_lemma_candidate("hog", "DT") == "hog");
-  //assert(lemma_extractor.get_lemma_candidate("hogs", "DT") == "hogs");
 }
 
 #endif // TEST_LemmaExtractor_cc

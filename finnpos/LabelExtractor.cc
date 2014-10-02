@@ -49,7 +49,8 @@ unsigned int LabelExtractor::get_label(const std::string &label_string)
 {
   if (label_map.find(label_string) == label_map.end())
     {
-      label_map[label_string] = label_map.size();
+      unsigned int id = label_map.size();
+      label_map[label_string] = id;
       string_map.push_back(label_string);
     }
 
@@ -214,7 +215,9 @@ void LabelExtractor::set_label_candidates(const std::string &word_form,
 const std::string &LabelExtractor::get_label_string(unsigned int label) const
 {
   if (label >= string_map.size())
-    { throw IllegalLabel(); }
+    { 
+      throw IllegalLabel(); 
+    }
 
   return string_map.at(label);
 }
