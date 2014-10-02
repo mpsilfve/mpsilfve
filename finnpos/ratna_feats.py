@@ -24,6 +24,7 @@
 
 from sys import stdin, stdout, stderr
 from re  import match
+from os  import linesep
 
 EXIT_FAIL    = 1
 EXIT_SUCCESS = 0
@@ -31,7 +32,9 @@ EXIT_SUCCESS = 0
 # Read input from ifile and write extracted features to ofile. This function 
 # doesn't check its argument streams.
 def main(ifname, ifile, ofname, ofile, olog):
-    olog.write('Reading from %s. Writing to %s.\n' % (ifname, ofname))
+    olog.write(('Reading from %s. Writing to %s.' + linesep) 
+               % 
+               (ifname, ofname))
 
     sentences = [[]]
 
@@ -43,7 +46,7 @@ def main(ifname, ifile, ofname, ofile, olog):
 
             if len(fields) != 3:
                 olog.write(("Line %u in file %s: Incorrect field count %u. " +
-                           "Should be 3.\n") 
+                           "Should be 3." + linesep) 
                            % (i + 1, ifname, len(fields)))
 
                 return EXIT_FAIL
@@ -71,9 +74,11 @@ def main(ifname, ifile, ofname, ofile, olog):
 
             feat_str = " ".join(filter(None, features))
 
-            ofile.write("%s\t%s\t%s\t%s\t_\n" % (wf, feat_str, lemma, label))
+            ofile.write(("%s\t%s\t%s\t%s\t_" + linesep) 
+                        % 
+                        (wf, feat_str, lemma, label))
 
-        ofile.write('\n')
+        ofile.write(linesep)
 
     return EXIT_SUCCESS
 
