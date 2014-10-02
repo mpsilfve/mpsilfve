@@ -43,6 +43,7 @@ def main(iname, ifile, oname, ofile, olog):
 
     sentences = [[]]
 
+    # Split file into sentences and check syntax.
     for i, line in enumerate(map(lambda x: x.strip(), ifile)):
         if len(line) == 0:
             sentences.append([])
@@ -59,6 +60,7 @@ def main(iname, ifile, oname, ofile, olog):
 
             sentences[-1].append(fields)
 
+    # Extract features for each sentence and write output to ofile.
     for sentence in filter(None, sentences):
         for i, line in enumerate(sentence):
             wf, lemma, label = line
