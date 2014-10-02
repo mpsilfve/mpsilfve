@@ -92,7 +92,7 @@ void Tagger::train(std::istream &train_in,
   dev_data.set_label_guesses(label_extractor, 0, tagger_options.guess_count);
   
   msg_out << "Estimating lemmatizer parameters." << std::endl;
-  //lemma_extractor.train(train_data, dev_data, label_extractor, msg_out);
+  lemma_extractor.train(train_data, dev_data, label_extractor, msg_out);
 
   msg_out << "Estimating tagger parameters." << std::endl;
 
