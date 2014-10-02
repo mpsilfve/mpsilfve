@@ -31,6 +31,10 @@ EXIT_SUCCESS = 0
 # Boundary word.
 BOUNDARY = "_#_"
 
+# Maximum length of extracted suffix and prefix features.
+MAX_SUF_LEN = 10
+MAX_PRE_LEN = 10
+
 # Read input from ifile and write extracted features to ofile. This function 
 # doesn't check its argument streams.
 def main(ifname, ifile, ofname, ofile, olog):
@@ -89,10 +93,10 @@ def get_wf(i, sentence):
     return BOUNDARY if i < 0 or i + 1 > len(sentence) else sentence[i][0]
 
 def get_suffixes(wf):
-    return [ "%u-SUFFIX=%s" % (i, wf[-i:]) for i in range(1, 11) ]
+    return [ "%u-SUFFIX=%s" % (i, wf[-i:]) for i in range(1, MAX_SUF_LEN + 1) ]
 
 def get_prefixes(wf):
-    return [ "%u-PREFIX=%s" % (i, wf[:i]) for i in range(1, 11) ]
+    return [ "%u-PREFIX=%s" % (i, wf[:i]) for i in range(1, MAX_PRE_LEN + 1) ]
 
 def has_uc(wf):
     return "HAS_UC" if match(".*([A-Z]|Å|Ä|Ö).*", wf) else None
