@@ -14,6 +14,9 @@ all:finnpos-train
 clean:
 	rm -f $(OBJS) $(TESTS) finnpos-train
 
+doc-clean:
+	rm -Rf html latex
+
 doc: html
 
 html:
