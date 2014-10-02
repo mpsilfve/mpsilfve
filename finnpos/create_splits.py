@@ -50,6 +50,7 @@ def main(argv, olog):
             sentences[-1].append(line)
 
     for i, sentence in enumerate(sentences):
+        # Pad sentences with and extra newline.
         sentence_str = linesep.join(sentence) + linesep + linesep
 
         if i % 10 == 9:
@@ -68,17 +69,12 @@ def main(argv, olog):
 
 def get_file(fn, mode, olog):
     try:
-        f = open(fn, mode)
-        return f
+        return open(fn, mode)
     except IOError:
         if 'w' in mode:
-            olog.write(("File %s can't be opened for writing!" + linesep)
-                       % 
-                       fn)
+            olog.write(("File %s can't be opened for writing!" + linesep) % fn)
         else:
-            olog.write(("File %s can't be opened for reading!" + linesep)
-                       % 
-                       fn)
+            olog.write(("File %s can't be opened for reading!" + linesep) % fn)
         return None
     
 if __name__ == '__main__':
