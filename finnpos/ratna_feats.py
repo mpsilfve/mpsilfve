@@ -35,9 +35,10 @@ BOUNDARY = "_#_"
 MAX_SUF_LEN = 10
 MAX_PRE_LEN = 10
 
-# Read input from ifile and write extracted features to ofile. This function 
-# doesn't check its argument streams.
 def main(ifname, ifile, ofname, ofile, olog):
+""" Read input from ifile and write extracted features to ofile. This function 
+    doesn't check its argument streams. """
+
     olog.write(('Reading from %s. Writing to %s.' + linesep) 
                % 
                (ifname, ofname))
