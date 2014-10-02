@@ -49,14 +49,14 @@ void PerceptronTrainer::train(const Data &train_data,
 
   for (unsigned int i = 0; i < train_data.size(); ++i)
     {
-      train_trellises.push_back(new Trellis(train_data_copy.at(i), boundary_label, beam));
+      train_trellises.push_back(Trellis(train_data_copy.at(i), boundary_label, beam));
     }
 
   TrellisVector dev_trellises;
 
   for (unsigned int i = 0; i < dev_data.size(); ++i)
     {
-      dev_trellises.push_back(new Trellis(dev_data_copy.at(i), boundary_label, beam));
+      dev_trellises.push_back(Trellis(dev_data_copy.at(i), boundary_label, beam));
     }
 
   float best_dev_acc = -1;
@@ -73,7 +73,7 @@ void PerceptronTrainer::train(const Data &train_data,
       // Train pass.
       for (unsigned int j = 0; j < train_trellises.size(); ++j)
 	{
-	  train_trellises[j]->set_maximum_a_posteriori_assignment
+	  train_trellises[j].set_maximum_a_posteriori_assignment
 	    (pos_params);
 
 	  update(train_data.at(j), train_data_copy.at(j));
@@ -85,7 +85,7 @@ void PerceptronTrainer::train(const Data &train_data,
       // Tag dev data.
       for (unsigned int j = 0; j < dev_trellises.size(); ++j)
 	{
-	  dev_trellises[j]->set_maximum_a_posteriori_assignment(pt);
+	  dev_trellises[j].set_maximum_a_posteriori_assignment(pt);
 	}
 
       float acc = dev_data.get_acc(dev_data_copy, lemma_extractor).label_acc;

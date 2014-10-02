@@ -84,7 +84,7 @@ private:
   void set_trigram_marginals(const ParamTable &pt);
 };
 
-typedef std::vector<Trellis*> TrellisVector;
+typedef std::vector<Trellis> TrellisVector;
 
 void populate(Data &data, 
 	      TrellisVector &v, 
