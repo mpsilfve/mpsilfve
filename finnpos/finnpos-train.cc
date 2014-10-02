@@ -31,7 +31,8 @@ int main(int argc, char * argv[])
 {
   if (argc != 5)
     {
-      std::cerr <<  "USAGE: " << argv[0] << " config_file train_file dev_file"
+      std::cerr <<  "USAGE: " << argv[0] 
+		<< " config_file train_file dev_file output_file"
 		<< std::endl;
 
       exit(1);
