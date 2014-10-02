@@ -35,13 +35,11 @@ BOUNDARY = "_#_"
 MAX_SUF_LEN = 10
 MAX_PRE_LEN = 10
 
-def main(ifname, ifile, ofname, ofile, olog):
+def main(iname, ifile, oname, ofile, olog):
 """ Read input from ifile and write extracted features to ofile. This function 
     doesn't check its argument streams. """
 
-    olog.write(('Reading from %s. Writing to %s.' + linesep) 
-               % 
-               (ifname, ofname))
+    olog.write(('Reading from %s. Writing to %s.' + linesep) % (iname, oname))
 
     sentences = [[]]
 
@@ -55,7 +53,7 @@ def main(ifname, ifile, ofname, ofile, olog):
                 olog.write(("Line %u in file %s: Incorrect field count %u. " +
                            "Should be 3." + linesep) 
                            % 
-                           (i + 1, ifname, len(fields)))
+                           (i + 1, iname, len(fields)))
 
                 return EXIT_FAIL
 
