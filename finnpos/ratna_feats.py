@@ -36,8 +36,8 @@ MAX_SUF_LEN = 10
 MAX_PRE_LEN = 10
 
 def main(iname, ifile, oname, ofile, olog):
-""" Read input from ifile and write extracted features to ofile. This function 
-    doesn't check its argument streams. """
+    """ Read input from ifile and write extracted features to ofile. 
+        This function doesn't check its argument streams. """
 
     olog.write(('Reading from %s. Writing to %s.' + linesep) % (iname, oname))
 
