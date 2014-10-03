@@ -76,7 +76,6 @@ Tagger::Tagger(std::istream &tagger_opt_in, std::ostream &msg_out):
 void Tagger::train(std::istream &train_in,
 		   std::istream &dev_in)
 {
-  static_cast<void>(test_in);
   msg_out << "Reading training data." << std::endl;
   Data train_data(train_in, 1, label_extractor, param_table, tagger_options.degree);
   train_data.clear_label_guesses(); 
