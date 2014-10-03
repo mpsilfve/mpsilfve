@@ -50,8 +50,11 @@ public:
 
   StringVector label(std::istream &in);
   StringVector label(Sentence &s);
+  void label(Data &data);
 
   void store(std::ostream &out) const;
+
+  void evaluate(std::istream &in);
 
 private:
   unsigned int line_counter;

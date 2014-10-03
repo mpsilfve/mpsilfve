@@ -35,13 +35,17 @@ PerceptronTrainer::PerceptronTrainer(unsigned int max_passes,
 				     std::ostream &msg_out):  
   Trainer(max_passes, max_useless_passes, pt, boundary_label, lemma_extractor, msg_out),
   iter(0)
-{}
+{
+  pos_params = pt;
+  neg_params = pt;
+}
 
 void PerceptronTrainer::train(const Data &train_data, 
 			      const Data &dev_data,
 			      unsigned int beam)
 {
   Data train_data_copy(train_data);
+
   Data dev_data_copy(dev_data);
   dev_data_copy.unset_label();
 
@@ -90,7 +94,7 @@ void PerceptronTrainer::train(const Data &train_data,
 
       float acc = dev_data.get_acc(dev_data_copy, lemma_extractor).label_acc;
 
-      msg_out << "  Dev acc: " << acc * 100.00 << "%" << std::endl;
+      msg_out << "    Dev acc: " << acc * 100.00 << "%" << std::endl;
 
       if (acc > best_dev_acc)
 	{
@@ -104,10 +108,10 @@ void PerceptronTrainer::train(const Data &train_data,
 	}
     }
 
-  msg_out << std::endl;
-  msg_out << "Final dev acc: " << best_dev_acc * 100.00 << "%" << std::endl;
+  msg_out << "  Final dev acc: " << best_dev_acc * 100.00 << "%" << std::endl;
 
   pt = best_params;
+  pt.set_trained();
 }
 
 void PerceptronTrainer::train_lemmatizer(const Data &train_data, 
@@ -199,7 +203,7 @@ void PerceptronTrainer::train_lemmatizer(const Data &train_data,
 
       float acc = (total == 0 ? 0 : correct / total);
 
-      msg_out << "  Dev acc: " << acc * 100.00 << "%" << std::endl;
+      msg_out << "    Dev acc: " << acc * 100.00 << "%" << std::endl;
 
       if (acc > best_dev_acc)
 	{
@@ -213,8 +217,7 @@ void PerceptronTrainer::train_lemmatizer(const Data &train_data,
 	}
     }
 
-  msg_out << std::endl;
-  msg_out << "Final dev acc: " << best_dev_acc * 100.0 << "%" << std::endl;
+  msg_out << "  Final dev acc: " << best_dev_acc * 100.0 << "%" << std::endl;
   
   pt = best_params;
 }

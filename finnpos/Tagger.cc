@@ -76,6 +76,7 @@ Tagger::Tagger(std::istream &tagger_opt_in, std::ostream &msg_out):
 void Tagger::train(std::istream &train_in,
 		   std::istream &dev_in)
 {
+  static_cast<void>(test_in);
   msg_out << "Reading training data." << std::endl;
   Data train_data(train_in, 1, label_extractor, param_table, tagger_options.degree);
   train_data.clear_label_guesses(); 
@@ -95,6 +96,7 @@ void Tagger::train(std::istream &train_in,
   lemma_extractor.train(train_data, dev_data, label_extractor, msg_out);
 
   msg_out << "Estimating tagger parameters." << std::endl;
+  //param_table.set_trained();
 
   if (tagger_options.estimator == AVG_PERC)
     {
@@ -109,6 +111,36 @@ void Tagger::train(std::istream &train_in,
     }
   else
     { throw NotImplemented(); }
+  
+}
+
+void Tagger::evaluate(std::istream &in)
+{
+  msg_out << "Evaluating." << std::endl;
+  Data data(in, 1, label_extractor, param_table, tagger_options.degree);
+  data.clear_label_guesses(); 
+
+  Data data_copy(data);
+  data_copy.unset_label();
+
+  data_copy.set_label_guesses(label_extractor, 1, tagger_options.guess_count);
+
+  TrellisVector trellises;
+  
+  for (unsigned int i = 0; i < data.size(); ++i)
+    {
+      trellises.push_back(Trellis(data_copy.at(i), label_extractor.get_boundary_label(), tagger_options.beam));
+    }
+
+  // Tag test data.
+  for (unsigned int j = 0; j < trellises.size(); ++j)
+    {
+      trellises[j].set_maximum_a_posteriori_assignment(param_table);
+    }
+  
+  float acc1 = data.get_acc(data_copy, lemma_extractor).label_acc;
+  
+  msg_out << "  Final test acc: " << acc1 * 100.00 << "%" << std::endl;
 }
 
 StringVector Tagger::label(std::istream &in)
@@ -132,13 +164,25 @@ StringVector Tagger::label(std::istream &in)
     }
 }
 
+void Tagger::label(Data &data)
+{
+  //data.set_label_guesses(label_extractor, 1, tagger_options.guess_count);
+
+  for (unsigned int i = 0; i < data.size(); ++i)
+    { label(data.at(i)); }
+}
+
 StringVector Tagger::label(Sentence &s)
 {
-  s.set_label_guesses(label_extractor, 1, tagger_options.guess_count);
+  s.unset_label();
+  s.clear_label_guesses();
+  s.set_label_guesses(label_extractor, 1, tagger_options.guess_count);  
+
   Trellis trellis(s, label_extractor.get_boundary_label(), tagger_options.beam);
+
   trellis.set_maximum_a_posteriori_assignment(param_table);
 
-  return labels_to_strings(trellis.get_maximum_a_posteriori_assignment(param_table));
+  return StringVector();//labels_to_strings(trellis.get_maximum_a_posteriori_assignment(param_table));
 }
 
 StringVector Tagger::labels_to_strings(const LabelVector &v)

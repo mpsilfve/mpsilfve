@@ -136,8 +136,6 @@ void Data::unset_label(void)
     }
 }
 
-#include <cassert>
-
 Acc Data::get_acc(const Data &other, 
 		  const LemmaExtractor &lemma_extractor) const
 {
@@ -177,9 +175,6 @@ Acc Data::get_acc(const Data &other,
 	  
 	  if (word1.get_word_form() == BOUNDARY_WF)
 	    { continue; }
-
-	  assert(word1.get_label() != static_cast<unsigned int>(-1));
-	  assert(word2.get_label() != static_cast<unsigned int>(-1));
 
 	  label_match += (word1.get_label() == word2.get_label());
 	  lemma_match += (word1.get_lemma() == word2.get_lemma());

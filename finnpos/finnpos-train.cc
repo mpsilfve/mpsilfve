@@ -41,7 +41,7 @@ int main(int argc, char * argv[])
   std::string config_fn = argv[1];  
   std::string train_fn  = argv[2];  
   std::string dev_fn    = argv[3];  
-  std::string output_fn = argv[4];  
+  std::string output_fn = argv[4]; 
 
   std::ifstream config_in(config_fn);
   std::ifstream train_in(train_fn);

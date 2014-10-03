@@ -26,8 +26,30 @@
 
 #include "Word.hh"
 
+ParamTable::ParamTable(void):
+  trained(0)
+{}
+
 ParamTable::~ParamTable(void)
 {}
+
+ParamTable &ParamTable::operator=(const ParamTable &another)
+{
+  if (this == &another)
+    { return *this; }
+
+  trained              = another.trained;
+  feature_template_map = another.feature_template_map;
+  unstruct_param_table = another.unstruct_param_table;
+  struct_param_table   = another.struct_param_table;
+
+  return *this;
+}
+
+void ParamTable::set_trained(void)
+{
+  trained = 1;
+}
 
 unsigned int ParamTable::get_feat_template
 (const std::string &feat_template_string)
@@ -47,10 +69,15 @@ FeatureTemplateVector ParamTable::get_feat_templates
   FeatureTemplateVector feat_templates;
 
   for (unsigned int i = 0; i < feat_template_strings.size(); ++i)
-    { 
+    {
+      if (trained and feature_template_map.count(feat_template_strings[i]) == 0)
+	{ 
+	  continue; 
+	}
+     
       feat_templates.push_back(get_feat_template(feat_template_strings[i]));
     }
-  
+
   return feat_templates;
 }
 

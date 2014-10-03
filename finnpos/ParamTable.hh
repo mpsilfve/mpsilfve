@@ -41,7 +41,9 @@ typedef std::unordered_map<long, float> ParamMap;
 class ParamTable
 {
 public:
-   virtual ~ParamTable(void);
+  ParamTable(void);
+  virtual ~ParamTable(void);
+  ParamTable &operator=(const ParamTable &another);
 
   unsigned int get_feat_template(const std::string &feat_template_string);
   FeatureTemplateVector get_feat_templates(StringVector &feat_template_strings);
@@ -69,9 +71,12 @@ public:
   ParamMap::iterator get_unstruct_end(void);
   ParamMap::iterator get_struct_end(void);
 
+  void set_trained(void);
+
 private:
   typedef std::unordered_map<std::string, unsigned int> FeatureTemplateMap;
 
+  bool trained;
   FeatureTemplateMap feature_template_map;
   ParamMap unstruct_param_table;
   ParamMap struct_param_table;
