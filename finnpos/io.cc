@@ -129,6 +129,12 @@ bool check(std::string &fn, std::istream &in, std::ostream &msg_out)
     }
 }
 
+bool has_same_endianness(std::istream &in, unsigned int marker)
+{
+  unsigned int marker_in_file = read_numerical_val<unsigned int>(in, 0);
+  return marker_in_file == marker;
+}
+
 #else // TEST_io_cc
 
 #include <cassert>

@@ -25,6 +25,7 @@
 #include <string>
 #include <vector>
 #include <iostream>
+#include <algorithm>
 
 typedef std::vector<std::string> StringVector;
 
@@ -45,5 +46,39 @@ Entry get_next_line(std::istream &in);
 
 bool check(std::string &fn, std::ostream &out, std::ostream &msg_out);
 bool check(std::string &fn, std::istream &in, std::ostream &msg_out);
+
+template<class T> T reverse(T numerical_val)
+{
+  char * start = reinterpret_cast<char *>(&numerical_val);
+  char * stop  = start + sizeof(T);
+  
+  std::reverse(start, stop);
+
+  return numerical_val;
+}
+
+template<class T> T read_numerical_val(std::istream &in, bool reverse_bytes)
+{
+  T t;
+  in.read(reinterpret_cast<char *>(&t), sizeof(T));
+
+  return reverse_bytes ? reverse(t) : t;
+}
+
+template<class T> read_vector(std::istream &in, 
+			      std::vector<T> &v, 
+			      bool reverse_bytes)
+{
+  unsigned int size = read_numerical_val<unsigned int>(in, reverse_bytes);
+				
+  for (unsigned int i = 0; i < v.size(); ++i)
+    {
+      v.push_back(read_numerical_val(in, reverse_bytes));
+    }
+}
+
+bool has_same_endianness(std::istream &in, unsigned int marker);
+
+
 
 #endif // HEADER_io_hh
