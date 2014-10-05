@@ -129,10 +129,34 @@ bool check(std::string &fn, std::istream &in, std::ostream &msg_out)
     }
 }
 
-bool has_same_endianness(std::istream &in, unsigned int marker)
+bool homoendian(std::istream &in, unsigned int marker)
 {
-  unsigned int marker_in_file = read_numerical_val<unsigned int>(in, 0);
+  unsigned int marker_in_file = read_val<unsigned int>(in, 0);
   return marker_in_file == marker;
+}
+
+template<> std::string read_val(std::istream &in, bool reverse_bytes)
+{
+  // String byte order never needs to be reversed.
+  static_cast<void>(reverse_bytes);
+
+  std::string str;
+  std::getline(in, str, '\0');
+
+  if (in.fail())
+    { throw ReadFailed(); }
+
+  return str;
+}
+
+template<> void write_val(std::ostream &out, const std::string &str)
+{
+  out.write(str.c_str(), str.size() + 1);
+  
+  if (out.fail())
+    { 
+      throw WriteFailed();
+    }
 }
 
 #else // TEST_io_cc
@@ -141,6 +165,7 @@ bool has_same_endianness(std::istream &in, unsigned int marker)
 #include <cstdlib>
 #include <sstream>
 #include <iostream>
+#include <fstream>
 
 int main(void)
 {
@@ -318,6 +343,127 @@ int main(void)
       assert(0);
     }
 
+  std::string f_str = "a";
+
+  for (unsigned int i = 1; i < sizeof(float); ++i)
+    { f_str += "b"; }
+
+  std::string rev_f_str = f_str;
+
+  std::reverse(rev_f_str.begin(), rev_f_str.end());
+
+  float f1;
+  f1 = *(reinterpret_cast<const float *>(f_str.c_str()));
+  
+  float f2;
+  f2 = *(reinterpret_cast<const float *>(rev_f_str.c_str()));
+
+  assert(reverse_num(f1) == f2);
+
+  // Reading from empty file should throw WriteFailed.
+  std::istringstream empty_in;
+  try
+    {
+      static_cast<void>(read_val<int>(empty_in, false));
+      assert(0);
+    }
+  catch (ReadFailed &e)
+    { /* EXPECTED FAIL */ }
+
+  try
+    {
+      static_cast<void>(read_val<std::string>(empty_in, false));
+      assert(0);
+    }
+  catch (ReadFailed &e)
+    { /* EXPECTED FAIL */ }
+  
+  // Writing to closed file or similar should throw WriteFailed.
+  //std::ostringstream closed_out_ss;
+  std::ofstream closed_out;
+  closed_out.close();
+  try
+    {
+      write_val<int>(closed_out, 1);
+      assert(0);
+    }
+  catch (WriteFailed &e)
+    { /* EXPECTED FAIL */ }
+
+  try
+    {
+      write_val<std::string>(closed_out, "foo");
+      assert(0);
+    }
+  catch (WriteFailed &e)
+    { /* EXPECTED FAIL */ }
+
+  // Write and read an int.
+  std::ostringstream test_int_out;
+  write_val<int>(test_int_out,13131);
+  std::istringstream test_int_in(test_int_out.str());
+  assert(read_val<int>(test_int_in, false) == 13131);
+
+  // Write an int in reversed endianness and read in system
+  // endianness.
+  std::ostringstream test_rev_int_out;
+  write_val<int>(test_rev_int_out,reverse_num<int>(13131));
+  std::istringstream test_rev_int_in(test_rev_int_out.str());
+  assert(read_val<int>(test_rev_int_in, true) == 13131);
+
+  // Write and read a string.
+  std::ostringstream test_string_out;
+  write_val<std::string>(test_string_out,"foo");
+  std::istringstream test_string_in(test_string_out.str());
+  assert(read_val<std::string>(test_string_in, false) == "foo");
+
+  // Make sure that reverse-variable is properly ignored with strings.
+  std::ostringstream test_string_out_rev;
+  write_val<std::string>(test_string_out_rev,"foo");
+  std::istringstream test_string_in_rev(test_string_out_rev.str());
+  assert(read_val<std::string>(test_string_in_rev, true) == "foo");
+
+  // Write and read an empty std::vector<int>.
+  std::ostringstream vect_out_1;
+  write_vector<int>(vect_out_1, std::vector<int>());
+  std::istringstream vect_in_1(vect_out_1.str());
+  std::vector<int> int_v;
+  read_vector<int>(vect_in_1, int_v, false);
+  assert(int_v == std::vector<int>());
+
+  // Write and read an empty std::vector<std::string>.
+  std::ostringstream vect_out_2;
+  write_vector<std::string>(vect_out_2, std::vector<std::string>());
+  std::istringstream vect_in_2(vect_out_2.str());
+  std::vector<std::string> string_v;
+  read_vector<std::string>(vect_in_2, string_v, false);
+  assert(string_v == std::vector<std::string>());
+
+  // Write and read a non-empty std::vector<int>.
+  std::ostringstream vect_out_3;
+  std::vector<int> int_v_orig;
+  int_v_orig.push_back(0);
+  int_v_orig.push_back(1);
+  int_v_orig.push_back(2);
+  write_vector<int>(vect_out_3, int_v_orig);
+  std::istringstream vect_in_3(vect_out_3.str());
+  int_v.clear();
+  read_vector<int>(vect_in_3, int_v, false);
+  assert(int_v == int_v_orig);
+
+  // Write and read a non-empty std::vector<std::string>.
+  std::ostringstream vect_out_4;
+  std::vector<std::string> string_v_orig;
+  string_v_orig.push_back("foo");
+  string_v_orig.push_back("bar");
+  string_v_orig.push_back("baz");
+  write_vector<std::string>(vect_out_4, string_v_orig);
+  std::istringstream vect_in_4(vect_out_4.str());
+  string_v.clear();
+  read_vector<std::string>(vect_in_4, string_v, false);
+  assert(string_v == string_v_orig);
+
+  
 }
 
 #endif // TEST_io_cc

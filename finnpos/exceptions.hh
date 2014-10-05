@@ -54,5 +54,10 @@ struct NoLabel : public std::exception
 struct WordNotSet : public std::exception
 {};
 
+struct WriteFailed : public std::exception
+{};
+
+struct ReadFailed : public std::exception
+{};
 
 #endif // HEADER_exceptions_hh

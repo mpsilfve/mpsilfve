@@ -181,7 +181,7 @@ StringVector Tagger::label(Sentence &s)
 
   trellis.set_maximum_a_posteriori_assignment(param_table);
 
-  return StringVector();//labels_to_strings(trellis.get_maximum_a_posteriori_assignment(param_table));
+  return labels_to_strings(trellis.get_maximum_a_posteriori_assignment(param_table));
 }
 
 StringVector Tagger::labels_to_strings(const LabelVector &v)

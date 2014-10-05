@@ -26,6 +26,9 @@
 #include <vector>
 #include <iostream>
 #include <algorithm>
+#include <unordered_map>
+
+#include "exceptions.hh"
 
 typedef std::vector<std::string> StringVector;
 
@@ -47,7 +50,9 @@ Entry get_next_line(std::istream &in);
 bool check(std::string &fn, std::ostream &out, std::ostream &msg_out);
 bool check(std::string &fn, std::istream &in, std::ostream &msg_out);
 
-template<class T> T reverse(T numerical_val)
+bool homoendian(std::istream &in, unsigned int marker);
+
+template<class T> T reverse_num(T numerical_val)
 {
   char * start = reinterpret_cast<char *>(&numerical_val);
   char * stop  = start + sizeof(T);
@@ -57,28 +62,159 @@ template<class T> T reverse(T numerical_val)
   return numerical_val;
 }
 
-template<class T> T read_numerical_val(std::istream &in, bool reverse_bytes)
+template<class T> T read_val(std::istream &in, bool reverse_bytes)
 {
   T t;
   in.read(reinterpret_cast<char *>(&t), sizeof(T));
 
-  return reverse_bytes ? reverse(t) : t;
+  if (in.fail())
+    { 
+      throw ReadFailed(); 
+    }
+
+  return reverse_bytes ? reverse_num(t) : t;
 }
 
-template<class T> read_vector(std::istream &in, 
-			      std::vector<T> &v, 
-			      bool reverse_bytes)
+template<class T> void write_val(std::ostream &out, const T &t)
 {
-  unsigned int size = read_numerical_val<unsigned int>(in, reverse_bytes);
-				
-  for (unsigned int i = 0; i < v.size(); ++i)
-    {
-      v.push_back(read_numerical_val(in, reverse_bytes));
+  out.write(reinterpret_cast<const char *>(&t), sizeof(T));
+  
+  if (out.fail())
+    { 
+      throw WriteFailed();
     }
 }
 
-bool has_same_endianness(std::istream &in, unsigned int marker);
+template<> std::string read_val(std::istream &in, bool reverse_bytes);
+template<> void write_val(std::ostream &out, const std::string &str);
 
+template<class T> std::vector<T> &read_vector(std::istream &in, 
+					      std::vector<T> &v, 
+					      bool reverse_bytes)
+{
+  unsigned int size = read_val<unsigned int>(in, reverse_bytes);
+				
+  for (unsigned int i = 0; i < size; ++i)
+    {
+      v.push_back(read_val<T>(in, reverse_bytes));
+    }
 
+  return v;
+}
+
+template<class T> void write_vector(std::ostream &out, 
+				    const std::vector<T> &v)
+{
+  write_val<unsigned int>(out, v.size());
+				
+  for (unsigned int i = 0; i < v.size(); ++i)
+    {
+      write_val<T>(out, v.at(i));
+    }
+}
+
+template<class T, class U> 
+std::unordered_map<T, U> &read_map(std::istream &in,
+				   std::unordered_map<T, U> &m,
+				   bool reverse_bytes)
+{
+  unsigned int size = read_val<unsigned int>(in, reverse_bytes);
+
+  for (unsigned int i = 0; i < size; ++i)
+    {
+      T t = read_val<T>(in, reverse_bytes);
+      U u = read_val<U>(in, reverse_bytes);
+
+      m[t] = u;
+    }
+
+  return m;
+}
+
+template<class T, class U> void write_map(std::ostream &out,
+					  std::unordered_map<T, U> &m)
+{
+  write_val<unsigned int>(out, m.size());
+
+  for (typename std::unordered_map<T, U>::const_iterator it = m.begin();
+       it != m.end();
+       ++it)
+    {
+      write_val<T>(out, it->first);
+      write_val<T>(out, it->second);
+    }
+}
+
+template<class T, class U> std::unordered_map<T, std::vector<U> > &
+read_map(std::istream &in,
+	 std::unordered_map<T, std::vector<U> > &m,
+	 bool reverse_bytes)
+{
+  unsigned int size = read_val<unsigned int>(in, reverse_bytes);
+
+  for (unsigned int i = 0; i < size; ++i)
+    {
+      T t = read_val<T>(in, reverse_bytes);
+
+      std::vector<U> v;
+      read_vector<U>(in, v, reverse_bytes);
+
+      m[t] = v;
+    }
+
+  return m;
+}
+
+template<class T, class U> 
+void write_map(std::ostream &out,
+	       std::unordered_map<T, std::vector<U> > &m)
+{
+  write_val<unsigned int>(out, m.size());
+
+  for (typename std::unordered_map<T, std::vector<U> >::const_iterator it = 
+	 m.begin();
+       it != m.end();
+       ++it)
+    {
+      write_val<T>(out, it->first);
+      write_vector<U>(out, it->second);
+    }
+}
+
+template<class T, class U, class V> std::unordered_map<T, std::unordered_map<U, V> > &
+read_map(std::istream &in,
+	 std::unordered_map<T, std::unordered_map<U, V> > &m,
+	 bool reverse_bytes)
+{
+  unsigned int size = read_val<unsigned int>(in, reverse_bytes);
+
+  for (unsigned int i = 0; i < size; ++i)
+    {
+      T t = read_val<T>(in, reverse_bytes);
+
+      std::unordered_map<U, V> mm;
+      read_map<U, V>(in, mm, reverse_bytes);
+
+      m[t] = mm;
+    }
+
+  return m;
+}
+
+template<class T, class U, class V> 
+void write_map(std::ostream &out,
+	       std::unordered_map<T, std::unordered_map<U, V> > &m)
+{
+  write_val<unsigned int>(out, m.size());
+
+  for (typename std::unordered_map<T, std::vector<U> >::const_iterator it = 
+	 m.begin();
+       it != m.end();
+       ++it)
+    {
+      write_val<T>(out, it->first);
+      write_map<U, V>(out, it->second);
+    }
+}
 
 #endif // HEADER_io_hh
