@@ -135,8 +135,8 @@ template<> void write_val(std::ostream &out, const std::string &str);
 
 /**
  * @brief Read a vector from stream @p in. Store it in @p v. Reverse
- * byte order, iff reverse_bytes == true. Instantiate with strings or
- * numerical values only! Throws ReadFailed.
+ * byte order, iff reverse_bytes == true. Instantiate with std::string
+ * and numerical types only! Throws ReadFailed.
  */
 template<class T> std::vector<T> &read_vector(std::istream &in, 
 					      std::vector<T> &v, 
@@ -153,8 +153,8 @@ template<class T> std::vector<T> &read_vector(std::istream &in,
 }
 
 /**
- * @brief Write vector @p v to stream @p out. Instantiate with strings
- * or numerical values only! Throws WriteFailed.
+ * @brief Write vector @p v to stream @p out. Instantiate with
+ * std::string and numerical types only! Throws WriteFailed.
  */
 template<class T> void write_vector(std::ostream &out, 
 				    const std::vector<T> &v)
@@ -168,9 +168,9 @@ template<class T> void write_vector(std::ostream &out,
 }
 
 /**
- * @brief Read a map from stream @p in. Store it in @p m. Reverse
- * byte order, iff reverse_bytes == true. Instantiate with strings or
- * numerical values only! Throws ReadFailed.
+ * @brief Read a map from stream @p in. Store it in @p m. Reverse byte
+ * order, iff reverse_bytes == true. Instantiate with std::string or
+ * numerical types only! Throws ReadFailed.
  */
 template<class T, class U> 
 std::unordered_map<T, U> &read_map(std::istream &in,
@@ -191,8 +191,8 @@ std::unordered_map<T, U> &read_map(std::istream &in,
 }
 
 /**
- * @brief Write map @p m to stream @p out. Instantiate with strings
- * or numerical values only! Throws WriteFailed.
+ * @brief Write map @p m to stream @p out. Instantiate with
+ * std::string and numerical types only! Throws WriteFailed.
  */
 template<class T, class U> void write_map(std::ostream &out,
 					  std::unordered_map<T, U> &m)
@@ -209,9 +209,9 @@ template<class T, class U> void write_map(std::ostream &out,
 }
 
 /**
- * @brief Read a map from stream @p in. Store it in @p m. Reverse
- * byte order, iff reverse_bytes == true. Instantiate with strings or
- * numerical values only! Throws ReadFailed.
+ * @brief Read a map from stream @p in. Store it in @p m. Reverse byte
+ * order, iff reverse_bytes == true. Instantiate with std::string or
+ * numerical types only! Throws ReadFailed.
  */
 template<class T, class U> std::unordered_map<T, std::vector<U> > &
 read_map(std::istream &in,
@@ -234,8 +234,8 @@ read_map(std::istream &in,
 }
 
 /**
- * @brief Write map @p m to stream @p out. Instantiate with strings
- * or numerical values only! Throws WriteFailed.
+ * @brief Write map @p m to stream @p out. Instantiate with
+ * std::string and numerical types only! Throws WriteFailed.
  */
 template<class T, class U> 
 void write_map(std::ostream &out,
@@ -254,9 +254,9 @@ void write_map(std::ostream &out,
 }
 
 /**
- * @brief Read a map from stream @p in. Store it in @p m. Reverse
- * byte order, iff reverse_bytes == true. Instantiate with strings or
- * numerical values only! Throws ReadFailed.
+ * @brief Read a map from stream @p in. Store it in @p m. Reverse byte
+ * order, iff reverse_bytes == true. Instantiate with std::string or
+ * numerical types only! Throws ReadFailed.
  */
 template<class T, class U, class V> std::unordered_map<T, std::unordered_map<U, V> > &
 read_map(std::istream &in,
@@ -279,8 +279,8 @@ read_map(std::istream &in,
 }
 
 /**
- * @brief Write map @p m to stream @p out. Instantiate with strings
- * or numerical values only! Throws WriteFailed.
+ * @brief Write map @p m to stream @p out. Instantiate with
+ * std::string and numerical types only! Throws WriteFailed.
  */
 template<class T, class U, class V> 
 void write_map(std::ostream &out,
