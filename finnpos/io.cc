@@ -132,6 +132,10 @@ bool check(std::string &fn, std::istream &in, std::ostream &msg_out)
 bool homoendian(std::istream &in, unsigned int marker)
 {
   unsigned int marker_in_file = read_val<unsigned int>(in, 0);
+
+  if (in.fail())
+    { throw ReadFailed(); }
+
   return marker_in_file == marker;
 }
 
