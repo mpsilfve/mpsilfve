@@ -32,6 +32,10 @@
 
 typedef std::vector<std::string> StringVector;
 
+/**
+ * @brief Holds all the information concerning a single word in a training or
+ * test file.
+ */
 struct Entry
 {
   Entry(void);
@@ -43,15 +47,40 @@ struct Entry
   std::string annotations;
 };
 
+/**
+ * @brief Split @p str at @p delim characters and store the pieces in @p
+ * target. Discards all @p delim characters.
+ */
 void split(const std::string &str, StringVector &target, char delim);
 
+/**
+ * @brief Read the next line in stream @p in and store the information
+ * in an Entry object. Throws SyntaxError.
+ */
 Entry get_next_line(std::istream &in);
 
+/**
+ * @brief Check that stream @out is okay for writing. Write an error
+ * message to @p msg_out if that is not the case.
+ */
 bool check(std::string &fn, std::ostream &out, std::ostream &msg_out);
+
+/**
+ * @brief Check that stream @in is okay for reading. Write an error
+ * message to @p msg_out if that is not the case.
+ */
 bool check(std::string &fn, std::istream &in, std::ostream &msg_out);
 
+/**
+ * @brief Return true, if the endianness of @p in and @p marker
+ * match. Otherwise, return false. Throws ReadFailed.
+ */
 bool homoendian(std::istream &in, unsigned int marker);
 
+/**
+ * @brief Return the big endian representation of a little endian
+ * number and vice versa.
+ */
 template<class T> T reverse_num(T numerical_val)
 {
   char * start = reinterpret_cast<char *>(&numerical_val);
@@ -62,6 +91,10 @@ template<class T> T reverse_num(T numerical_val)
   return numerical_val;
 }
 
+/**
+ * @brief Read a numerical value from @p in. Reverse the endianness,
+ * iff @p reverse_bytes == true. Throws ReadFailed.
+ */
 template<class T> T read_val(std::istream &in, bool reverse_bytes)
 {
   T t;
@@ -75,6 +108,10 @@ template<class T> T read_val(std::istream &in, bool reverse_bytes)
   return reverse_bytes ? reverse_num(t) : t;
 }
 
+/**
+ * @brief Write numerical value @p t to stream @p out. Throws
+ * WriteFailed.
+ */
 template<class T> void write_val(std::ostream &out, const T &t)
 {
   out.write(reinterpret_cast<const char *>(&t), sizeof(T));
@@ -85,9 +122,22 @@ template<class T> void write_val(std::ostream &out, const T &t)
     }
 }
 
+/**
+ * @brief Read a string from @p in. Throws ReadFailed.
+ */
 template<> std::string read_val(std::istream &in, bool reverse_bytes);
+
+/**
+ * @brief Write string @p str to stream @p out. Throws
+ * WriteFailed.
+ */
 template<> void write_val(std::ostream &out, const std::string &str);
 
+/**
+ * @brief Read a vector from stream @p in. Store it in @p v. Reverse
+ * byte order, iff reverse_bytes == true. Instantiate with strings or
+ * numerical values only! Throws ReadFailed.
+ */
 template<class T> std::vector<T> &read_vector(std::istream &in, 
 					      std::vector<T> &v, 
 					      bool reverse_bytes)
@@ -102,6 +152,10 @@ template<class T> std::vector<T> &read_vector(std::istream &in,
   return v;
 }
 
+/**
+ * @brief Write vector @p v to stream @p out. Instantiate with strings
+ * or numerical values only! Throws WriteFailed.
+ */
 template<class T> void write_vector(std::ostream &out, 
 				    const std::vector<T> &v)
 {
@@ -113,6 +167,11 @@ template<class T> void write_vector(std::ostream &out,
     }
 }
 
+/**
+ * @brief Read a map from stream @p in. Store it in @p m. Reverse
+ * byte order, iff reverse_bytes == true. Instantiate with strings or
+ * numerical values only! Throws ReadFailed.
+ */
 template<class T, class U> 
 std::unordered_map<T, U> &read_map(std::istream &in,
 				   std::unordered_map<T, U> &m,
@@ -131,6 +190,10 @@ std::unordered_map<T, U> &read_map(std::istream &in,
   return m;
 }
 
+/**
+ * @brief Write map @p m to stream @p out. Instantiate with strings
+ * or numerical values only! Throws WriteFailed.
+ */
 template<class T, class U> void write_map(std::ostream &out,
 					  std::unordered_map<T, U> &m)
 {
@@ -145,6 +208,11 @@ template<class T, class U> void write_map(std::ostream &out,
     }
 }
 
+/**
+ * @brief Read a map from stream @p in. Store it in @p m. Reverse
+ * byte order, iff reverse_bytes == true. Instantiate with strings or
+ * numerical values only! Throws ReadFailed.
+ */
 template<class T, class U> std::unordered_map<T, std::vector<U> > &
 read_map(std::istream &in,
 	 std::unordered_map<T, std::vector<U> > &m,
@@ -165,6 +233,10 @@ read_map(std::istream &in,
   return m;
 }
 
+/**
+ * @brief Write map @p m to stream @p out. Instantiate with strings
+ * or numerical values only! Throws WriteFailed.
+ */
 template<class T, class U> 
 void write_map(std::ostream &out,
 	       std::unordered_map<T, std::vector<U> > &m)
@@ -181,6 +253,11 @@ void write_map(std::ostream &out,
     }
 }
 
+/**
+ * @brief Read a map from stream @p in. Store it in @p m. Reverse
+ * byte order, iff reverse_bytes == true. Instantiate with strings or
+ * numerical values only! Throws ReadFailed.
+ */
 template<class T, class U, class V> std::unordered_map<T, std::unordered_map<U, V> > &
 read_map(std::istream &in,
 	 std::unordered_map<T, std::unordered_map<U, V> > &m,
@@ -201,6 +278,10 @@ read_map(std::istream &in,
   return m;
 }
 
+/**
+ * @brief Write map @p m to stream @p out. Instantiate with strings
+ * or numerical values only! Throws WriteFailed.
+ */
 template<class T, class U, class V> 
 void write_map(std::ostream &out,
 	       std::unordered_map<T, std::unordered_map<U, V> > &m)
