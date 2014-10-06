@@ -233,7 +233,8 @@ void Tagger::load(std::istream &in)
 {
   msg_out << "Loading model." << std::endl;
 
-  std::string id_string = read_val<std::string>(in, false);
+  std::string id_string;
+  read_val<std::string>(in, id_string, false);
 
   if (id_string != FINN_POS_ID_STRING)
     { 

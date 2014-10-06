@@ -245,7 +245,7 @@ void LabelExtractor::load(std::istream &in, bool reverse_bytes)
   label_counts.clear();
   lexicon.clear();
 
-  max_suffix_len = read_val<unsigned int>(in, reverse_bytes);
+  read_val<unsigned int>(in, max_suffix_len, reverse_bytes);
   read_map   (in, label_map,    reverse_bytes);
   read_vector(in, string_map,   reverse_bytes);
   read_map   (in, label_counts, reverse_bytes);

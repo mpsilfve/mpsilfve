@@ -105,9 +105,8 @@ template<class T> T reverse_num(T numerical_val)
  * @brief Read a numerical value from @p in. Reverse the endianness,
  * iff @p reverse_bytes == true. Throws ReadFailed.
  */
-template<class T> T read_val(std::istream &in, bool reverse_bytes)
+template<class T> void read_val(std::istream &in, T &t, bool reverse_bytes)
 {
-  T t;
   in.read(reinterpret_cast<char *>(&t), sizeof(T));
 
   if (in.fail())
@@ -115,7 +114,10 @@ template<class T> T read_val(std::istream &in, bool reverse_bytes)
       throw ReadFailed(); 
     }
 
-  return reverse_bytes ? reverse_num(t) : t;
+  if (reverse_bytes)
+    { t = reverse_num(t); }
+
+  //  return reverse_bytes ? reverse_num(t) : t;
 }
 
 /**
@@ -135,7 +137,7 @@ template<class T> void write_val(std::ostream &out, const T &t)
 /**
  * @brief Read a string from @p in. Throws ReadFailed.
  */
-template<> std::string read_val(std::istream &in, bool reverse_bytes);
+template<> void read_val(std::istream &in, std::string &str, bool reverse_bytes);
 
 /**
  * @brief Write string @p str to stream @p out. Throws
@@ -163,11 +165,16 @@ template<class T> std::vector<T> &read_vector(std::istream &in,
 					      std::vector<T> &v, 
 					      bool reverse_bytes)
 {
-  unsigned int size = read_val<unsigned int>(in, reverse_bytes);
-				
+  unsigned int size;
+  read_val<unsigned int>(in, size, reverse_bytes);
+
+  v.insert(v.end(), size, T());
+
   for (unsigned int i = 0; i < size; ++i)
     {
-      v.push_back(read_val<T>(in, reverse_bytes));
+      //     T t;
+      //      v.push_back(read_val<T>(in, reverse_bytes));
+      read_val<T>(in, v[i], reverse_bytes);
     }
 
   return v;
@@ -197,8 +204,8 @@ template<class T, class U> std::pair<T, U> &read_pair(std::istream &in,
 						      std::pair<T, U> &p, 
 						      bool reverse_bytes)
 {
-  p.first  = read_val<T>(in, reverse_bytes);
-  p.second = read_val<U>(in, reverse_bytes);
+  read_val<T>(in, p.first, reverse_bytes);
+  read_val<U>(in, p.second, reverse_bytes);
   
   return p;
 }
@@ -224,14 +231,16 @@ std::unordered_map<T, U> &read_map(std::istream &in,
 				   std::unordered_map<T, U> &m,
 				   bool reverse_bytes)
 {
-  unsigned int size = read_val<unsigned int>(in, reverse_bytes);
+  unsigned int size;
+  read_val<unsigned int>(in, size, reverse_bytes);
 
   for (unsigned int i = 0; i < size; ++i)
     {
-      T t = read_val<T>(in, reverse_bytes);
-      U u = read_val<U>(in, reverse_bytes);
+      T t;
+      read_val<T>(in, t, reverse_bytes);
+      //U u = read_val<U>(in, reverse_bytes);
 
-      m[t] = u;
+      read_val<U>(in, m[t], reverse_bytes);
     }
 
   return m;
@@ -265,16 +274,18 @@ read_map(std::istream &in,
 	 std::unordered_map<T, std::vector<U> > &m,
 	 bool reverse_bytes)
 {
-  unsigned int size = read_val<unsigned int>(in, reverse_bytes);
+  unsigned int size;
+  read_val<unsigned int>(in, size, reverse_bytes);
 
   for (unsigned int i = 0; i < size; ++i)
     {
-      T t = read_val<T>(in, reverse_bytes);
+      T t;
+      read_val<T>(in, t, reverse_bytes);
 
-      std::vector<U> v;
-      read_vector<U>(in, v, reverse_bytes);
+      //      std::vector<U> v;
+      read_vector<U>(in, m[t], reverse_bytes);
 
-      m[t] = v;
+      //      m[t] = v;
     }
 
   return m;
@@ -310,16 +321,18 @@ read_map(std::istream &in,
 	 std::unordered_map<T, std::pair<U, V> > &m,
 	 bool reverse_bytes)
 {
-  unsigned int size = read_val<unsigned int>(in, reverse_bytes);
+  unsigned int size;
+  read_val<unsigned int>(in, size, reverse_bytes);
 
   for (unsigned int i = 0; i < size; ++i)
     {
-      T t = read_val<T>(in, reverse_bytes);
+      T t;
+      read_val<T>(in, t, reverse_bytes);
 
-      std::pair<U, V> p;
-      read_pair<U, V>(in, p, reverse_bytes);
+      //      std::pair<U, V> p;
+      read_pair<U, V>(in, m[t], reverse_bytes);
 
-      m[t] = p;
+      //      m[t] = p;
     }
 
   return m;
@@ -355,16 +368,18 @@ read_map(std::istream &in,
 	 std::unordered_map<T, std::unordered_map<U, V> > &m,
 	 bool reverse_bytes)
 {
-  unsigned int size = read_val<unsigned int>(in, reverse_bytes);
+  unsigned int size;
+  read_val<unsigned int>(in, size, reverse_bytes);
 
   for (unsigned int i = 0; i < size; ++i)
     {
-      T t = read_val<T>(in, reverse_bytes);
+      T t;
+      read_val<T>(in, t, reverse_bytes);
 
-      std::unordered_map<U, V> mm;
-      read_map<U, V>(in, mm, reverse_bytes);
+      //      std::unordered_map<U, V> mm;
+      read_map<U, V>(in, m[t], reverse_bytes);
 
-      m[t] = mm;
+      //      m[t] = mm;
     }
 
   return m;

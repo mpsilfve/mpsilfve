@@ -232,7 +232,7 @@ void LemmaExtractor::store(std::ostream &out) const
 void LemmaExtractor::load(std::istream &in, bool reverse_bytes)
 {
   param_table.load(in, reverse_bytes);
-  class_count = read_val<unsigned int>(in, reverse_bytes);
+  read_val<unsigned int>(in, class_count, reverse_bytes);
   read_map(in, lemma_lexicon, reverse_bytes);
   read_map<std::string, std::string, unsigned int>
     (in, suffix_map, reverse_bytes);

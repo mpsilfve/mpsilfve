@@ -131,7 +131,8 @@ bool check(std::string &fn, std::istream &in, std::ostream &msg_out)
 
 bool homoendian(std::istream &in, int marker)
 {
-  int marker_in_file = read_val<int>(in, 0);
+  int marker_in_file;
+  read_val<int>(in, marker_in_file, 0);
 
   if (in.fail())
     { throw ReadFailed(); }
@@ -150,18 +151,15 @@ void init_string_stream(std::istream &in, std::istringstream &str_in, bool rever
   str_in.str(binary_string);
 }
 
-template<> std::string read_val(std::istream &in, bool reverse_bytes)
+template<> void read_val(std::istream &in, std::string &str, bool reverse_bytes)
 {
   // String byte order never needs to be reversed.
   static_cast<void>(reverse_bytes);
 
-  std::string str;
   std::getline(in, str, '\0');
 
   if (in.fail())
     { throw ReadFailed(); }
-
-  return str;
 }
 
 #include <cassert>
@@ -191,7 +189,8 @@ void write_char_buffer(std::ostream &out, const std::string &buffer)
 
 void read_char_buffer(std::istream &in, std::string &buffer, bool reverse_bytes)
 {
-  unsigned int size = read_val<unsigned int>(in, reverse_bytes);
+  unsigned int size;
+  read_val<unsigned int>(in, size, reverse_bytes);
   
   char * buf = static_cast<char *>(malloc(size));
   in.read(buf, size);
@@ -211,6 +210,7 @@ void read_char_buffer(std::istream &in, std::string &buffer, bool reverse_bytes)
 #include <sstream>
 #include <iostream>
 #include <fstream>
+#include <unordered_map>
 
 int main(void)
 {
@@ -409,7 +409,8 @@ int main(void)
   std::istringstream empty_in;
   try
     {
-      static_cast<void>(read_val<int>(empty_in, false));
+      int i;
+      read_val<int>(empty_in, i, false);
       assert(0);
     }
   catch (ReadFailed &e)
@@ -417,7 +418,8 @@ int main(void)
 
   try
     {
-      static_cast<void>(read_val<std::string>(empty_in, false));
+      std::string str;
+      read_val<std::string>(empty_in, str, false);
       assert(0);
     }
   catch (ReadFailed &e)
@@ -447,27 +449,33 @@ int main(void)
   std::ostringstream test_int_out;
   write_val<int>(test_int_out,13131);
   std::istringstream test_int_in(test_int_out.str());
-  assert(read_val<int>(test_int_in, false) == 13131);
+  int int_copy;
+  read_val<int>(test_int_in, int_copy, false);
+  assert(int_copy == 13131);
 
   // Write an int in reversed endianness and read in system
   // endianness.
   std::ostringstream test_rev_int_out;
   write_val<int>(test_rev_int_out,reverse_num<int>(13131));
   std::istringstream test_rev_int_in(test_rev_int_out.str());
-  assert(read_val<int>(test_rev_int_in, true) == 13131);
+  read_val<int>(test_rev_int_in, int_copy, true);
+  assert(int_copy == 13131);
 
   // Write and read a string.
   std::ostringstream test_string_out;
   write_val<std::string>(test_string_out,"foo");
   std::istringstream test_string_in(test_string_out.str());
-  assert(read_val<std::string>(test_string_in, false) == "foo");
+  std::string str_copy;
+  read_val<std::string>(test_string_in, str_copy, false);
+  assert(str_copy == "foo");
 
   // Make sure that reverse-variable is properly ignored with strings.
   std::ostringstream test_string_out_rev;
   write_val<std::string>(test_string_out_rev,"foo");
   std::istringstream test_string_in_rev(test_string_out_rev.str());
-  assert(read_val<std::string>(test_string_in_rev, true) == "foo");
-
+  read_val<std::string>(test_string_in_rev, str_copy, true);
+  assert(str_copy == "foo");
+  
   // Write and read an empty std::vector<int>.
   std::ostringstream vect_out_1;
   write_vector<int>(vect_out_1, std::vector<int>());
@@ -475,7 +483,7 @@ int main(void)
   std::vector<int> int_v;
   read_vector<int>(vect_in_1, int_v, false);
   assert(int_v == std::vector<int>());
-
+  
   // Write and read an empty std::vector<std::string>.
   std::ostringstream vect_out_2;
   write_vector<std::string>(vect_out_2, std::vector<std::string>());
@@ -483,7 +491,7 @@ int main(void)
   std::vector<std::string> string_v;
   read_vector<std::string>(vect_in_2, string_v, false);
   assert(string_v == std::vector<std::string>());
-
+  
   // Write and read a non-empty std::vector<int>.
   std::ostringstream vect_out_3;
   std::vector<int> int_v_orig;
@@ -495,7 +503,7 @@ int main(void)
   int_v.clear();
   read_vector<int>(vect_in_3, int_v, false);
   assert(int_v == int_v_orig);
-
+  
   // Write and read a non-empty std::vector<std::string>.
   std::ostringstream vect_out_4;
   std::vector<std::string> string_v_orig;
@@ -507,7 +515,7 @@ int main(void)
   string_v.clear();
   read_vector<std::string>(vect_in_4, string_v, false);
   assert(string_v == string_v_orig);
-
+  
   // Test reading and writing of map<T, U>
   std::ostringstream map_out_1;
   std::unordered_map<int, float> m;
