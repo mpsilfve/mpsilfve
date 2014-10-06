@@ -266,8 +266,39 @@ ParamMap::iterator ParamTable::get_struct_end(void)
   return struct_param_table.end();
 }
 
+#include <cassert>
+
+void ParamTable::store(std::ostream &out) const
+{
+  write_val(out, trained);
+  write_map(out, feature_template_map);
+  write_map(out, unstruct_param_table);
+  write_map(out, struct_param_table);
+}
+
+void ParamTable::load(std::istream &in, bool reverse_bytes)
+{
+  trained = read_val<bool>(in, reverse_bytes);
+  read_map(in, feature_template_map, reverse_bytes);
+  read_map(in, unstruct_param_table, reverse_bytes);
+  read_map(in, struct_param_table, reverse_bytes);
+}
+
+bool ParamTable::operator==(const ParamTable &another) const
+{
+  if (this == &another)
+    { return 1; }
+
+  return
+    (trained == another.trained and
+     feature_template_map == another.feature_template_map and
+     unstruct_param_table == another.unstruct_param_table and
+     struct_param_table == another.struct_param_table);
+}
+
 #else // TEST_ParamTable_cc
 
+#include <sstream>
 #include <cassert>
 
 int main(void)
@@ -321,6 +352,13 @@ int main(void)
   assert(pt.get_struct(0, 1, 0) == 0);
   pt.update_struct(0, 1, 0, 2);
   assert(pt.get_struct(0, 1, 0) == 2);  
+
+  std::ostringstream pt_out;
+  pt.store(pt_out);
+  std::istringstream pt_in(pt_out.str());
+  ParamTable pt_copy;
+  pt_copy.load(pt_in, false);
+  assert(pt_copy == pt);
 }
 
 #endif // TEST_ParamTable_cc

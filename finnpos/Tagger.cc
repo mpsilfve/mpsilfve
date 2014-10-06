@@ -23,9 +23,18 @@
 
 #ifndef TEST_Tagger_cc
 
+#include <sstream>
+
 #include "PerceptronTrainer.hh"
 #include "SGDTrainer.hh"
 #include "Trellis.hh"
+
+#define FINN_POS_ID_STRING "FinnPosModel"
+const int ENDIANNESS_MARKER=1;
+
+Tagger::Tagger(std::ostream &msg_out):
+  msg_out(msg_out)
+{}
 
 Tagger::Tagger(const TaggerOptions &tagger_options, 
 	       std::ostream &msg_out):
@@ -72,6 +81,7 @@ Tagger::Tagger(std::istream &tagger_opt_in, std::ostream &msg_out):
   line_counter = 0;
 }
 
+#include <cassert>
 
 void Tagger::train(std::istream &train_in,
 		   std::istream &dev_in)
@@ -203,9 +213,56 @@ StringVector Tagger::labels_to_strings(const LabelVector &v)
 
 void Tagger::store(std::ostream &out) const
 {
-  // FIXME
-  static_cast<void>(out);
-  assert(0);
+  msg_out << "Storing model." << std::endl;
+
+  std::ostringstream str_out;
+
+  tagger_options.store(str_out);
+  label_extractor.store(str_out);
+  lemma_extractor.store(str_out);
+  param_table.store(str_out);
+
+  std::string binary = str_out.str();
+
+  write_val<std::string>(out, FINN_POS_ID_STRING);
+  write_val<int>(out, ENDIANNESS_MARKER);
+  write_val<unsigned int>(out, binary.size());
+  write_val(out, binary);
+}
+
+void Tagger::load(std::istream &in)
+{
+  msg_out << "Loading model." << std::endl;
+
+  std::string id_string = read_val<std::string>(in, false);
+
+  if (id_string != FINN_POS_ID_STRING)
+    { 
+      throw BadBinary();
+    }
+
+  bool reverse_bytes = not homoendian(in, ENDIANNESS_MARKER);
+
+  // Read file contents into stringstream.
+  std::istringstream str_in;
+  init_string_stream(in, str_in, reverse_bytes);
+
+  tagger_options.load(str_in, msg_out, reverse_bytes);
+  label_extractor.load(str_in, reverse_bytes);
+  lemma_extractor.load(str_in, reverse_bytes);
+  param_table.load(str_in, reverse_bytes); 
+}
+
+bool Tagger::operator==(const Tagger &another) const
+{
+  if (this == &another)
+    { return 1; }
+  
+  return
+    (tagger_options == another.tagger_options   and
+     label_extractor == another.label_extractor and
+     lemma_extractor == another.lemma_extractor and
+     param_table == another.param_table);
 }
 
 #else // TEST_Tagger_cc
@@ -267,6 +324,13 @@ int main(void)
   assert(labels[0] == "DT");
   assert(labels[1] == "NN");
   assert(labels[2] == ".");
+
+  std::ostringstream tagger_out;
+  tagger.store(tagger_out);
+  std::istringstream tagger_in(tagger_out.str());
+  Tagger tagger_copy(null_stream);
+  tagger_copy.load(tagger_in);
+  assert(tagger == tagger_copy);
 }
 
 #endif // TEST_Tagger_cc

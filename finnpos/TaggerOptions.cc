@@ -21,6 +21,7 @@
 
 #include "TaggerOptions.hh"
 #include "exceptions.hh"
+#include "io.hh"
 
 std::string strip(const std::string &str, const std::string &prefix); 
 Estimator get_estimator(const std::string &str);
@@ -59,6 +60,9 @@ std::string despace(const std::string &line)
 
   return res;
 }
+
+TaggerOptions::TaggerOptions(void)
+{}
 
 TaggerOptions::TaggerOptions(Estimator estimator, 
 			     Inference inference, 
@@ -138,6 +142,87 @@ TaggerOptions::TaggerOptions(std::istream &in, unsigned int &counter):
     }
 }
 
+void TaggerOptions::store(std::ostream &out) const
+{
+  std::vector<std::string> field_names;
+  std::vector<int>         fields;
+
+  field_names.push_back("estimator");
+  field_names.push_back("inference");
+  field_names.push_back("suffix_length");
+  field_names.push_back("degree");
+  field_names.push_back("max_train_passes");
+  field_names.push_back("max_useless_passes");
+  field_names.push_back("guess_count");
+  field_names.push_back("beam");
+  field_names.push_back("regularization");
+  field_names.push_back("delta");
+  field_names.push_back("sigma");
+
+  fields.push_back(static_cast<int>(estimator));
+  fields.push_back(static_cast<int>(inference));
+  fields.push_back(static_cast<int>(suffix_length));
+  fields.push_back(static_cast<int>(degree));
+  fields.push_back(static_cast<int>(max_train_passes));
+  fields.push_back(static_cast<int>(max_useless_passes));
+  fields.push_back(static_cast<int>(guess_count));
+  fields.push_back(static_cast<int>(beam));
+  fields.push_back(static_cast<int>(regularization));
+  fields.push_back(static_cast<int>(delta));
+  fields.push_back(static_cast<int>(sigma));
+  
+  write_vector(out, field_names);
+  write_vector(out, fields);
+}
+
+void TaggerOptions::load(std::istream &in, std::ostream &msg_out, bool reverse_bytes)
+{
+  std::vector<std::string> field_names;
+  std::vector<int>         fields;
+
+  read_vector(in, field_names, reverse_bytes);
+  read_vector(in, fields, reverse_bytes);
+
+  if (in.fail())
+    { throw ReadFailed(); }
+
+  if (field_names.size() != fields.size())
+    { throw BadBinary(); }
+
+  for (unsigned int i = 0; i < field_names.size(); ++i)
+    {
+      if (field_names[i] == "estimator")
+	{ estimator = static_cast<Estimator>(fields[i]); }
+      else if (field_names[i] == "inference")
+	{ inference = static_cast<Inference>(fields[i]); }
+      else if (field_names[i] == "suffix_length")
+	{ suffix_length = static_cast<unsigned int>(fields[i]); }
+      else if (field_names[i] == "degree")
+	{ degree = static_cast<unsigned int>(fields[i]); }
+      else if (field_names[i] == "max_train_passes")
+	{ max_train_passes = static_cast<unsigned int>(fields[i]); }
+      else if (field_names[i] == "max_useless_passes")
+	{ max_useless_passes = static_cast<unsigned int>(fields[i]); }
+      else if (field_names[i] == "guess_count")
+	{ guess_count = static_cast<unsigned int>(fields[i]); }
+      else if (field_names[i] == "beam")
+	{ beam = static_cast<unsigned int>(fields[i]); }
+      else if (field_names[i] == "regularization")
+	{ regularization = static_cast<Regularization>(fields[i]); }
+      else if (field_names[i] == "delta")
+	{ delta = static_cast<float>(fields[i]); }
+      else if (field_names[i] == "sigma")
+	{ sigma = static_cast<float>(fields[i]); }
+      else
+	{
+	  msg_out << "Found unknown parameter name " 
+		  << field_names[i] << ". "
+		  << "Please, update your FinnPos version."
+		  << std::endl;
+	}
+    }
+}
+
 std::string strip(const std::string &str, const std::string &prefix)
 {
   size_t prefix_start = str.find(prefix);
@@ -197,6 +282,24 @@ unsigned int get_float(const std::string &str)
     { throw NumericalRangeError(); }
 
   return f; 
+}
+
+bool TaggerOptions::operator==(const TaggerOptions &another) const
+{
+  if (this == &another)
+    { return 1; }
+
+  return 
+    (estimator == another.estimator               and
+     inference == another.inference               and
+     suffix_length == another.suffix_length       and
+     degree == another.degree                     and
+     max_train_passes == another.max_train_passes and
+     guess_count == another.guess_count           and
+     beam == another.beam                         and
+     regularization == another.regularization     and
+     delta == another.delta                       and
+     sigma == another.sigma);
 }
 
 #else // TEST_TaggerOptions_cc
@@ -282,6 +385,14 @@ int main(void)
     {
       assert(counter == 6);
     } 
+
+  std::ostringstream opt_out;
+  options.store(opt_out);
+  std::istringstream opt_in(opt_out.str());
+  TaggerOptions options_copy;
+  options_copy.load(opt_in, std::cerr, false);
+  assert(options == options_copy);
+  
 }
 
 #endif // TEST_TaggerOptions_cc

@@ -129,14 +129,31 @@ bool check(std::string &fn, std::istream &in, std::ostream &msg_out)
     }
 }
 
-bool homoendian(std::istream &in, unsigned int marker)
+bool homoendian(std::istream &in, int marker)
 {
-  unsigned int marker_in_file = read_val<unsigned int>(in, 0);
+  int marker_in_file = read_val<int>(in, 0);
 
   if (in.fail())
     { throw ReadFailed(); }
 
   return marker_in_file == marker;
+}
+
+void init_string_stream(std::istream &in, std::istringstream &str_in, bool reverse_bytes)
+{
+  unsigned int binary_size;
+  binary_size = read_val<unsigned int>(in, reverse_bytes);
+
+  char * binary_str = static_cast<char *>(malloc(binary_size));
+  in.read(binary_str, binary_size);
+  
+  std::string binary_string(binary_str, binary_size);
+  free(binary_str);
+
+  if (in.fail())
+    { throw ReadFailed(); }
+
+  str_in.str(binary_string);
 }
 
 template<> std::string read_val(std::istream &in, bool reverse_bytes)

@@ -218,6 +218,42 @@ unsigned int LemmaExtractor::get_class_number(const std::string &word,
   return suffix_map[wf_suffix][lemma_suffix];
 }
 
+void LemmaExtractor::store(std::ostream &out) const
+{
+  param_table.store(out);
+  write_val(out, class_count);
+  write_map(out, lemma_lexicon);
+  write_map<std::string, std::string, unsigned int>
+    (out, suffix_map);
+  write_map(out, id_map);
+  write_map(out, feat_dict);
+}
+
+void LemmaExtractor::load(std::istream &in, bool reverse_bytes)
+{
+  param_table.load(in, reverse_bytes);
+  class_count = read_val<unsigned int>(in, reverse_bytes);
+  read_map(in, lemma_lexicon, reverse_bytes);
+  read_map<std::string, std::string, unsigned int>
+    (in, suffix_map, reverse_bytes);
+  read_map(in, id_map, reverse_bytes);
+  read_map(in, feat_dict, reverse_bytes);
+}
+
+bool LemmaExtractor::operator==(const LemmaExtractor &another) const
+{
+  if (this == &another)
+    { return 1; }
+
+  return 
+    (param_table == another.param_table     and
+     class_count == another.class_count     and
+     lemma_lexicon == another.lemma_lexicon and
+     suffix_map == another.suffix_map       and
+     id_map == another.id_map               and
+     feat_dict == another.feat_dict);
+}
+
 unsigned int LemmaExtractor::get_class_number(const std::string &word, 
 					      const std::string &lemma) const
 {
@@ -611,6 +647,13 @@ int main(void)
   lemma_extractor.train(train_data, dev_data, label_extractor, null_stream);
 
   assert(lemma_extractor.get_lemma_candidate("hogs", "NN") == "hog");
+
+  std::ostringstream lemma_extractor_out;
+  lemma_extractor.store(lemma_extractor_out);
+  std::istringstream lemma_extractor_in(lemma_extractor_out.str());
+  LemmaExtractor lemma_extractor_copy;
+  lemma_extractor_copy.load(lemma_extractor_in, false);
+  assert(lemma_extractor == lemma_extractor_copy);
 }
 
 #endif // TEST_LemmaExtractor_cc

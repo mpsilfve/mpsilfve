@@ -228,6 +228,43 @@ const std::string &LabelExtractor::get_label_string(unsigned int label) const
   return string_map.at(label);
 }
 
+void LabelExtractor::store(std::ostream &out) const
+{
+  write_val(out, max_suffix_len);
+  write_map(out, label_map);
+  write_vector(out, string_map);
+  write_map(out, label_counts);
+  write_map(out, lexicon);
+}
+
+void LabelExtractor::load(std::istream &in, bool reverse_bytes)
+{
+  max_suffix_len = 0;
+  label_map.clear();
+  string_map.clear();
+  label_counts.clear();
+  lexicon.clear();
+
+  max_suffix_len = read_val<unsigned int>(in, reverse_bytes);
+  read_map   (in, label_map,    reverse_bytes);
+  read_vector(in, string_map,   reverse_bytes);
+  read_map   (in, label_counts, reverse_bytes);
+  read_map   (in, lexicon,      reverse_bytes);
+}
+
+bool LabelExtractor::operator==(const LabelExtractor &another) const
+{
+  if (this == &another)
+    { return 1; }
+
+  return
+    (max_suffix_len == another.max_suffix_len and
+     label_map == another.label_map           and
+     string_map == another.string_map         and
+     label_counts == another.label_counts     and
+     lexicon == another.lexicon);
+}
+
 #else // TEST_LabelExtractor_cc
 
 #include <sstream>
@@ -305,6 +342,13 @@ int main(void)
   LabelVector dog_labels;
   le.set_label_candidates("dog", 1, 5, dog_labels);
   assert(dog_labels.size() == 1);
+
+  std::ostringstream le_out;
+  le.store(le_out);
+  std::istringstream le_in(le_out.str());
+  LabelExtractor le_copy;
+  le_copy.load(le_in, false);
+  assert(le == le_copy);
 }
 
 #endif // TEST_LabelExtractor_cc

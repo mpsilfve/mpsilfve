@@ -37,7 +37,7 @@ class Data;
 class LabelExtractor
 {
  public:
-  LabelExtractor(unsigned int max_suffix_len);
+  LabelExtractor(unsigned int max_suffix_len=10);
   virtual ~LabelExtractor(void);
 
   virtual void set_label_candidates(const std::string &word_form,
@@ -51,6 +51,11 @@ class LabelExtractor
   const std::string &get_label_string(unsigned int label) const;
   unsigned int label_count(void) const;
 
+  void store(std::ostream &out) const;
+
+  void load(std::istream &in, bool reverse_bytes);
+
+  bool operator==(const LabelExtractor &another) const;
 private:
   typedef std::unordered_map<std::string, LabelVector> SubstringLabelMap;
 

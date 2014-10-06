@@ -57,6 +57,10 @@ class LemmaExtractor
   virtual bool is_known_wf(const std::string &word_form) const;
 
   bool print_stuff;
+
+  void store(std::ostream &out) const;
+  void load(std::istream &in, bool reverse_bytes);
+  bool operator==(const LemmaExtractor &another) const;
 protected:
   typedef std::pair<std::string, std::string> StringPair;
   typedef std::unordered_map<std::string, unsigned int> ClassIDMap;

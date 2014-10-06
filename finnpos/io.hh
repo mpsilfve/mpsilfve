@@ -27,6 +27,7 @@
 #include <iostream>
 #include <algorithm>
 #include <unordered_map>
+#include <sstream>
 
 #include "exceptions.hh"
 
@@ -75,7 +76,16 @@ bool check(std::string &fn, std::istream &in, std::ostream &msg_out);
  * @brief Return true, if the endianness of @p in and @p marker
  * match. Otherwise, return false. Throws ReadFailed.
  */
-bool homoendian(std::istream &in, unsigned int marker);
+bool homoendian(std::istream &in, int marker);
+
+/**
+ * @brief Init @p str_in with the contents of @p in. 
+ * 
+ * First an unsigned int is read from @p in, which tells the number of
+ * bytes to be read into @p str_in. If endianness of the stream @p in
+ * ans the system differ, @reverse_bytes has to be true.
+ */
+void init_string_stream(std::istream &in, std::istringstream &str_in, bool reverse_bytes);
 
 /**
  * @brief Return the big endian representation of a little endian

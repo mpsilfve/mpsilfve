@@ -35,6 +35,20 @@ enum Regularization
 
 struct TaggerOptions
 {
+  Estimator estimator;
+  Inference inference;
+  unsigned int suffix_length;
+  unsigned int degree;
+  unsigned int max_train_passes;
+  unsigned int max_useless_passes;
+  unsigned int guess_count;
+  unsigned int beam;
+  Regularization regularization;
+  float delta;
+  float sigma;
+
+  TaggerOptions(void);
+
   TaggerOptions(Estimator estimator, 
 		Inference inference, 
 		unsigned int suffix_length, 
@@ -49,17 +63,11 @@ struct TaggerOptions
   
   TaggerOptions(std::istream &in, unsigned int &counter);
 
-  Estimator estimator;
-  Inference inference;
-  unsigned int suffix_length;
-  unsigned int degree;
-  unsigned int max_train_passes;
-  unsigned int max_useless_passes;
-  unsigned int guess_count;
-  unsigned int beam;
-  Regularization regularization;
-  float delta;
-  float sigma;
+  void store(std::ostream &out) const;
+
+  void load(std::istream &in, std::ostream &msg_out, bool reverse_bytes);
+
+  bool operator==(const TaggerOptions &another) const;
 };
 
 #endif // HEADER_TaggerOptions_hh

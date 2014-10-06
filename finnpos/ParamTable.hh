@@ -73,6 +73,10 @@ public:
 
   void set_trained(void);
 
+  void store(std::ostream &out) const;
+  void load(std::istream &in, bool reverse_bytes);
+  bool operator==(const ParamTable &another) const;
+
 private:
   typedef std::unordered_map<std::string, unsigned int> FeatureTemplateMap;
 

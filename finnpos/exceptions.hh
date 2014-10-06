@@ -60,4 +60,7 @@ struct WriteFailed : public std::exception
 struct ReadFailed : public std::exception
 {};
 
+struct BadBinary : public std::exception
+{};
+
 #endif // HEADER_exceptions_hh

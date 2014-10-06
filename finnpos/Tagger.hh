@@ -38,12 +38,12 @@ struct NotImplemented : public std::exception
 class Tagger
 {
 public:
+  Tagger(std::ostream &msg_out);
+
   Tagger(const TaggerOptions &tagger_options,
 	 std::ostream &msg_out);
 
   Tagger(std::istream &tagger_opt_in, std::ostream &msg_out);
-
-  Tagger(std::istream &in);
 
   void train(std::istream &train_in,
 	     std::istream &dev_in);
@@ -53,9 +53,10 @@ public:
   void label(Data &data);
 
   void store(std::ostream &out) const;
+  void load(std::istream &in);
 
   void evaluate(std::istream &in);
-
+  bool operator==(const Tagger &another) const;
 private:
   unsigned int line_counter;
 
