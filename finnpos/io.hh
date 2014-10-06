@@ -195,7 +195,7 @@ std::unordered_map<T, U> &read_map(std::istream &in,
  * std::string and numerical types only! Throws WriteFailed.
  */
 template<class T, class U> void write_map(std::ostream &out,
-					  std::unordered_map<T, U> &m)
+					  const std::unordered_map<T, U> &m)
 {
   write_val<unsigned int>(out, m.size());
 
@@ -204,7 +204,7 @@ template<class T, class U> void write_map(std::ostream &out,
        ++it)
     {
       write_val<T>(out, it->first);
-      write_val<T>(out, it->second);
+      write_val<U>(out, it->second);
     }
 }
 
@@ -239,7 +239,7 @@ read_map(std::istream &in,
  */
 template<class T, class U> 
 void write_map(std::ostream &out,
-	       std::unordered_map<T, std::vector<U> > &m)
+	       const std::unordered_map<T, std::vector<U> > &m)
 {
   write_val<unsigned int>(out, m.size());
 
@@ -284,11 +284,11 @@ read_map(std::istream &in,
  */
 template<class T, class U, class V> 
 void write_map(std::ostream &out,
-	       std::unordered_map<T, std::unordered_map<U, V> > &m)
+	       const std::unordered_map<T, std::unordered_map<U, V> > &m)
 {
   write_val<unsigned int>(out, m.size());
 
-  for (typename std::unordered_map<T, std::vector<U> >::const_iterator it = 
+  for (typename std::unordered_map<T, std::unordered_map<U, V> >::const_iterator it = 
 	 m.begin();
        it != m.end();
        ++it)

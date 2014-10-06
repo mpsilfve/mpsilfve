@@ -467,7 +467,66 @@ int main(void)
   read_vector<std::string>(vect_in_4, string_v, false);
   assert(string_v == string_v_orig);
 
-  
+  // Test reading and writing of map<T, U>
+  std::ostringstream map_out_1;
+  std::unordered_map<int, float> m;
+  write_map<int, float>(map_out_1, m);
+  std::unordered_map<int, float> m_copy;
+  std::istringstream map_in_1(map_out_1.str());
+  read_map<int, float>(map_in_1, m_copy, false);
+  assert(m == m_copy);
+
+  std::ostringstream map_out_2;
+  m.clear();
+  m[0] = 0.1;
+  m[100] = 5.1;
+  write_map<int, float>(map_out_2, m);
+  m_copy.clear();
+  std::istringstream map_in_2(map_out_2.str());
+  read_map<int, float>(map_in_2, m_copy, false);
+  assert(m == m_copy);
+
+  // Test reading and writing of map<T, std::vector<U> >
+  std::ostringstream map_out_3;
+  std::unordered_map<int, std::vector<float> > m1;
+  write_map<int, float>(map_out_3, m1);
+  std::unordered_map<int, std::vector<float> > m_copy1;
+  std::istringstream map_in_3(map_out_3.str());
+  read_map<int, float>(map_in_3, m_copy1, false);
+  assert(m1 == m_copy1);
+
+  std::ostringstream map_out_4;
+  m1.clear();
+  m1[0] = std::vector<float>();
+  m1[100] = std::vector<float>();
+  m1[100].push_back(1);
+  m1[100].push_back(2);
+  write_map<int, float>(map_out_4, m1);
+  m_copy1.clear();
+  std::istringstream map_in_4(map_out_4.str());
+  read_map<int, float>(map_in_4, m_copy1, false);
+  assert(m1 == m_copy1);
+
+  // Test reading and writing of map<T, std::unordered_map<U, V> >
+  std::ostringstream map_out_5;
+  std::unordered_map<int, std::unordered_map<int, float> > m2;
+  write_map<int, int, float>(map_out_5, m2);
+  std::unordered_map<int, std::unordered_map<int, float> > m_copy2;
+  std::istringstream map_in_5(map_out_5.str());
+  read_map<int, int, float>(map_in_5, m_copy2, false);
+  assert(m2 == m_copy2);
+
+  std::ostringstream map_out_6;
+  m2.clear();
+  m2[0][0] = 0;
+  m2[100][0] = 5.1;
+  m2[100][100] = 16;
+  write_map<int, int, float>(map_out_6, m2);
+  m_copy2.clear();
+  std::istringstream map_in_6(map_out_6.str());
+  read_map<int, int, float>(map_in_6, m_copy2, false);
+  assert(m2 == m_copy2);
+
 }
 
 #endif // TEST_io_cc
