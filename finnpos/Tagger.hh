@@ -57,6 +57,7 @@ public:
 
   void evaluate(std::istream &in);
   bool operator==(const Tagger &another) const;
+  LabelExtractor &get_label_extractor(void);
 private:
   unsigned int line_counter;
 
