@@ -141,14 +141,8 @@ bool homoendian(std::istream &in, int marker)
 
 void init_string_stream(std::istream &in, std::istringstream &str_in, bool reverse_bytes)
 {
-  unsigned int binary_size;
-  binary_size = read_val<unsigned int>(in, reverse_bytes);
-
-  char * binary_str = static_cast<char *>(malloc(binary_size));
-  in.read(binary_str, binary_size);
-  
-  std::string binary_string(binary_str, binary_size);
-  free(binary_str);
+  std::string binary_string;
+  read_char_buffer(in, binary_string, reverse_bytes);
 
   if (in.fail())
     { throw ReadFailed(); }
@@ -170,14 +164,44 @@ template<> std::string read_val(std::istream &in, bool reverse_bytes)
   return str;
 }
 
+#include <cassert>
+
 template<> void write_val(std::ostream &out, const std::string &str)
 {
+  assert(str.find('\0') == std::string::npos);
+
   out.write(str.c_str(), str.size() + 1);
+
+  if (out.fail())
+    { 
+      throw WriteFailed();
+    }
+}
+
+void write_char_buffer(std::ostream &out, const std::string &buffer)
+{
+  write_val<unsigned int>(out, buffer.size());
+  out.write(buffer.c_str(), buffer.size());
   
   if (out.fail())
     { 
       throw WriteFailed();
     }
+}
+
+void read_char_buffer(std::istream &in, std::string &buffer, bool reverse_bytes)
+{
+  unsigned int size = read_val<unsigned int>(in, reverse_bytes);
+  
+  char * buf = static_cast<char *>(malloc(size));
+  in.read(buf, size);
+  buffer = std::string(buf, size);
+  free(buf);
+
+  if (in.fail())
+  { 
+    throw ReadFailed();
+  }
 }
 
 #else // TEST_io_cc
@@ -193,9 +217,9 @@ int main(void)
   // Empty input string.
   // Splitting gives ("")
   // get_next_line throws EmptyLine.
-
+  
   std::string str1;
-
+  
   StringVector fields1;
   split(str1, fields1, '\t');
   assert(fields1.size() == 1);
@@ -543,6 +567,36 @@ int main(void)
   std::istringstream map_in_6(map_out_6.str());
   read_map<int, int, float>(map_in_6, m_copy2, false);
   assert(m2 == m_copy2);
+
+  // Test reading and writing a pair.
+  std::ostringstream pair_out_1;
+  std::pair<char, float> p('a', 0.55);
+  write_pair(pair_out_1, p);
+  std::istringstream pair_in_1(pair_out_1.str());
+  std::pair<char, float> p_copy;
+  read_pair(pair_in_1, p_copy, 0);
+  assert(p == p_copy);
+
+  // Test reading and writing of map<T, std::pair<U, V> >
+  std::ostringstream map_out_7;
+  std::unordered_map<int, std::pair<int, float> > m3;
+  write_map<int, int, float>(map_out_7, m3);
+  std::unordered_map<int, std::pair<int, float> > m_copy3;
+  std::istringstream map_in_7(map_out_7.str());
+  read_map<int, int, float>(map_in_7, m_copy3, false);
+  assert(m3 == m_copy3);
+
+  std::ostringstream map_out_8;
+  m3.clear();
+  m3[0].first = 0;
+  m3[0].second = 1;
+  m3[100].first = 5.1;
+  m3[100].second = 16;
+  write_map<int, int, float>(map_out_8, m3);
+  m_copy3.clear();
+  std::istringstream map_in_8(map_out_8.str());
+  read_map<int, int, float>(map_in_8, m_copy3, false);
+  assert(m3 == m_copy3);
 
 }
 

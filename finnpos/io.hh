@@ -139,9 +139,20 @@ template<> std::string read_val(std::istream &in, bool reverse_bytes);
 
 /**
  * @brief Write string @p str to stream @p out. Throws
- * WriteFailed.
+ * WriteFailed. Can only be used to write valid c-strings, not
+ * arbitrary char buffers!
  */
 template<> void write_val(std::ostream &out, const std::string &str);
+
+/** 
+ * @brief Function for writing char buffers.
+ */
+void write_char_buffer(std::ostream &out, const std::string &buffer);
+
+/** 
+ * @brief Function for reading char buffers.
+ */
+void read_char_buffer(std::istream &in, std::string &buffer, bool reverse_bytes);
 
 /**
  * @brief Read a vector from stream @p in. Store it in @p v. Reverse
@@ -175,6 +186,32 @@ template<class T> void write_vector(std::ostream &out,
     {
       write_val<T>(out, v.at(i));
     }
+}
+
+/**
+ * @brief Read a pair from stream @p in. Store it in @p p. Reverse
+ * byte order, iff reverse_bytes == true. Instantiate with std::string
+ * and numerical types only! Throws ReadFailed.
+ */
+template<class T, class U> std::pair<T, U> &read_pair(std::istream &in, 
+						      std::pair<T, U> &p, 
+						      bool reverse_bytes)
+{
+  p.first  = read_val<T>(in, reverse_bytes);
+  p.second = read_val<U>(in, reverse_bytes);
+  
+  return p;
+}
+
+/**
+ * @brief Write pair @p p to stream @p out. Instantiate with
+ * std::string and numerical types only! Throws WriteFailed.
+ */
+template<class T, class U> void write_pair(std::ostream &out, 
+					   const std::pair<T, U> &p)
+{
+  write_val<T>(out, p.first);
+  write_val<U>(out, p.second);	
 }
 
 /**
@@ -260,6 +297,51 @@ void write_map(std::ostream &out,
     {
       write_val<T>(out, it->first);
       write_vector<U>(out, it->second);
+    }
+}
+
+/**
+ * @brief Read a map from stream @p in. Store it in @p m. Reverse byte
+ * order, iff reverse_bytes == true. Instantiate with std::string or
+ * numerical types only! Throws ReadFailed.
+ */
+template<class T, class U, class V> std::unordered_map<T, std::pair<U, V> > &
+read_map(std::istream &in,
+	 std::unordered_map<T, std::pair<U, V> > &m,
+	 bool reverse_bytes)
+{
+  unsigned int size = read_val<unsigned int>(in, reverse_bytes);
+
+  for (unsigned int i = 0; i < size; ++i)
+    {
+      T t = read_val<T>(in, reverse_bytes);
+
+      std::pair<U, V> p;
+      read_pair<U, V>(in, p, reverse_bytes);
+
+      m[t] = p;
+    }
+
+  return m;
+}
+
+/**
+ * @brief Write map @p m to stream @p out. Instantiate with
+ * std::string and numerical types only! Throws WriteFailed.
+ */
+template<class T, class U, class V> 
+void write_map(std::ostream &out,
+	       const std::unordered_map<T, std::pair<U, V> > &m)
+{
+  write_val<unsigned int>(out, m.size());
+
+  for (typename std::unordered_map<T, std::pair<U, V> >::const_iterator it = 
+	 m.begin();
+       it != m.end();
+       ++it)
+    {
+      write_val<T>(out, it->first);
+      write_pair<U, V>(out, it->second);
     }
 }
 

@@ -222,12 +222,11 @@ void Tagger::store(std::ostream &out) const
   lemma_extractor.store(str_out);
   param_table.store(str_out);
 
-  std::string binary = str_out.str();
+  const std::string &binary = str_out.str();
 
   write_val<std::string>(out, FINN_POS_ID_STRING);
   write_val<int>(out, ENDIANNESS_MARKER);
-  write_val<unsigned int>(out, binary.size());
-  write_val(out, binary);
+  write_char_buffer(out, binary);
 }
 
 void Tagger::load(std::istream &in)

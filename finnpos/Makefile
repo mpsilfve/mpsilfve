@@ -9,7 +9,7 @@ TrellisCell Tagger TaggerOptions
 TESTS=$(MODULES:%=TEST_%)
 OBJS=$(MODULES:%=%.o)
 
-all:finnpos-train
+all:finnpos-train finnpos-label
 
 clean:
 	rm -f $(OBJS) $(TESTS) finnpos-train
@@ -32,5 +32,6 @@ TEST_%:$(OBJS) %.cc
 	$(CXX) $(CXXFLAGS) -DTEST_$*_cc -o $@ $^
 
 finnpos-train:finnpos-train.cc $(OBJS)
+finnpos-label:finnpos-label.cc $(OBJS)
 
 train_lemmatizer:train_lemmatizer.cc $(OBJS)
