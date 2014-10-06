@@ -215,18 +215,13 @@ void Tagger::store(std::ostream &out) const
 {
   msg_out << "Storing model." << std::endl;
 
-  std::ostringstream str_out;
-
-  tagger_options.store(str_out);
-  label_extractor.store(str_out);
-  lemma_extractor.store(str_out);
-  param_table.store(str_out);
-
-  const std::string &binary = str_out.str();
-
   write_val<std::string>(out, FINN_POS_ID_STRING);
   write_val<int>(out, ENDIANNESS_MARKER);
-  write_char_buffer(out, binary);
+
+  tagger_options.store(out);
+  label_extractor.store(out);
+  lemma_extractor.store(out);
+  param_table.store(out);
 }
 
 void Tagger::load(std::istream &in)
@@ -243,14 +238,10 @@ void Tagger::load(std::istream &in)
 
   bool reverse_bytes = not homoendian(in, ENDIANNESS_MARKER);
 
-  // Read file contents into stringstream.
-  std::istringstream str_in;
-  init_string_stream(in, str_in, reverse_bytes);
-
-  tagger_options.load(str_in, msg_out, reverse_bytes);
-  label_extractor.load(str_in, reverse_bytes);
-  lemma_extractor.load(str_in, reverse_bytes);
-  param_table.load(str_in, reverse_bytes); 
+  tagger_options.load(in, msg_out, reverse_bytes);
+  label_extractor.load(in, reverse_bytes);
+  lemma_extractor.load(in, reverse_bytes);
+  param_table.load(in, reverse_bytes); 
 }
 
 bool Tagger::operator==(const Tagger &another) const
