@@ -70,8 +70,12 @@ public:
 
   std::string get_word_form(void) const;
 
+  std::string get_annotations(void) const;
+
   void unset_lemma(void);
   void unset_label(void);
+
+  std::string to_string(LabelExtractor &label_extractor) const;
 
  private:
   std::string           word_form;

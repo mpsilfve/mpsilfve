@@ -59,6 +59,8 @@ class Sentence
   void unset_lemma(void);
   void unset_label(void);
 
+  void print(std::ostream &out, LabelExtractor &label_extractor);
+
  private:
   WordVector sentence;
 };

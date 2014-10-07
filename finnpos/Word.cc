@@ -104,6 +104,19 @@ void Word::unset_label(void)
 {
   label = NO_LABEL;
 }
+
+std::string Word::get_annotations(void) const
+{ return annotations; }
+
+std::string Word::to_string(LabelExtractor &label_extractor) const
+{
+  return 
+    get_word_form() + '\t' +
+    '_' + '\t' +
+    get_lemma() + '\t' +
+    label_extractor.get_label_string(get_label()) + '\t' +
+    get_annotations();
+}
   
 #else // TEST_Word_cc
 

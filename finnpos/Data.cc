@@ -211,6 +211,18 @@ Acc Data::get_acc(const Data &other,
   return acc;
 }
 
+void Data::print(std::ostream &out, LabelExtractor &label_extractor)
+{
+  for (unsigned int i = 0; i < size(); ++i)
+    {
+      at(i).print(out, label_extractor);
+      out << std::endl;
+
+      if (i + 1 < data.size())
+	{ out << std::endl; }
+    }
+}
+
 #else // TEST_Data_cc
 
 #include <sstream>

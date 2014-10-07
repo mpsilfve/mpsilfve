@@ -99,10 +99,12 @@ class Data
 
   Acc get_acc(const Data &other, const LemmaExtractor &lemma_extractor) const;
 
+  void print(std::ostream &out, LabelExtractor &label_extractor);
  private:
   SentenceVector data;
 
   void init(const std::string &fn, std::istream &in, bool is_gold, LabelExtractor &extractor, ParamTable &pt, unsigned int degree);
 };
+
 
 #endif // HEADER_Data_hh

@@ -162,6 +162,20 @@ void Sentence::unset_label(void)
     }
 }
 
+void Sentence::print(std::ostream &out, LabelExtractor &label_extractor)
+{
+  for (unsigned int i = 0; i < size() - 0; ++i)
+    { 
+      if (at(i).get_word_form() == BOUNDARY_WF)
+	{ continue; }
+
+      out << at(i).to_string(label_extractor);
+      
+      if (i + 1 < size() and at(i + 1).get_word_form() != BOUNDARY_WF)
+	{ out << std::endl; }
+    }
+}
+
 #else // TEST_Sentence_cc
 
 #include <cassert>
