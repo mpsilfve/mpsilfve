@@ -49,14 +49,5 @@ int main(int argc, char * argv[])
   std::cerr << "Reading from STDIN. Writing to STDOUT" 
 	    << std::endl;
 
-  while (std::cin)
-    {
-      StringVector labels = tagger.label(std::cin);
-      
-      for (unsigned int i = 0; i < labels.size(); ++i)
-	{ 
-	  std::cout << labels[i] << std::endl; 
-	}
-      std::cout << std::endl;
-    }
+  tagger.label(std::cin, std::cout);
 }

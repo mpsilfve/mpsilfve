@@ -48,9 +48,9 @@ public:
   void train(std::istream &train_in,
 	     std::istream &dev_in);
 
-  StringVector label(std::istream &in);
+  void label(std::istream &in, std::ostream &out);
   StringVector label(Sentence &s);
-  void label(Data &data);
+  void label(Data &data, std::ostream &out);
 
   void store(std::ostream &out) const;
   void load(std::istream &in);

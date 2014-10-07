@@ -144,41 +144,41 @@ void Tagger::evaluate(std::istream &in)
   // Tag test data.
   for (unsigned int j = 0; j < trellises.size(); ++j)
     {
-      trellises[j].set_maximum_a_posteriori_assignment(param_table);
+      trellises[j].set_maximum_a_posteriori_assignment(param_table);      
     }
   
-  float acc1 = data.get_acc(data_copy, lemma_extractor).label_acc;
+  data_copy.predict_lemma(lemma_extractor, label_extractor);
+
+  Acc accs = data.get_acc(data_copy, lemma_extractor);
   
-  msg_out << "  Final test acc: " << acc1 * 100.00 << "%" << std::endl;
+  msg_out << "  Final test label acc: " << accs.label_acc * 100.00 << "%" 
+	  << std::endl;
+  msg_out << "  Final test lemma acc: " << accs.lemma_acc * 100.00 << "%" 
+	  << std::endl;
 }
 
-StringVector Tagger::label(std::istream &in)
+void Tagger::label(std::istream &in, std::ostream &out)
 {
-  while (1)
-    {
-      if (not in)
-	{ return StringVector(); }
-
-      Sentence s(in, 
-		 0, 
-		 label_extractor, 
-		 param_table, 
-		 tagger_options.degree,
-		 line_counter);
-
-      s.unset_label();
-
-      if (s.size() > 0)
-	{ return label(s); }
-    }
+  Data data(in, 0, label_extractor, param_table, tagger_options.beam);
+  label(data, out);
 }
 
-void Tagger::label(Data &data)
+void Tagger::label(Data &data, std::ostream &out)
 {
-  //data.set_label_guesses(label_extractor, 1, tagger_options.guess_count);
+  data.set_label_guesses(label_extractor, 1, tagger_options.guess_count);
+  
+  TrellisVector trellises;
 
   for (unsigned int i = 0; i < data.size(); ++i)
-    { label(data.at(i)); }
+    { Trellis trellis(data.at(i), 
+		      label_extractor.get_boundary_label(),
+		      tagger_options.beam); 
+      trellis.set_maximum_a_posteriori_assignment(param_table);
+    }
+
+  data.predict_lemma(lemma_extractor, label_extractor);
+
+  data.print(out, label_extractor);
 }
 
 StringVector Tagger::label(Sentence &s)
