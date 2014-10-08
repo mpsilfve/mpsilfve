@@ -256,6 +256,21 @@ bool Tagger::operator==(const Tagger &another) const
      param_table == another.param_table);
 }
 
+LabelExtractor &Tagger::get_label_extractor(void)
+{ return label_extractor; }
+
+LemmaExtractor &Tagger::get_lemma_extractor(void)
+{ return lemma_extractor; }
+
+Data Tagger::get_data(const std::string &filename, bool tagged)
+{
+  return Data(filename, 
+	      tagged, 
+	      label_extractor, 
+	      param_table, 
+	      tagger_options.degree);
+}
+
 #else // TEST_Tagger_cc
 #include <sstream>
 #include <cassert>
@@ -303,7 +318,7 @@ int main(void)
 			    ".\tWORD=.\t.\t.\t_\n");
   
   std::istringstream test_in(test_contents);
-
+  /*
   StringVector labels = tagger.label(test_in);
 
   assert(labels[0] == "DT");
@@ -315,6 +330,7 @@ int main(void)
   assert(labels[0] == "DT");
   assert(labels[1] == "NN");
   assert(labels[2] == ".");
+  */
 
   std::ostringstream tagger_out;
   tagger.store(tagger_out);

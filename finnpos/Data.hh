@@ -79,7 +79,8 @@ class Data
 {
  public:
   static bool silent;
- 
+  
+  Data(void);
   Data(const std::string &fn, bool is_gold, LabelExtractor &extractor, ParamTable &pt, unsigned int degree);
   Data(std::istream &in, bool is_gold, LabelExtractor &extractor, ParamTable &pt, unsigned int degree);
 
@@ -100,6 +101,7 @@ class Data
   Acc get_acc(const Data &other, const LemmaExtractor &lemma_extractor) const;
 
   void print(std::ostream &out, LabelExtractor &label_extractor);
+
  private:
   SentenceVector data;
 

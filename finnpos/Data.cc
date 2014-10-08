@@ -30,6 +30,9 @@
 
 bool Data::silent = 0;
 
+Data::Data(void)
+{}
+
 Data::Data(const std::string &fn, 
 	   bool is_gold,
 	   LabelExtractor &extractor, 
