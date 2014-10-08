@@ -60,9 +60,7 @@ LemmaExtractor::~LemmaExtractor(void)
 
 bool LemmaExtractor::is_known_wf(const std::string &word_form) const
 {
-  static_cast<void>(word_form);
-
-  return 0;
+  return word_form_dict.count(word_form) > 0;
 }
 
 void LemmaExtractor::train(const Data &train_data, 
@@ -227,6 +225,7 @@ void LemmaExtractor::store(std::ostream &out) const
     (out, suffix_map);
   write_map(out, id_map);
   write_map(out, feat_dict);
+  write_map(out, word_form_dict);
 }
 
 void LemmaExtractor::load(std::istream &in, bool reverse_bytes)
@@ -238,6 +237,7 @@ void LemmaExtractor::load(std::istream &in, bool reverse_bytes)
     (in, suffix_map, reverse_bytes);
   read_map(in, id_map, reverse_bytes);
   read_map(in, feat_dict, reverse_bytes);
+  read_map(in, word_form_dict, reverse_bytes);
 }
 
 bool LemmaExtractor::operator==(const LemmaExtractor &another) const
@@ -286,7 +286,8 @@ void LemmaExtractor::extract_classes(const Data &data,
 	  static_cast<void>(get_class_number(word.get_word_form(),
 					     word.get_lemma()));
 	  
-	  lemma_lexicon[word.get_word_form() + "<W+LA>" + e.get_label_string(word.get_label())] = word.get_lemma();
+	  lemma_lexicon[word.get_word_form() + "<W+LA>" + e.get_label_string(word.get_label())] = word.get_lemma();	  
+	  word_form_dict[word.get_word_form()] = 1;
 	}
     }
 }

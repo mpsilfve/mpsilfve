@@ -73,10 +73,11 @@ protected:
 
   ParamTable param_table;
   unsigned int class_count;
-  LemmaLexicon lemma_lexicon;
+  LemmaLexicon lemma_lexicon;  
   SuffixMap suffix_map;
   IDClassMap id_map;
   ClassIDMap feat_dict;
+  ClassIDMap word_form_dict;
 
   void extract_classes(const Data &data, const LabelExtractor &le);
 
