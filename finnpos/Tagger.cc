@@ -337,7 +337,7 @@ int main(void)
   std::istringstream tagger_in(tagger_out.str());
   Tagger tagger_copy(null_stream);
   tagger_copy.load(tagger_in);
-  assert(tagger == tagger_copy);
+  assert(tagger == tagger_copy);*/
 }
 
 #endif // TEST_Tagger_cc
