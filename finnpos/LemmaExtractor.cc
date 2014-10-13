@@ -371,9 +371,7 @@ Word * LemmaExtractor::extract_feats(const std::string &word_form,
       feats.push_back( get_feat_id("SUFFIX=" + padded_word_form.substr(i) + " LABEL=" + label) );
       feats.push_back( get_feat_id("SUFFIX=" + padded_word_form.substr(i) + " MAIN_LABEL=" + main_label) );
     }
-
-  feats.push_back( get_feat_id("LABEL=" + label) );
-
+  feats.push_back( get_feat_id("LABEL=" + label) );  
   feats.push_back( get_feat_id("MAIN_LABEL=" + get_main_label(label)) );
 
   if (has_upper(word_form))
@@ -440,7 +438,7 @@ unsigned int LemmaExtractor::get_lemma_candidate_class(const Word &w,
     {
       unsigned int klass = lemma_class_candidates[i];
       
-      float score = pt->get_all_unstruct(w, klass);
+      float score = pt->get_all_unstruct(w, klass, 0);
 
       if (score > max_score)
 	{

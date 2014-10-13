@@ -273,6 +273,18 @@ unsigned int Trellis::size(void) const
   return trellis.size(); 
 }
 
+void Trellis::set_beam_mass(float mass)
+{
+  for (unsigned int i = 0; i < trellis.size(); ++i)
+    { trellis.at(i).set_beam_mass(mass); }
+}
+
+void Trellis::set_beam(unsigned int beam)
+{
+  for (unsigned int i = 0; i < trellis.size(); ++i)
+    { trellis.at(i).set_beam(beam); }
+}
+
 void Trellis::reserve(unsigned int n, unsigned int boundary_label)
 { 
   trellis.insert(trellis.end(), n, TrellisColumn(boundary_label, beam));
@@ -404,22 +416,22 @@ int main(void)
   pt.update_unstruct(5, 1, 4.386);
   pt.update_unstruct(5, 9, 1.145);
 
-  pt.update_struct(0,0,1,6.521);
-  pt.update_struct(0,0,9,7.494);
-  pt.update_struct(0,9,5.891);
-  pt.update_struct(0,1,0.883);
-  pt.update_struct(9,2.275);
-  pt.update_struct(1,3.68);
+  pt.update_struct3(0,0,1,6.521);
+  pt.update_struct3(0,0,9,7.494);
+  pt.update_struct2(0,9,5.891, false);
+  pt.update_struct2(0,1,0.883, false);
+  pt.update_struct1(9,2.275);
+  pt.update_struct1(1,3.68);
 
-  pt.update_struct(1,1,1,5.206);
-  pt.update_struct(1,1,9,4.958);
-  pt.update_struct(1,1,3.883);
-  pt.update_struct(1,9,4.309);
+  pt.update_struct3(1,1,1,5.206);
+  pt.update_struct3(1,1,9,4.958);
+  pt.update_struct2(1,1,3.883, false);
+  pt.update_struct2(1,9,4.309, false);
 
-  pt.update_struct(1,9,1,9.494);
-  pt.update_struct(1,9,9,6.355);
-  pt.update_struct(9,1,0.358);
-  pt.update_struct(9,9,6.690);
+  pt.update_struct3(1,9,1,9.494);
+  pt.update_struct3(1,9,9,6.355);
+  pt.update_struct2(9,1,0.358, false);
+  pt.update_struct2(9,9,6.690, false);
 
   Trellis trellis(s, 0);
   trellis.set_marginals(pt);
@@ -458,21 +470,21 @@ int main(void)
 	      f += pt.get_unstruct(4, labels[k]);
 	      f += pt.get_unstruct(5, labels[k]);
 
-	      f += pt.get_struct(0, 0, labels[i]);
-	      f += pt.get_struct(0, labels[i]);
-	      f += pt.get_struct(labels[i]);
+	      f += pt.get_struct3(0, 0, labels[i]);
+	      f += pt.get_struct2(0, labels[i], false);
+	      f += pt.get_struct1(labels[i]);
 
-	      f += pt.get_struct(0, labels[i], labels[j]);
-	      f += pt.get_struct(labels[i], labels[j]);
-	      f += pt.get_struct(labels[j]);
+	      f += pt.get_struct3(0, labels[i], labels[j]);
+	      f += pt.get_struct2(labels[i], labels[j], false);
+	      f += pt.get_struct1(labels[j]);
 
-	      f += pt.get_struct(labels[i], labels[j], labels[k]);
-	      f += pt.get_struct(labels[j], labels[k]);
-	      f += pt.get_struct(labels[k]);
+	      f += pt.get_struct3(labels[i], labels[j], labels[k]);
+	      f += pt.get_struct2(labels[j], labels[k], false);
+	      f += pt.get_struct1(labels[k]);
 	      
-	      f += pt.get_struct(labels[j], labels[k], 0);
-	      f += pt.get_struct(labels[k], 0, 0);
-	      f += pt.get_struct(labels[k], 0);
+	      f += pt.get_struct3(labels[j], labels[k], 0);
+	      f += pt.get_struct3(labels[k], 0, 0);
+	      f += pt.get_struct2(labels[k], 0, false);
 
 	      tot_score = expsumlog(tot_score, f);
 	      

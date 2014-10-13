@@ -102,6 +102,8 @@ class Data
 
   void print(std::ostream &out, LabelExtractor &label_extractor);
 
+  void randomize(void);
+
  private:
   SentenceVector data;
 

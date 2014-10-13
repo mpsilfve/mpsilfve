@@ -29,12 +29,12 @@
 
 #include "io.hh"
 
-
 typedef std::vector<unsigned int> FeatureTemplateVector;
 
 const long MAX_LABEL = 50000;
 
 class Word;
+class LabelExtractor;
 
 typedef std::unordered_map<long, float> ParamMap;
 
@@ -49,22 +49,22 @@ public:
   FeatureTemplateVector get_feat_templates(StringVector &feat_template_strings);
 
   float get_unstruct(unsigned int feature_template, unsigned int label) const;
-  float get_struct(unsigned int label) const;
-  float get_struct(unsigned int plabel, unsigned int label) const;
-  float get_struct(unsigned int pplabel, unsigned int plabel, unsigned int label) const;
+  float get_struct1(unsigned int label) const;
+  float get_struct2(unsigned int plabel, unsigned int label, bool sub_labels) const;
+  float get_struct3(unsigned int pplabel, unsigned int plabel, unsigned int label) const;
 
-  float get_all_struct_fw(unsigned int pplabel, unsigned int plabel, unsigned int label) const;
-  float get_all_struct_bw(unsigned int pplabel, unsigned int plabel, unsigned int label) const;
-  float get_all_unstruct(const Word &word, unsigned int label) const;
+  float get_all_struct_fw(unsigned int pplabel, unsigned int plabel, unsigned int label, bool sub_labels = 1) const;
+  float get_all_struct_bw(unsigned int pplabel, unsigned int plabel, unsigned int label, bool sub_labels = 1) const;
+  float get_all_unstruct(const Word &word, unsigned int label, bool sub_labels = 1) const;
 
-  void update_all_struct_fw(unsigned int pplabel, unsigned int plabel, unsigned int label, float update);
-  void update_all_struct_bw(unsigned int pplabel, unsigned int plabel, unsigned int label, float update);
-  void update_all_unstruct(const Word &word, unsigned int label, float update);
+  void update_all_struct_fw(unsigned int pplabel, unsigned int plabel, unsigned int label, float update, bool sub_labels = 1);
+  void update_all_struct_bw(unsigned int pplabel, unsigned int plabel, unsigned int label, float update, bool sub_labels = 1);
+  void update_all_unstruct(const Word &word, unsigned int label, float update, bool sub_labels = 1);
 
   void update_unstruct(unsigned int feature_template, unsigned int label, float ud);
-  void update_struct(unsigned int label, float ud);
-  void update_struct(unsigned int plabel, unsigned int label, float ud);
-  void update_struct(unsigned int pplabel, unsigned int plabel, unsigned int label, float ud);
+  void update_struct1(unsigned int label, float ud);
+  void update_struct2(unsigned int plabel, unsigned int label, float ud, bool sub_labels);
+  void update_struct3(unsigned int pplabel, unsigned int plabel, unsigned int label, float ud);
 
   ParamMap::iterator get_unstruct_begin(void);
   ParamMap::iterator get_struct_begin(void);
@@ -77,9 +77,12 @@ public:
   void load(std::istream &in, bool reverse_bytes);
   bool operator==(const ParamTable &another) const;
 
+  void set_label_extractor(const LabelExtractor &label_extractor);
+
 private:
   typedef std::unordered_map<std::string, unsigned int> FeatureTemplateMap;
-
+  
+  const LabelExtractor * label_extractor;
   bool trained;
   FeatureTemplateMap feature_template_map;
   ParamMap unstruct_param_table;

@@ -45,7 +45,8 @@ TrellisColumn::TrellisColumn(unsigned int boundary_label,
   ncol                        (0),
   word                        (0),
   boundary_label (boundary_label),
-  beam_width(beam_width)
+  beam_width(beam_width),
+  use_adaptive_beam(0)
 {}  
 
 void TrellisColumn::set_ncol(TrellisColumn * ncol)
@@ -301,14 +302,17 @@ void TrellisColumn::compute_viterbi(const ParamTable &pt)
 	  set_viterbi_tr_score(pt, 0, i);
 
 	  get_cell(0, i).viterbi += em;
-	  
+	  get_cell(0, i).fw += em;
+
 	  cells_in_beam.push_back(&get_cell(0,i));
 	}
       else
-	{	  
+	{ 
+	  unsigned int p_col_beam_cell_count = pcol->beam_cell_count();
+ 
 	  for (unsigned int j = 0; j < beam_width; ++j)
 	    {
-	      if (j >= pcol->beam_cell_count())
+	      if (j >= p_col_beam_cell_count)
 		{ 
 		  assert(j != 0);
 		  break; 
@@ -321,10 +325,13 @@ void TrellisColumn::compute_viterbi(const ParamTable &pt)
 	      unsigned int label   = get_label(i);
 
 	      float pcol_score = (pcol == 0 ? 0 : pcell->viterbi);
-	      
+
 	      float tr_score = pt.get_all_struct_fw(pplabel, plabel, label);
 	      
 	      float score = tr_score + pcol_score + em;
+	      	      
+	      get_cell(pcell->label_index, i).fw = expsumlog(get_cell(pcell->label_index, i).fw,
+							     pcell->fw + tr_score + em);
 
 	      if (get_cell(pcell->label_index, i).viterbi == -FLT_MAX)
 		{
@@ -348,9 +355,41 @@ TrellisCell * TrellisColumn::get_beam_cell(unsigned int i)
   return cells_in_beam.at(i);
 }
 
+void TrellisColumn::set_beam_mass(float mass)
+{
+  use_adaptive_beam = 1;
+  beam_mass = mass;
+}
+
+void TrellisColumn::set_beam(unsigned int beam)
+{
+  beam_width = beam;
+}
+
 unsigned int TrellisColumn::beam_cell_count(void)
 {
-  return cells_in_beam.size();
+  if (not use_adaptive_beam)
+    { return cells_in_beam.size(); }
+
+  float tot_mass = -FLT_MAX;
+
+  for (size_t i = 0; i < cells_in_beam.size(); ++i)
+    {
+      tot_mass = expsumlog(tot_mass, cells_in_beam.at(i)->fw);
+    }
+
+  float prefix_mass = -FLT_MAX;
+
+  for (size_t i = 0; i < cells_in_beam.size(); ++i)
+    {
+      prefix_mass = expsumlog(prefix_mass, cells_in_beam.at(i)->fw);
+
+      if (exp(prefix_mass - tot_mass) > 0.999)
+	{
+	  return i + 1; 
+	}
+    }
+  return cells_in_beam.size(); 
 }
 
 void TrellisColumn::set_viterbi_tr_score(const ParamTable &pt, 
@@ -359,6 +398,7 @@ void TrellisColumn::set_viterbi_tr_score(const ParamTable &pt,
 {
   unsigned int max_pplabel_index = -1;
   float max_score = -FLT_MAX;
+  float tot_score = -FLT_MAX;
 
   for (unsigned int k = 0; k < (pcol == 0 ? 1 : pcol->plabel_count); ++k)
     {
@@ -367,7 +407,7 @@ void TrellisColumn::set_viterbi_tr_score(const ParamTable &pt,
       unsigned int label   = get_label(label_index);
       
       float pcol_score = (pcol == 0 ? 0 : pcol->get_viterbi(k, plabel_index));
-      
+
       float tr_score = pt.get_all_struct_fw(pplabel, plabel, label);
 
       float score = tr_score + pcol_score;
@@ -377,11 +417,17 @@ void TrellisColumn::set_viterbi_tr_score(const ParamTable &pt,
 	  max_score = score;
 	  max_pplabel_index = k;
 	}
+
+      float pcol_fw_score = (pcol == 0 ? 0 : pcol->get_fw(k, plabel_index));
+      float fw_score = tr_score + pcol_fw_score;
+      tot_score = expsumlog(tot_score, fw_score);
     }
   
   TrellisCell &c = get_cell(plabel_index, label_index);
 
   c.viterbi = max_score;
+  c.fw = tot_score;
+
   c.pcell = 
     (pcol == 0 ? 0 : &(pcol->get_cell(max_pplabel_index, plabel_index)));
 }
@@ -471,22 +517,22 @@ int main(void)
   pt.update_unstruct(5, 1, 4.386);
   pt.update_unstruct(5, 9, 1.145);
 
-  pt.update_struct(0,0,1,6.521);
-  pt.update_struct(0,0,9,7.494);
-  pt.update_struct(0,9,5.891);
-  pt.update_struct(0,1,0.883);
-  pt.update_struct(9,2.275);
-  pt.update_struct(1,3.68);
+  pt.update_struct3(0,0,1,6.521);
+  pt.update_struct3(0,0,9,7.494);
+  pt.update_struct2(0,9,5.891, false);
+  pt.update_struct2(0,1,0.883, false);
+  pt.update_struct1(9,2.275);
+  pt.update_struct1(1,3.68);
 
-  pt.update_struct(1,1,1,5.206);
-  pt.update_struct(1,1,9,4.958);
-  pt.update_struct(1,1,3.883);
-  pt.update_struct(1,9,4.309);
+  pt.update_struct3(1,1,1,5.206);
+  pt.update_struct3(1,1,9,4.958);
+  pt.update_struct2(1,1,3.883, false);
+  pt.update_struct2(1,9,4.309, false);
 
-  pt.update_struct(1,9,1,9.494);
-  pt.update_struct(1,9,9,6.355);
-  pt.update_struct(9,1,0.358);
-  pt.update_struct(9,9,6.690);
+  pt.update_struct3(1,9,1,9.494);
+  pt.update_struct3(1,9,9,6.355);
+  pt.update_struct2(9,1,0.358, false);
+  pt.update_struct2(9,9,6.690, false);
 
   rbcol2.compute_fw(pt);
   rbcol2.compute_viterbi(pt);
@@ -513,21 +559,21 @@ int main(void)
 	      f += pt.get_unstruct(4, labels[k]);
 	      f += pt.get_unstruct(5, labels[k]);
 
-	      f += pt.get_struct(0, 0, labels[i]);
-	      f += pt.get_struct(0, labels[i]);
-	      f += pt.get_struct(labels[i]);
+	      f += pt.get_struct3(0, 0, labels[i]);
+	      f += pt.get_struct2(0, labels[i], false);
+	      f += pt.get_struct1(labels[i]);
 
-	      f += pt.get_struct(0, labels[i], labels[j]);
-	      f += pt.get_struct(labels[i], labels[j]);
-	      f += pt.get_struct(labels[j]);
+	      f += pt.get_struct3(0, labels[i], labels[j]);
+	      f += pt.get_struct2(labels[i], labels[j], false);
+	      f += pt.get_struct1(labels[j]);
 
-	      f += pt.get_struct(labels[i], labels[j], labels[k]);
-	      f += pt.get_struct(labels[j], labels[k]);
-	      f += pt.get_struct(labels[k]);
+	      f += pt.get_struct3(labels[i], labels[j], labels[k]);
+	      f += pt.get_struct2(labels[j], labels[k], false);
+	      f += pt.get_struct1(labels[k]);
 	      
-	      f += pt.get_struct(labels[j], labels[k], 0);
-	      f += pt.get_struct(labels[k], 0, 0);
-	      f += pt.get_struct(labels[k], 0);
+	      f += pt.get_struct3(labels[j], labels[k], 0);
+	      f += pt.get_struct3(labels[k], 0, 0);
+	      f += pt.get_struct2(labels[k], 0, false);
 
 	      tot_score = expsumlog(tot_score, f);
 
@@ -576,9 +622,9 @@ int main(void)
   scorerb1 = expsumlog(scorerb1, rbcol1.get_bw(0,0) + rbcol1.get_fw(0,0));
 
   float scorerb2 = -FLT_MAX;
-
+  
   scorerb2 = expsumlog(scorerb2, rbcol2.get_bw(0,0) + rbcol2.get_fw(0,0));
-
+  std::cerr << tot_score << " " << scorelb << ' ' << score0 << ' ' << score1 << ' ' << score2 << ' ' << scorerb1 << ' ' << std::endl;
   assert(float_eq(tot_score, scorelb));
   assert(float_eq(tot_score, score0));
   assert(float_eq(tot_score, score1));
@@ -590,8 +636,8 @@ int main(void)
 
   ParamTable foo_pt;
   foo_pt.update_unstruct(0,1,10);
-  foo_pt.update_struct(2,2,2,1000);
-  foo_pt.update_struct(2,2,-1);
+  foo_pt.update_struct3(2,2,2,1000);
+  foo_pt.update_struct2(2,2,-1, false);
 
   FeatureTemplateVector foo_feats(1,0);
 

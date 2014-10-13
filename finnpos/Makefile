@@ -1,6 +1,6 @@
 CXX=clang++
-CXXFLAGS=-Wall -Wextra -g -O3 -Wfatal-errors -Werror -std=c++0x
-#CXXFLAGS=-Wall -Wextra -g -O0 -Wfatal-errors -Werror -std=c++0x
+#CXXFLAGS=-Wall -Wextra -g -O3 -Wfatal-errors -Werror -std=c++0x
+CXXFLAGS=-Wall -Wextra -g -O0 -Wfatal-errors -Werror -std=c++0x
 
 MODULES=io Word LemmaExtractor LabelExtractor Sentence ParamTable \
 Data TrellisColumn Trellis Trainer PerceptronTrainer SGDTrainer \

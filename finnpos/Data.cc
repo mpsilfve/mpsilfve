@@ -25,6 +25,8 @@
 
 #include <vector>
 #include <string>
+#include <cstdlib>
+#include <algorithm>
 
 #include "io.hh"
 
@@ -224,6 +226,13 @@ void Data::print(std::ostream &out, LabelExtractor &label_extractor)
       if (i + 1 < data.size())
 	{ out << std::endl; }
     }
+}
+
+void Data::randomize(void)
+{
+  // Use fixed seed, in order to assure the replicability of experiments.q
+  std::srand(0);
+  std::random_shuffle(data.begin(), data.end());
 }
 
 #else // TEST_Data_cc

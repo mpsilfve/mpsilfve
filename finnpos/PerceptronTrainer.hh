@@ -37,12 +37,13 @@ public:
   PerceptronTrainer(unsigned int max_passes,
 		    unsigned int max_useless_passes,
 		    ParamTable &pt,
-		    unsigned int boundary_label,
+		    const LabelExtractor &label_e,
 		    const LemmaExtractor &le,
 		    std::ostream &msg_out);
   
   void train(const Data &train_data, const Data &dev_data, 
-	     unsigned int beam = -1);
+	     unsigned int beam = -1,
+	     float beam_mass = -1);
 
   void train_lemmatizer(const Data &train_data, 
 			const Data &dev_data,

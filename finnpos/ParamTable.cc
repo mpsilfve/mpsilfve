@@ -27,6 +27,7 @@
 #include "Word.hh"
 
 ParamTable::ParamTable(void):
+  label_extractor(0),
   trained(0)
 {}
 
@@ -87,6 +88,9 @@ long ParamTable::get_unstruct_param_id(unsigned int feature_template,
   return (MAX_LABEL + 1) * feature_template + label;
 }
 
+void ParamTable::set_label_extractor(const LabelExtractor &label_extractor)
+{ this->label_extractor = &label_extractor; }
+
 long ParamTable::get_struct_param_id(unsigned int label) const
 {
   return 
@@ -127,7 +131,7 @@ float ParamTable::get_unstruct(unsigned int feature_template,
   return it->second;
 }
 
-float ParamTable::get_struct(unsigned int label) const
+float ParamTable::get_struct1(unsigned int label) const
 {
   long id = get_struct_param_id(label);
   
@@ -139,21 +143,41 @@ float ParamTable::get_struct(unsigned int label) const
   return it->second;
 }
 
-float ParamTable::get_struct(unsigned int plabel, unsigned int label) const
+float ParamTable::get_struct2(unsigned int plabel, unsigned int label, bool use_sub_labels) const
 {
   long id = get_struct_param_id(plabel, label);
   
   ParamMap::const_iterator it = struct_param_table.find(id);
 
-  if (it == struct_param_table.end())
-    { return 0; }
+  float res = 0;
 
-  return it->second;
+  if (it != struct_param_table.end())
+    { return res += it->second; }
+
+  if (label_extractor != 0 and use_sub_labels)
+    {
+      const LabelVector &sub_labels = label_extractor->sub_labels(label);
+      const LabelVector &psub_labels = label_extractor->sub_labels(plabel);
+
+      for (unsigned int i = 0; i < psub_labels.size(); ++i)
+	{
+	  for (unsigned int j = 0; j < sub_labels.size(); ++j)
+	    {
+	      id = get_struct_param_id(psub_labels[i], sub_labels[j]);	      
+	      it = struct_param_table.find(id);
+
+	      if (it != struct_param_table.end())
+		{ res += it->second; };
+	    }
+	}
+    }
+
+  return res;
 }
 
-float ParamTable::get_struct(unsigned int pplabel,
-			     unsigned int plabel, 
-			     unsigned int label) const
+float ParamTable::get_struct3(unsigned int pplabel,
+			      unsigned int plabel, 
+			      unsigned int label) const
 {
   long id = get_struct_param_id(pplabel, plabel, label);
   
@@ -165,7 +189,7 @@ float ParamTable::get_struct(unsigned int pplabel,
   return it->second;
 }
 
-float ParamTable::get_all_unstruct(const Word &word, unsigned int label) const
+float ParamTable::get_all_unstruct(const Word &word, unsigned int label, bool sub_labels) const
 {
   float res = 0;
 
@@ -174,27 +198,42 @@ float ParamTable::get_all_unstruct(const Word &word, unsigned int label) const
       res += get_unstruct(word.get_feature_template(i), label);
     }
 
+  if (sub_labels and label_extractor != 0)
+    {
+      const LabelVector &sub_labels = label_extractor->sub_labels(label);
+      
+      for (unsigned int i = 0; i < word.get_feature_template_count(); ++i)
+	{
+	  for (unsigned int j = 0; j < sub_labels.size(); ++j)
+	    {
+	      res += get_unstruct(word.get_feature_template(i), sub_labels[j]);
+	    }
+	}
+    }
+
   return res;
 }
 
 float ParamTable::get_all_struct_fw(unsigned int pplabel, 
 				    unsigned int plabel, 
-				    unsigned int label) const
+				    unsigned int label,
+				    bool sub_labels) const
 {
   return 
-    get_struct(pplabel, plabel, label) +
-    get_struct(plabel, label) +
-    get_struct(label);
+    get_struct3(pplabel, plabel, label) +
+    get_struct2(plabel, label, sub_labels) +
+    get_struct1(label);
 }
 
 float ParamTable::get_all_struct_bw(unsigned int pplabel, 
 				    unsigned int plabel, 
-				    unsigned int label) const
+				    unsigned int label,
+				    bool sub_labels) const
 {
   return 
-    get_struct(pplabel, plabel, label) +
-    get_struct(plabel, label) +
-    get_struct(label);
+    get_struct3(pplabel, plabel, label) +
+    get_struct2(plabel, label, sub_labels) +
+    get_struct1(label);
 }
 
 void ParamTable::update_unstruct(unsigned int feature_template, 
@@ -204,19 +243,35 @@ void ParamTable::update_unstruct(unsigned int feature_template,
   unstruct_param_table[get_unstruct_param_id(feature_template, label)] += ud;
 }
 
-void ParamTable::update_struct(unsigned int label, float ud)
+void ParamTable::update_struct1(unsigned int label, float ud)
 {
   struct_param_table[get_struct_param_id(label)] += ud;
 }
 
-void ParamTable::update_struct(unsigned int plabel, 
+void ParamTable::update_struct2(unsigned int plabel, 
 			       unsigned int label, 
-			       float ud)
+			       float ud,
+			       bool use_sub_labels)
 {
   struct_param_table[get_struct_param_id(plabel, label)] += ud;
+
+  if (label_extractor != 0 and use_sub_labels)
+    {
+      const LabelVector &sub_labels = label_extractor->sub_labels(label);
+      const LabelVector &psub_labels = label_extractor->sub_labels(plabel);
+
+      for (unsigned int i = 0; i < psub_labels.size(); ++i)
+	{
+	  for (unsigned int j = 0; j < sub_labels.size(); ++j)
+	    {
+	      struct_param_table[get_struct_param_id(psub_labels[i], 
+						     sub_labels[j])] += ud;
+	    }
+	}
+    }
 }
 
-void ParamTable::update_struct(unsigned int pplabel, 
+void ParamTable::update_struct3(unsigned int pplabel, 
 			       unsigned int plabel, 
 			       unsigned int label, 
 			       float ud)
@@ -224,25 +279,38 @@ void ParamTable::update_struct(unsigned int pplabel,
   struct_param_table[get_struct_param_id(pplabel, plabel, label)] += ud;
 }
 
-void ParamTable::update_all_struct_fw(unsigned int pplabel, unsigned int plabel, unsigned int label, float update)
+void ParamTable::update_all_struct_fw(unsigned int pplabel, unsigned int plabel, unsigned int label, float update, bool sub_labels)
 {
-  update_struct(label, update);
-  update_struct(plabel, label, update);
-  update_struct(pplabel, plabel, label, update); 
+  update_struct1(label, update);
+  update_struct2(plabel, label, update, sub_labels);
+  update_struct3(pplabel, plabel, label, update); 
 }
 
-void ParamTable::update_all_struct_bw(unsigned int pplabel, unsigned int plabel, unsigned int label, float update)
+void ParamTable::update_all_struct_bw(unsigned int pplabel, unsigned int plabel, unsigned int label, float update, bool sub_labels)
 {
-  update_struct(pplabel, plabel, label, update);
-  update_struct(plabel, label, update);
-  update_struct(label, update);
+  update_struct3(pplabel, plabel, label, update);
+  update_struct2(plabel, label, update, sub_labels);
+  update_struct1(label, update);
 }
 
-void ParamTable::update_all_unstruct(const Word &word, unsigned int label, float update)
+void ParamTable::update_all_unstruct(const Word &word, unsigned int label, float update, bool sub_label)
 {
   for (unsigned int i = 0; i < word.get_feature_template_count(); ++i)
     {
       update_unstruct(word.get_feature_template(i), label, update);
+    }
+
+  if (label_extractor != 0 and sub_label)
+    {
+      const LabelVector &sub_labels = label_extractor->sub_labels(label);
+      
+      for (unsigned int i = 0; i < word.get_feature_template_count(); ++i)
+	{
+	  for (unsigned int j = 0; j < sub_labels.size(); ++j)
+	    {
+	      update_unstruct(word.get_feature_template(i), sub_labels[j], update);
+	    }
+	}
     }
 }
 
@@ -329,29 +397,29 @@ int main(void)
   pt.update_unstruct(pt.get_feat_template("FOO"), 0, 1);
   assert(pt.get_unstruct(pt.get_feat_template("FOO"), 0) == 2);
 
-  assert(pt.get_struct(0) == 0);
-  pt.update_struct(0, 1);
-  assert(pt.get_struct(0) == 1);
+  assert(pt.get_struct1(0) == 0);
+  pt.update_struct1(0, 1);
+  assert(pt.get_struct1(0) == 1);
 
-  assert(pt.get_struct(1) == 0);
-  pt.update_struct(1, 2);
-  assert(pt.get_struct(1) == 2);
+  assert(pt.get_struct1(1) == 0);
+  pt.update_struct1(1, 2);
+  assert(pt.get_struct1(1) == 2);
 
-  assert(pt.get_struct(0, 0) == 0);
-  pt.update_struct(0, 0, 1);
-  assert(pt.get_struct(0, 0) == 1);
+  assert(pt.get_struct2(0, 0, false) == 0);
+  pt.update_struct2(0, 0, 1, false);
+  assert(pt.get_struct2(0, 0, false) == 1);
 
-  assert(pt.get_struct(0, 1) == 0);
-  pt.update_struct(0, 1, 2);
-  assert(pt.get_struct(0, 1) == 2);
+  assert(pt.get_struct2(0, 1, false) == 0);
+  pt.update_struct2(0, 1, 2, false);
+  assert(pt.get_struct2(0, 1, false) == 2);
 
-  assert(pt.get_struct(0, 0, 0) == 0);
-  pt.update_struct(0, 0, 0, 1);
-  assert(pt.get_struct(0, 0, 0) == 1);
+  assert(pt.get_struct3(0, 0, 0) == 0);
+  pt.update_struct3(0, 0, 0, 1);
+  assert(pt.get_struct3(0, 0, 0) == 1);
 
-  assert(pt.get_struct(0, 1, 0) == 0);
-  pt.update_struct(0, 1, 0, 2);
-  assert(pt.get_struct(0, 1, 0) == 2);  
+  assert(pt.get_struct3(0, 1, 0) == 0);
+  pt.update_struct3(0, 1, 0, 2);
+  assert(pt.get_struct3(0, 1, 0) == 2);  
 
   std::ostringstream pt_out;
   pt.store(pt_out);

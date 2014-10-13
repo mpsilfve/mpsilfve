@@ -52,9 +52,35 @@ unsigned int LabelExtractor::get_label(const std::string &label_string)
       unsigned int id = label_map.size();
       label_map[label_string] = id;
       string_map.push_back(label_string);
+
+      if (label_string.find('|') != std::string::npos)
+	{
+	  StringVector sub_label_strings;
+	  split(label_string, sub_label_strings, '|');
+	  LabelVector &sub_labels = sub_label_map[id];
+
+	  for (unsigned int i = 0; i < sub_label_strings.size(); ++i)
+	    { 
+	      sub_labels.push_back(get_label(sub_label_strings[i]));
+	    }
+	}
+      else
+	{
+	  sub_label_map[id].push_back(id);
+	}
     }
 
   return label_map[label_string];
+}
+
+LabelVector no_sub_labels;
+
+const LabelVector &LabelExtractor::sub_labels(unsigned int label) const
+{ 
+  if (sub_label_map.count(label) != 0)
+    { return sub_label_map.find(label)->second; }
+  else
+    { return no_sub_labels; }
 }
 
 unsigned int LabelExtractor::label_count(void) const
@@ -235,6 +261,7 @@ void LabelExtractor::store(std::ostream &out) const
   write_vector(out, string_map);
   write_map(out, label_counts);
   write_map(out, lexicon);
+  write_map(out, sub_label_map);
 }
 
 void LabelExtractor::load(std::istream &in, bool reverse_bytes)
@@ -244,12 +271,14 @@ void LabelExtractor::load(std::istream &in, bool reverse_bytes)
   string_map.clear();
   label_counts.clear();
   lexicon.clear();
+  sub_label_map.clear();
 
   read_val<unsigned int>(in, max_suffix_len, reverse_bytes);
-  read_map   (in, label_map,    reverse_bytes);
-  read_vector(in, string_map,   reverse_bytes);
-  read_map   (in, label_counts, reverse_bytes);
-  read_map   (in, lexicon,      reverse_bytes);
+  read_map   (in, label_map,     reverse_bytes);
+  read_vector(in, string_map,    reverse_bytes);
+  read_map   (in, label_counts,  reverse_bytes);
+  read_map   (in, lexicon,       reverse_bytes);
+  read_map   (in, sub_label_map, reverse_bytes);
 }
 
 bool LabelExtractor::operator==(const LabelExtractor &another) const
@@ -262,7 +291,8 @@ bool LabelExtractor::operator==(const LabelExtractor &another) const
      label_map == another.label_map           and
      string_map == another.string_map         and
      label_counts == another.label_counts     and
-     lexicon == another.lexicon);
+     lexicon == another.lexicon               and
+     sub_label_map == another.sub_label_map);
 }
 
 #else // TEST_LabelExtractor_cc

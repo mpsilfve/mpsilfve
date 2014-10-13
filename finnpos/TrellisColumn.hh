@@ -45,8 +45,8 @@ class TrellisColumn
   void compute_viterbi(const ParamTable &pt);
 
   float get_fw(unsigned int plabel_index, 
-		       unsigned int label_index) const;
-
+	       unsigned int label_index) const;
+  
   float get_bw(unsigned int plabel_index, 
 	       unsigned int label_index) const;
 
@@ -63,6 +63,9 @@ class TrellisColumn
   const TrellisCell &get_cell(unsigned int plabel_index, 
 			      unsigned int label_index) const;
 
+  void set_beam_mass(float mass);
+  void set_beam(unsigned int beam);
+
  private:
   TrellisColumn * pcol;
   TrellisColumn * ncol;
@@ -71,6 +74,9 @@ class TrellisColumn
   unsigned int boundary_label;
 
   unsigned int beam_width;
+
+  bool use_adaptive_beam;
+  float beam_mass;
 
   unsigned int label_count;
   unsigned int plabel_count;

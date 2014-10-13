@@ -89,9 +89,11 @@ void Tagger::train(std::istream &train_in,
   msg_out << "Reading training data." << std::endl;
   Data train_data(train_in, 1, label_extractor, param_table, tagger_options.degree);
   train_data.clear_label_guesses(); 
-    
+  train_data.randomize();
+  
   msg_out << "Training label guesser." << std::endl;
   label_extractor.train(train_data);
+  param_table.set_label_extractor(label_extractor);
 
   msg_out << "Reading development data." << std::endl;
   Data dev_data(dev_in, 1, label_extractor, param_table, tagger_options.degree);
@@ -102,7 +104,7 @@ void Tagger::train(std::istream &train_in,
   dev_data.set_label_guesses(label_extractor, 1, tagger_options.guess_count);
   
   msg_out << "Estimating lemmatizer parameters." << std::endl;
-  lemma_extractor.train(train_data, dev_data, label_extractor, msg_out);
+  //lemma_extractor.train(train_data, dev_data, label_extractor, msg_out);
 
   msg_out << "Estimating tagger parameters." << std::endl;
   //param_table.set_trained();
@@ -112,11 +114,11 @@ void Tagger::train(std::istream &train_in,
       PerceptronTrainer trainer(tagger_options.max_train_passes, 
 				tagger_options.max_useless_passes, 
 				param_table, 
-				label_extractor.get_boundary_label(), 
+				label_extractor, 
 				lemma_extractor,
 				msg_out);
       
-      trainer.train(train_data, dev_data, tagger_options.beam);
+      trainer.train(train_data, dev_data, tagger_options.beam, tagger_options.beam_mass);
     }
   else
     { throw NotImplemented(); }
@@ -166,7 +168,7 @@ void Tagger::label(std::istream &in, std::ostream &out)
 void Tagger::label(Data &data, std::ostream &out)
 {
   data.set_label_guesses(label_extractor, 1, tagger_options.guess_count);
-  
+
   TrellisVector trellises;
 
   for (unsigned int i = 0; i < data.size(); ++i)
@@ -301,7 +303,7 @@ int main(void)
   
   std::istringstream dev_in(dev_contents);
 
-  TaggerOptions tagger_options(AVG_PERC, MAP, 10, 2, 20, 3, 20, -1, NONE, 0, 0);
+  TaggerOptions tagger_options(AVG_PERC, MAP, 10, 2, 20, 3, 20, -1, -1, NONE, 0, 0);
   std::ostringstream null_stream;
   Tagger tagger(tagger_options, null_stream);
   

@@ -30,7 +30,7 @@
 PerceptronTrainer::PerceptronTrainer(unsigned int max_passes,
 				     unsigned int max_useless_passes,
 				     ParamTable &pt,
-				     unsigned int boundary_label,
+				     const LabelExtractor &label_extractor,
 				     const LemmaExtractor &lemma_extractor,
 				     std::ostream &msg_out):  
   Trainer(max_passes, max_useless_passes, pt, boundary_label, lemma_extractor, msg_out),
@@ -38,11 +38,15 @@ PerceptronTrainer::PerceptronTrainer(unsigned int max_passes,
 {
   pos_params = pt;
   neg_params = pt;
+
+  pos_params.set_label_extractor(label_extractor);
+  neg_params.set_label_extractor(label_extractor);
 }
 
 void PerceptronTrainer::train(const Data &train_data, 
 			      const Data &dev_data,
-			      unsigned int beam)
+			      unsigned int beam,
+			      float beam_mass)
 {
   Data train_data_copy(train_data);
 
@@ -53,7 +57,12 @@ void PerceptronTrainer::train(const Data &train_data,
 
   for (unsigned int i = 0; i < train_data.size(); ++i)
     {
-      train_trellises.push_back(Trellis(train_data_copy.at(i), boundary_label, beam));
+      train_trellises.push_back(Trellis(train_data_copy.at(i), boundary_label));
+
+      if (beam != static_cast<unsigned int>(-1))
+	{ train_trellises.back().set_beam(beam); }
+      if (beam_mass != -1)
+	{ train_trellises.back().set_beam_mass(beam_mass); }
     }
 
   TrellisVector dev_trellises;
@@ -61,10 +70,17 @@ void PerceptronTrainer::train(const Data &train_data,
   for (unsigned int i = 0; i < dev_data.size(); ++i)
     {
       dev_trellises.push_back(Trellis(dev_data_copy.at(i), boundary_label, beam));
+
+      if (beam != static_cast<float>(-1))
+	{ dev_trellises.back().set_beam(beam); }
+      if (beam_mass != -1)
+	{ dev_trellises.back().set_beam_mass(beam_mass); }
     }
 
   float best_dev_acc = -1;
   ParamTable best_params;
+  best_params.set_label_extractor(label_extractor);
+
   unsigned int useless_passes = 0;
 
   for (unsigned int i = 0; i < max_passes; ++i)
@@ -265,11 +281,11 @@ void PerceptronTrainer::lemmatizer_update(const Word &w,
   static_cast<void>(lemma_e);
   static_cast<void>(label_e);
 
-  pos_params.update_all_unstruct(w, gold_class, 1);
-  neg_params.update_all_unstruct(w, gold_class, -iter);
+  pos_params.update_all_unstruct(w, gold_class, 1, 0);
+  neg_params.update_all_unstruct(w, gold_class, -iter, 0);
 
-  pos_params.update_all_unstruct(w, sys_class, -1);
-  neg_params.update_all_unstruct(w, sys_class, iter);
+  pos_params.update_all_unstruct(w, sys_class, -1, 0);
+  neg_params.update_all_unstruct(w, sys_class, iter, 0);
 
   //delete lemma_feature_word;
 }

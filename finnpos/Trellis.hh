@@ -56,6 +56,9 @@ public:
 
   unsigned int size(void) const;
 
+  void set_beam(unsigned int beam);
+  void set_beam_mass(float mass);
+
 private:
   Sentence * s;
   bool marginals_set;

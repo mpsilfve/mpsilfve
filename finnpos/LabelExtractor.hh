@@ -56,14 +56,19 @@ class LabelExtractor
   void load(std::istream &in, bool reverse_bytes);
 
   bool operator==(const LabelExtractor &another) const;
+
+  const LabelVector &sub_labels(unsigned int label) const;
+
 private:
   typedef std::unordered_map<std::string, LabelVector> SubstringLabelMap;
+  typedef std::unordered_map<unsigned int, LabelVector> SubLabelMap;
 
   unsigned int max_suffix_len;
   std::unordered_map<std::string, unsigned int> label_map;
   StringVector string_map;
   SubstringLabelMap label_counts;
   SubstringLabelMap lexicon;
+  SubLabelMap sub_label_map;
 };
 
 #endif // HEADER_LabelExtractor_hh
