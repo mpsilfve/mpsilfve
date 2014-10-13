@@ -43,6 +43,7 @@ struct TaggerOptions
   unsigned int max_useless_passes;
   unsigned int guess_count;
   unsigned int beam;
+  float beam_mass;
   Regularization regularization;
   float delta;
   float sigma;
@@ -57,6 +58,7 @@ struct TaggerOptions
 		unsigned int max_useless_passes,
 		unsigned int guess_count,
 		unsigned int beam,
+		float beam_mass,
 		Regularization regularization = NONE,
 		float delta = -1,
 		float sigma = -1);

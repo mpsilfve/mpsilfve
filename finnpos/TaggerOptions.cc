@@ -44,6 +44,7 @@ const char * max_train_passes_id = "max_train_passes=";
 const char * max_useless_passes_id = "max_useless_passes=";
 const char * guess_count_id = "guess_count=";
 const char * beam_id = "beam=";
+const char * beam_mass_id = "beam_mass=";
 const char * regularization_id = "regularization=";
 const char * delta_id = "delta=";
 const char * sigma_id = "sigma=";
@@ -72,6 +73,7 @@ TaggerOptions::TaggerOptions(Estimator estimator,
 			     unsigned int max_useless_passes,
 			     unsigned int guess_count,
 			     unsigned int beam,
+			     float beam_mass,
 			     Regularization regularization,
 			     float delta,
 			     float sigma):
@@ -83,6 +85,7 @@ TaggerOptions::TaggerOptions(Estimator estimator,
   max_useless_passes(max_useless_passes),
   guess_count(guess_count),
   beam(beam),
+  beam_mass(beam_mass),
   regularization(regularization),
   delta(delta),
   sigma(sigma)
@@ -97,7 +100,8 @@ TaggerOptions::TaggerOptions(std::istream &in, unsigned int &counter):
   max_train_passes(50),
   max_useless_passes(3),
   guess_count(10),
-  beam(20),
+  beam(-1),
+  beam_mass(-1),
   regularization(NONE),
   delta(-1),
   sigma(-1)
@@ -131,6 +135,8 @@ TaggerOptions::TaggerOptions(std::istream &in, unsigned int &counter):
 	{ guess_count = get_uint(strip(line, guess_count_id)); }
       else if (line.find(beam_id) != std::string::npos)
 	{ beam = get_uint(strip(line, beam_id)); }
+      else if (line.find(beam_mass_id) != std::string::npos)
+	{ beam_mass = get_uint(strip(line, beam_mass_id)); }
       else if (line.find(regularization_id) != std::string::npos)
 	{ regularization = get_regularization(strip(line, regularization_id)); }
       else if (line.find(delta_id) != std::string::npos)
@@ -155,6 +161,7 @@ void TaggerOptions::store(std::ostream &out) const
   field_names.push_back("max_useless_passes");
   field_names.push_back("guess_count");
   field_names.push_back("beam");
+  field_names.push_back("beam_mass");
   field_names.push_back("regularization");
   field_names.push_back("delta");
   field_names.push_back("sigma");
@@ -167,6 +174,7 @@ void TaggerOptions::store(std::ostream &out) const
   fields.push_back(static_cast<int>(max_useless_passes));
   fields.push_back(static_cast<int>(guess_count));
   fields.push_back(static_cast<int>(beam));
+  fields.push_back(static_cast<int>(beam_mass));
   fields.push_back(static_cast<int>(regularization));
   fields.push_back(static_cast<int>(delta));
   fields.push_back(static_cast<int>(sigma));
@@ -207,6 +215,8 @@ void TaggerOptions::load(std::istream &in, std::ostream &msg_out, bool reverse_b
 	{ guess_count = static_cast<unsigned int>(fields[i]); }
       else if (field_names[i] == "beam")
 	{ beam = static_cast<unsigned int>(fields[i]); }
+      else if (field_names[i] == "beam_mass")
+	{ beam_mass = static_cast<unsigned int>(fields[i]); }
       else if (field_names[i] == "regularization")
 	{ regularization = static_cast<Regularization>(fields[i]); }
       else if (field_names[i] == "delta")
@@ -297,6 +307,7 @@ bool TaggerOptions::operator==(const TaggerOptions &another) const
      max_train_passes == another.max_train_passes and
      guess_count == another.guess_count           and
      beam == another.beam                         and
+     beam_mass == another.beam_mass               and
      regularization == another.regularization     and
      delta == another.delta                       and
      sigma == another.sigma);
@@ -323,7 +334,7 @@ int main(void)
 	 empty_options.max_train_passes == 50  &&
 	 empty_options.max_useless_passes == 3 &&
 	 empty_options.guess_count == 10       &&
-	 empty_options.beam == 20              &&
+	 empty_options.beam == static_cast<unsigned int>(-1)              &&
 	 empty_options.regularization == NONE  &&
 	 empty_options.delta == -1             &&
 	 empty_options.sigma == -1);
@@ -342,6 +353,7 @@ int main(void)
     "suffix_length =8\n"
     "inference =MARGINAL\n"
     "estimator=ML\n"
+    "beam_mass=6"
     ;
 
   std::istringstream opt_file(opt_str);
@@ -358,7 +370,7 @@ int main(void)
   assert(options.regularization == L1);
   assert(options.delta == 2);
   assert(options.sigma == 1);
-
+  assert(options.beam_mass == 6);
   counter = 0;
 
   try

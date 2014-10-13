@@ -34,13 +34,14 @@ public:
   Trainer(unsigned int max_passes,
 	  unsigned int max_useless_passes,
 	  ParamTable &pt,
-	  unsigned int boundary_label,
+	  const LabelExtractor &label_extractor,
 	  const LemmaExtractor &lemma_extractor,
 	  std::ostream &msg_out);
   
   virtual void train(const Data &train_data, 
 		     const Data &dev_data,
-		     unsigned int beam) = 0;
+		     unsigned int beam,
+		     float beam_mass) = 0;
 
   void train_lemmatizer(const Data &train_data, 
 			const Data &dev_data,
@@ -53,8 +54,10 @@ protected:
 
   ParamTable &pt;
 
-  unsigned int boundary_label;
+  const LabelExtractor &label_extractor;
   const LemmaExtractor &lemma_extractor;
+
+  unsigned int boundary_label;
 
   std::ostream &msg_out;
 };
