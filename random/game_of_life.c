@@ -1,16 +1,16 @@
                                             #include   <stdio.h>
                                             #include    <time.h>
                                             #include  <stdlib.h>
-                                            #define A 15 /*GOL*/
+                                            #define A 20 /*GOL*/
                                             #define B (A*A)// IN
                                             /*C99 in the shape*/
                                             /* of  a  glider. */
 
 int main(void){srand                        /* 2014 */(time(0));
 char c[2*B];for( int                        i=0;i < B; ++i) c[i]
-= rand() % 2; printf                        (  "Press enter for"
-"next iteration and"                        "Ctrl-D to quit.\n")
-;for (int i = 0; i==                        0 ||  (i % B)  ||  (
+= rand() % 2; printf                        ( "Press enter for "
+"next iteration and"                        " Ctrl-D to quit.\n"
+);for (int i = 0;i==                        0 ||  (i % B)  ||  (
 getchar()  !=  EOF);                        ++i) { int n =  i  %
 (2*B); int x = (n  %                        B)  % A; int y = (n%
 
