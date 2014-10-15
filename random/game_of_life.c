@@ -3,9 +3,9 @@
                                             #include <time.h>///
                                             #define A 20//Glidrs
                                             #define B (A*A)//are
-                                            //the smallest space  
+                                            //the smallest space
                                             //ships. NB need c99
-
+                                                                
 int main(void){srand                        (time(0));//mpsilfve
 char c[2*B];for( int                        i=0;i < B; ++i) c[i]
 = rand() % 2; printf                        ( "Press enter for "
@@ -13,7 +13,7 @@ char c[2*B];for( int                        i=0;i < B; ++i) c[i]
 );for (int i = 0;i==                        0 ||  (i % B)  ||  (
 getchar()  !=  EOF);                        ++i) { int n =  i  %
 (2*B); int x = (n  %                        B)  % A; int y = (n%
-
+                                                                
                       B) /A; printf("%s%s"  , (c[n] ? "*" : " ")
                       ,((x+1)% A? "":"|\n"  )); int lc =  (x > 0
                       ?c[n-1]:0) + (x < A-  1 ?  c[n+ 1]:0); for
