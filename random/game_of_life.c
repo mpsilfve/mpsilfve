@@ -1,10 +1,10 @@
                                             #include   <stdio.h>
-                                            #include    <time.h>
+                                            #include <time.h>//A
                                             #include  <stdlib.h>
-                                            #define A 20 /*GOL*/
-                                            #define B (A*A)// IN
-                                            /*C99 in the shape*/
-                                            /* of  a  glider. */
+                                            #define A 20//glider
+                                            #define B  ( A * A )
+                                            //is  the   smallest
+                                            //spaceship.    C99.
 
 int main(void){srand                        /* 2014 */(time(0));
 char c[2*B];for( int                        i=0;i < B; ++i) c[i]
