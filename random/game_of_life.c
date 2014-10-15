@@ -1,12 +1,12 @@
-                                            #include   <stdio.h>
-                                            #include <time.h>//A
                                             #include  <stdlib.h>
-                                            #define A 20//glider
-                                            #define B  ( A * A )
-                                            // is  the  smallest
-                                            //of all spaceships.
+                                            #include <stdio.h>//
+                                            #include <time.h>///
+                                            #define A 20//Glidrs
+                                            #define B (A*A)//are
+                                            //the smallest space  
+                                            //ships. NB need c99
 
-int main(void){srand                        (time(0));//2014 C99
+int main(void){srand                        (time(0));//mpsilfve
 char c[2*B];for( int                        i=0;i < B; ++i) c[i]
 = rand() % 2; printf                        ( "Press enter for "
 "next iteration and"                        " Ctrl-D to quit.\n"
