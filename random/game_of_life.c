@@ -3,10 +3,10 @@
                                             #include  <stdlib.h>
                                             #define A 20//glider
                                             #define B  ( A * A )
-                                            //is  the   smallest
-                                            //spaceship.    C99.
+                                            // is  the  smallest
+                                            //of all spaceships.
 
-int main(void){srand                        /* 2014 */(time(0));
+int main(void){srand                        (time(0));//2014 C99
 char c[2*B];for( int                        i=0;i < B; ++i) c[i]
 = rand() % 2; printf                        ( "Press enter for "
 "next iteration and"                        " Ctrl-D to quit.\n"
