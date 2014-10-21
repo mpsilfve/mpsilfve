@@ -1,0 +1,65 @@
+
+ExPex Mar 2014
+
+-------------------------------------------------------------
+ExPex is maintained by John Frampton <j.frampton@neu.edu>
+-------------------------------------------------------------
+
+ExPex is designed to assist linguists in typesetting examples and
+glosses and in creating named reference to examples and parts of
+examples.
+
+-------------------------------------------------------------
+
+COPYRIGHT 2006-2014  by John Frampton <j.frampton@neu.edu>
+
+This program can be redistributed and/or modified under the terms
+of the LaTeX Project Public License, which can be found in the CTAN
+archives in directory macros/latex/base/lppl.txt.
+
+-------------------------------------------------------------
+
+The files in this distribution (v 5.0b) are:
+
+   README
+   expex.tex            Main macro file
+   expex.sty            Latex wrapper for expex.tex
+   expex-doc.pdf        User's Guide
+
+   eptexfn.tex          Tex footnote macros
+   epltxfn.sty          LaTex footnote package
+   epltxchapno.sty      LaTex package for chapter.number example
+                        numbering
+
+   expex-demo.tex       The code for most of the examples
+   expex-doc.zip        The source code for the User's Guide
+
+-------------------------------------------------------------
+
+expex-demo.tex
+
+This file contains most of the examples in the documentation.  It is
+intended to facilitate user experimentation with ExPex typesetting.
+Users can easily modify examples and see what the effect is. It can be
+run under either Plain Tex or LaTex.  Except for expex.tex and
+expex.sty, all files needed to run expex-demo should be part of any
+Tex installation.
+
+-------------------------------------------------------------
+
+Changes (from Version 5.0):
+
+1. In earlier versions before 5.0, {} empty items on the gla line were
+possible.  In 5.0, {{}} was required.  This version restores the old
+behavior.
+
+2. In versions before 5.0, glosses were built in a vbox, hence could
+not split between pages.  5.0 made glosses breakable, provided no
+explicit width was specified.  5.0 restores the old behavior but
+introduces a parameter <glossbreaking>.  It is set to false in
+expex.tex so that the default behavior is the old behavior.  But it
+can be set to true if the user wants glosses to break between pages.
+
+
+John Frampton 2014/03/10
+

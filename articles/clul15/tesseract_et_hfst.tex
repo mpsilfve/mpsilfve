@@ -1,0 +1,176 @@
+\documentclass[b5paper]{article}
+
+\usepackage{polyglossia}
+\usepackage{fontspec}
+\usepackage{xunicode}
+\usepackage{xltxtra}
+\usepackage{url}
+\usepackage{hyperref}
+\usepackage{expex}
+
+\makeatletter
+\def\blfootnote{\gdef\@thefnmark{}\@footnotetext}
+\makeatother
+
+\setmainfont[Mapping=tex-text]{Linux Libertine O}
+
+\begin{document}
+
+\title{Do Morphological Analyzers Improve the Quality Optical Character Recognition?}
+
+%\author{Miikka Silfverberg\\
+%University or Helsinki\\
+%Dept. of Modern Languages\\
+%\\
+%\url{miikka.silfverberg@helsinki.fi} \and
+%Jack Rueter\\
+%University or Helsinki\\
+%Dept. of Modern Languages\\
+%\\
+%\url{jack.rueter@helsinki.fi} 
+%}
+
+\author{...\\
+...\\
+...\\
+\\
+\url{...} \and
+...\\
+...\\
+...\\
+\\
+\url{...} 
+}
+\date{\today}
+
+\maketitle
+
+\begin{abstract}
+    Abstract can be between 150 and 300 words long. Separate keywords are not
+    used. Reviewers use abstract to decide which articles to review and readers
+    will use abstract to decide which articles to read, so make it informative
+    and interesting.
+\end{abstract}
+
+\section{Introduction}
+
+\begin{itemize}
+\item Digitization serves both linguists and language speakers. It is
+  crucial for maintaining viability of minority languages.
+\item Optical character recognition (OCR) can substantially improve
+  usability of digitized text. For example, it allows search engines
+  to index the text.
+\item Languages modelling is a commonly used technique for improving
+  language applications such as translation software and speech
+  recognizers. In OCR, language modelling usually amounts to using
+  dictionaries.
+\item For morphologically rich languages, e.g. the Uralic languages,
+  word lists may be an inadequate language model. Even extensive word
+  lists are unlikely to reach very high coverage on previously
+  unseen text [CITE] because of extensive compounding, derivation and
+  inflection.
+\item In contrast, a morphological analyzer [CITE], which encodes the
+  derivational and inflectional morphology of a language, can achieve
+  sufficient coverage. Thus it is conceivable that morphological
+  analyzers could substantially improve the quality of OCR for
+  morphologically rich languages.
+\item We present experiments on OCR for two (maybe a third?) Uralic
+  languages, Finnish and Erzya. In this paper, we utilize the
+  open-source OCR engine Tesseract \cite{smith07} and the
+  morphological analyzers OMorFi \cite{pirinen11} for Finnish and FOO
+  for Erzya [CITE].
+\item In light of our experiments, it seems that morphological
+  analyzers do help in OCR of morphologically rich languages, but the
+  improvements are modest.
+\item Nevertheless, it is worth pointing out, that for under-resourced
+  minority languages such as Erzya, morphological analyzers created by
+  linguists may represent the best existing lexical resources in
+  digital format. The reason for this is that digital content on the
+  internet can be very scarce. Therefore, using a morphological
+  analyzer as part of an OCR engine can be superior to using a word
+  list simply because no sufficiently broad coverage word lists exist.
+\end{itemize}
+
+\section{Related Work}
+
+\section{Methods}
+\begin{itemize}
+\item We modified the language modelling component of the Tesseract
+  OCR engine so that it could use HFST finite-state transducers in
+  optimized lookup format \cite{silfverberg09} as language models.
+\end{itemize}
+
+\subsection{Tesseract}
+\begin{itemize}
+\item Language modelling in Tesseract consists of a number of word
+  lists, e.g. a list of frequent word and words containing digits
+  \cite{smith07}.
+\item The word lists are compiled into directed acyclic graphs (DAWG)
+  that are in essence acyclic finite-state acceptors. Each acceptor
+  receives a global weighting coefficient, which determines its
+  reliability.
+\end{itemize}
+\subsection{Helsinki Finite-State Technology}
+\begin{itemize}
+\item HFST \cite{linden13}
+\item It is quite easy to integrate a morphological analyzer into a
+  scenario where dictionaries are already represented as DAWGs.
+\item At the surface the analyzer, converted into a cyclic
+  finite-state acceptor, does not differ from the word lists in DAWG
+  format. However it does function differently, because it is capable
+  of recognizing an infinite language.
+\item The analyzer receives a weighting coefficient.
+\item Optimized lookup format is fast.
+\item Memory consumption goes up, but not prohibitively.
+\end{itemize}
+
+\subsection{Using a Morphological Analyzer as an OCR Language Model}
+
+\section{Data}
+
+\section{Experiments}
+
+\begin{itemize}
+\item For both languages, we compare the following models:
+\begin{enumerate}
+\item No language model.
+\item Dictionary of word forms of varying sizes (1K, 100K and 1000K).
+\item A morphological analyzer.
+\item A combination of dictionaries and a morphological analyzer.
+\end{enumerate} 
+
+\item The dictionaries were composed of the most frequent N words in
+  the Wikipedias of the respective language. It is clear that the
+  choice of training material and especially the domain can influence
+  the results. Wikipedia should cover several different domains.
+
+\item The test set consists of standard prose.
+
+\item We created a hand crafted gold standard of 20 pages for each
+  language.
+
+\item Evaluation metric: Letter Edit Rate (LER). Amount of edits / maximal
+  amount of edits. The metric corresponds well to the amount of manual
+  post processing required [CITE].
+
+\item The OCR result and gold standard are first aligned using
+  approximate edit distance (implemented by the unix utility diff),
+  then the number of edits is computed from the aligned texts.
+\end{itemize}
+
+\section{Results}
+
+Tables and stuff....
+
+\section{Discussion and Conclusions}
+
+Doesn't seem to be hugely influential :/
+\section*{Acknowledgments}
+
+...
+
+\bibliographystyle{unsrt}
+\bibliography{fiwclul2015}
+
+\end{document}
+
