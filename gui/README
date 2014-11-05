@@ -1,0 +1,11 @@
+Run:
+
+python test_gui.py
+
+The dialog box can be dragged and it will vanish when you click one of
+the buttons.
+
+All quit buttons and quit-items in the menus do quit the demo.
+
+When quitting, the dome will print a list of all interactions with
+widgets that occurred.
