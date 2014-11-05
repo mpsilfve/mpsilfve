@@ -7,5 +7,5 @@ the buttons.
 
 All quit buttons and quit-items in the menus do quit the demo.
 
-When quitting, the dome will print a list of all interactions with
+When quitting, the demo will print a list of all interactions with
 widgets that occurred.
