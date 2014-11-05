@@ -16,31 +16,20 @@
 
 \begin{document}
 
-\title{Do Morphological Analyzers Improve the Quality Optical Character Recognition?}
+\title{Can Morphological Analyzers Improve the Quality of Optical Character Recognition?}
 
-%\author{Miikka Silfverberg\\
-%University or Helsinki\\
-%Dept. of Modern Languages\\
-%\\
-%\url{miikka.silfverberg@helsinki.fi} \and
-%Jack Rueter\\
-%University or Helsinki\\
-%Dept. of Modern Languages\\
-%\\
-%\url{jack.rueter@helsinki.fi} 
-%}
-
-\author{...\\
-...\\
-...\\
+\author{Miikka Silfverberg\\
+University or Helsinki\\
+Dept. of Modern Languages\\
 \\
-\url{...} \and
-...\\
-...\\
-...\\
+\url{mpsilfve@iki.fi} \and
+Jack Rueter\\
+University or Helsinki\\
+Dept. of Modern Languages\\
 \\
-\url{...} 
+\url{jack.rueter@helsinki.fi} 
 }
+
 \date{\today}
 
 \maketitle
@@ -92,6 +81,11 @@
 \end{itemize}
 
 \section{Related Work}
+\begin{itemize}
+\item \cite{smith09} add a module, which generates missing word
+  forms. This approach is unlikely to work well with compounds.
+
+\end{itemize}
 
 \section{Methods}
 \begin{itemize}
@@ -126,41 +120,209 @@
 
 \subsection{Using a Morphological Analyzer as an OCR Language Model}
 
-\section{Data}
-
 \section{Experiments}
 
+%\begin{itemize}
+%\item For both languages, we compare the following models:
+%\begin{enumerate}
+%\item No language model.
+%\item Dictionary of word forms of varying sizes (1K, 100K and 1000K).
+%\item A morphological analyzer.
+%\end{enumerate} 
+%
+%\item The dictionaries were composed of the most frequent N words in
+%  the Wikipedias of the respective language. It is clear that the
+%  choice of training material and especially the domain can influence
+%  the results. Wikipedia should cover several different domains.
+%
+%\item The test set consists of standard prose.
+%
+%\item We created a hand crafted gold standard of 20 pages for each
+%  language.
+%
+%\item Evaluation metric: Letter Edit Rate (LER). Amount of edits / maximal
+%  amount of edits. The metric corresponds well to the amount of manual
+%  post processing required [CITE].
+%
+%\item The OCR result and gold standard are first aligned using
+%  approximate edit distance (implemented by the unix utility diff),
+%  then the number of edits is computed from the aligned texts.
+%\end{itemize}
+In this section we describe the experimental setup of the paper.
+
+\subsection{Data}
+We evaluate the impact of morphological analyzers in OCR for two
+Uralic languages, Erzya and Finnish. For both languages, we perform
+experiments on excerpts from a novel and from newspaper text.
+ 
+For Finnish, we use pages 5 - 21 of the novel Elokuu by
+F.E. Sillanp\"{a}\"{a} \cite{sillanpaa08}. Additionally, we use the
+pages XX-YY of the Helsingin Sanomat newspaper from XX.YY.ZZZZ.
+
+For Erzya, we use pages 3 - 21 of the novel XX by Maksim Gorki
+\cite{gorki}. Additionally, we use pages XX - YY on September 11th 1927
+from the Erzyan newspaper Од эрямо.
+
+In order to gauge the effect of different language models on scanned
+material of varying quality, the data were scanned in three different
+resolutions: 100 dpi, 200 dpi and 300 dpi.
+
+Using correctly trained model with no vocabulary, standard Tesseract
+performs adequately on scanned images of quality 300 dpi. The results
+require little manual correction. However, 100 dpi usually gives quite
+poor performance. In fact the performance is so poor that manual
+correction might take longer than simply writing the text.
+
+For constructing Tesseract models with vocabulary, we used the text
+dumps of the Erzyan and Finnish Wikipedias. We used
+xml-files~\footnote{\url{www.foo.bar/baz} and \url{www.foo.bar/baz}}
+containing the current versions of all articles in the Wikipedias of
+the respective languages. For extracting the text contents, we used
+the utility {\tt wikipedia2text}~\footnote{\url{www.foo.bar/baz}}.
+
+DESCRIBE ANALYZERS
+
+\subsection{Methods}
+We trained six different models for both Finnish and Erzya.
 \begin{itemize}
-\item For both languages, we compare the following models:
-\begin{enumerate}
-\item No language model.
-\item Dictionary of word forms of varying sizes (1K, 100K and 1000K).
-\item A morphological analyzer.
-\item A combination of dictionaries and a morphological analyzer.
-\end{enumerate} 
-
-\item The dictionaries were composed of the most frequent N words in
-  the Wikipedias of the respective language. It is clear that the
-  choice of training material and especially the domain can influence
-  the results. Wikipedia should cover several different domains.
-
-\item The test set consists of standard prose.
-
-\item We created a hand crafted gold standard of 20 pages for each
-  language.
-
-\item Evaluation metric: Letter Edit Rate (LER). Amount of edits / maximal
-  amount of edits. The metric corresponds well to the amount of manual
-  post processing required [CITE].
-
-\item The OCR result and gold standard are first aligned using
-  approximate edit distance (implemented by the unix utility diff),
-  then the number of edits is computed from the aligned texts.
+\item A model without a language model.
+\item Models with a 1000, 10 000, 100 000 and 1 million word vocabularies respectively.
+\item A model using a morphological analyzer as language model.
 \end{itemize}
+
+For Finnish, we constructed the model without language model by
+deleting the vocabularies ({\tt freq-dawg} and {\tt word-dawg}) from
+the existing Tesseract model for Finnish~\footnote{see:
+  \url{https://code.google.com/p/tesseract-ocr/downloads/list}}.
+
+In order to compile the models with vocabularies ranging from 1000
+words to 1 million words, we extracted the most common N words from
+the Wikipedia, compiled them into a directed acyclic graph using the
+Tesseract utility {\tt wordlist2dawg} and used the graphs as word
+model ({\tt word-dawg}).
+
+DESCRIBE ANALYZER MODELS.
+
+\subsection{Evaluation}
+The process of optical character recognition gives rise to different kinds of errors:
+\begin{itemize}
+\item Characters, or entire text segments, may vanish. E.g. ``dog'' can be incorrectly recognized as ``dg''.
+\item Spurious characters may emerge. E.g. noise in the image may be recognized as ``il-\_.:''. 
+\item White-space may be dropped. E.g. ``the dog'' can be recognized as ``thedog''.
+\item Finally characters may be swpped for other
+  characters. E.g. ``dog'' can be recognized as ``d0g''.
+\end{itemize}
+
+The error types above frequently cause optical character recognition
+to produce text, whose length differs substantially from a gold
+standard text. Therefore, we cannot use simple character error rate as
+an evaluation metric. Instead, we measure the number of edits required
+to transform the recognized text into the gold standard text and
+relate that to the maximal number of edits that are required.
+
+Formally, we define the evaluation metric, {\it edit rate} (ER), thus:
+Let $T_1$ and $T_2$ be texts and let ${\rm dist}(T_!, T_2)$ be the
+minimum edit distance \cite{levenshtein66} between $T_1$ and $T_2$. Then the edit
+rate of $T_1$ and $T_2$ is
+$${\rm ER}(T_1, T_2) = {\rm dist}(T_1, T_2) / {\rm max}(|T_1|, |T_2|){\rm ,}$$
+where $|T|$ is the length of text $T$.
+ 
+Note, that the maximal edit distance of two texts, $T_1$ and $T_2$, is
+always $max(|T_1|, |T_2|)$, because the initial characters of the
+longer text can be swapped and the rest of the characters can be
+deleted. Moreover, if $T_1$ and $T_2$ share no common characters, then
+${\rm dist}(T_1, T_2) = max(|T_1|, |T_2|)$.
+
+In practice, we use the unix utility {\tt diff} instead of computing
+the exact edit distance. Both texts are transformed into one character
+per line format. The number of edits is computed from the output of
+{\tt diff}.
 
 \section{Results}
 
-Tables and stuff....
+In this section we show the results for Finnish in Tables
+\ref{fin-novel-res} and \ref{fin-news-res} and for Erzya in Tables
+\ref{myv-novel-res} and \ref{myv-news-res}. 
+
+For the Finnish novel, all models utilizing some kind of language
+modelling faired better than the baseline model without any kind of
+vocabulary information. The morphological analyzer performed better
+than the other models on the lowest image quality 100 dpi. Otherwise,
+it in fact performed worse than all other models utilizing language
+modelling.
+
+\begin{table}[!htb]
+\begin{center}
+\begin{tabular}{lrrr}
+\hline 
+                  & 300 dpi~~~~ & 200 dpi~~~~ & 100 dpi~~~~ \\
+\hline 
+No language model & ~3.48\%~~~~         & ~5.29\%~~~~         & 68.59\%~~~~         \\
+1000 words        & ~2.43\%~~~~         & ~3.39\%~~~~         & 67.12\%~~~~         \\
+10 000 words      & {\bf ~2.33}\%~~~~   & ~2.93\%~~~~         & 65.91\%~~~~         \\
+100 000 words     & ~2.46\%~~~~         & ~2.96\%~~~~         & 66.64\%~~~~         \\
+1 million words   & ~2.40\%~~~~         & {\bf ~2.83\%~~~~}   & 66.94\%~~~~         \\
+Morph. analyzer   & ~2.66\%~~~~         & ~3.39\%~~~~         & {\bf 64.94\%~~~~}   \\
+\hline 
+\end{tabular}
+\caption{LER for the Finnish novel Elokuu using different models and resolutions.}\label{fin-novel-res}
+\end{center}
+\end{table}
+
+\begin{table}[!htb]
+\begin{center}
+\begin{tabular}{lrrr}
+\hline 
+                  & 300 dpi~~~~ & 200 dpi~~~~ & 100 dpi~~~~ \\
+\hline 
+No language model & xx.xx\%~~~~   & xx.xx\%~~~~   & xx.xx\%~~~~   \\
+1000 words        & xx.xx\%~~~~   & xx.xx\%~~~~   & xx.xx\%~~~~   \\
+10 000 words      & xx.xx\%~~~~   & xx.xx\%~~~~   & xx.xx\%~~~~   \\
+100 000 words     & xx.xx\%~~~~   & xx.xx\%~~~~   & xx.xx\%~~~~   \\
+1 million words   & xx.xx\%~~~~   & xx.xx\%~~~~   & xx.xx\%~~~~   \\
+Morph. analyzer   & xx.xx\%~~~~   & xx.xx\%~~~~   & xx.xx\%~~~~   \\
+\hline 
+\end{tabular}
+\caption{LER for the Finnish newspaper excerpt using different models and resolutions.}\label{myv-novel-res}
+\end{center}
+\end{table}
+
+\begin{table}[!htb]
+\begin{center}
+\begin{tabular}{lrrr}
+\hline 
+                  & 300 dpi~~~~ & 200 dpi~~~~ & 100 dpi~~~~ \\
+\hline 
+No language model &  9.8\%~~~~   &  9.8\%~~~~   & 48.3\%~~~~   \\
+1000 words        &  7.9\%~~~~   &  8.7\%~~~~   & 53.8\%~~~~   \\
+10 000 words      &  7.1\%~~~~   &   7.7\%~~~~   & 47.4\%~~~~   \\
+68K words         &  {\bf 6.9\%}~~~~   &  7.8\%~~~~   & {\bf 46.4}\%~~~~~\\
+Morph. analyzer   &  9.1\%~~~~   &  9.9\%~~~~   & 47.0\%~~~~   \\
+Combination       &  7.0\%~~~~   &  {\bf 7.6}\%~~~~   & 48.3\%~~~~   \\
+\hline 
+\end{tabular}
+\caption{LER for the Erzyan novel FOO using different models and resolutions.}\label{fin-news-res}
+\end{center}
+\end{table}
+
+
+\begin{table}[!htb]
+\begin{center}
+\begin{tabular}{lrrr}
+\hline 
+                  & 300 dpi~~~~ & 200 dpi~~~~ & 100 dpi~~~~ \\
+\hline 
+No language model & xx.xx\%~~~~   & xx.xx\%~~~~   & xx.xx\%~~~~   \\
+1000 words        & xx.xx\%~~~~   & xx.xx\%~~~~   & xx.xx\%~~~~   \\
+10 000 words      & xx.xx\%~~~~   & xx.xx\%~~~~   & xx.xx\%~~~~   \\
+100 000 words     & xx.xx\%~~~~   & xx.xx\%~~~~   & xx.xx\%~~~~   \\
+1 million words   & xx.xx\%~~~~   & xx.xx\%~~~~   & xx.xx\%~~~~   \\
+Morph. analyzer   & xx.xx\%~~~~   & xx.xx\%~~~~   & xx.xx\%~~~~   \\
+\hline 
+\end{tabular}
+\caption{LER for the Erzyan newspaper excerpt using different models and resolutions.}\label{myv-news-res}
+\end{center}
+\end{table}
 
 \section{Discussion and Conclusions}
 
