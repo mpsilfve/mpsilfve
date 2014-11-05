@@ -1,3 +1,5 @@
+#! /usr/bin/env python
+
 import pygame
 from TextLine import TextLine, Borders
 from Menu import Menu
@@ -89,6 +91,6 @@ while 1:
     if "Quit" in events:
         break
 
-    pygame.time.wait(50)
+    pygame.time.wait(5)
 
 print events
