@@ -43,42 +43,52 @@ Dept. of Modern Languages\\
 
 \section{Introduction}
 
-\begin{itemize}
-\item Digitization serves both linguists and language speakers. It is
-  crucial for maintaining viability of minority languages.
-\item Optical character recognition (OCR) can substantially improve
-  usability of digitized text. For example, it allows search engines
-  to index the text.
-\item Languages modelling is a commonly used technique for improving
-  language applications such as translation software and speech
-  recognizers. In OCR, language modelling usually amounts to using
-  dictionaries.
-\item For morphologically rich languages, e.g. the Uralic languages,
-  word lists may be an inadequate language model. Even extensive word
-  lists are unlikely to reach very high coverage on previously
-  unseen text [CITE] because of extensive compounding, derivation and
-  inflection.
-\item In contrast, a morphological analyzer [CITE], which encodes the
-  derivational and inflectional morphology of a language, can achieve
-  sufficient coverage. Thus it is conceivable that morphological
-  analyzers could substantially improve the quality of OCR for
-  morphologically rich languages.
-\item We present experiments on OCR for two (maybe a third?) Uralic
-  languages, Finnish and Erzya. In this paper, we utilize the
-  open-source OCR engine Tesseract \cite{smith07} and the
-  morphological analyzers OMorFi \cite{pirinen11} for Finnish and FOO
-  for Erzya [CITE].
-\item In light of our experiments, it seems that morphological
-  analyzers do help in OCR of morphologically rich languages, but the
-  improvements are modest.
-\item Nevertheless, it is worth pointing out, that for under-resourced
-  minority languages such as Erzya, morphological analyzers created by
-  linguists may represent the best existing lexical resources in
-  digital format. The reason for this is that digital content on the
-  internet can be very scarce. Therefore, using a morphological
-  analyzer as part of an OCR engine can be superior to using a word
-  list simply because no sufficiently broad coverage word lists exist.
-\end{itemize}
+Digital media is an integral part of modern society and digitization
+of print matter is crucial for the viability of minority
+languages. Digitization also serves the linguistic community by making
+print media widely available. 
+
+{\it Optical Character Recognition} (OCR) can subtantially improve the
+usability of digitized documents by allowing for search in
+the document. In this paper, we investigate improving the quality of
+OCR using {\it morphological analyzers}.
+
+
+Languages modelling is a field encompassing a variety of
+techniques that aim at improving the function of language applications
+such as translation software and speech recognizers by capturing key
+properties of the target language. In OCR, language modelling usually
+amounts to using lista of word forms.
+
+Word lists are often adequate language models in applications designed
+for languages with limited morphology, for example English. However,
+morphologically rich languages, such as the Uralic languages, require
+more elaborate approaches. Even extensive word lists are unlikely to
+reach very high coverage on previously unseen text [CITE] because of
+extensive compounding, derivation and inflection.
+
+In contrast, a morphological analyzer [CITE], which encodes the
+derivational and inflectional morphology of a language, can achieve
+substantially higher coverage. Thus it is conceivable that morphological
+analyzers could substantially improve the quality of OCR for
+morphologically rich languages.
+
+We present experiments on OCR for two Uralic languages, Finnish and
+Erzya. In this paper, we utilize the open-source OCR engine Tesseract
+\cite{smith07} and the morphological analyzers OMorFi \cite{pirinen11}
+for Finnish and FOO for Erzya [CITE].
+
+In light of our experiments, it seems that morphological analyzers do
+help in OCR of morphologically rich languages, but the improvements
+are modest.
+
+Nevertheless, it is worth pointing out, that for under-resourced
+minority languages such as Erzya, morphological analyzers created by
+linguists may represent the best existing lexical resources in digital
+format. The reason for this is that digital content on the internet
+can be very scarce. Therefore, using a morphological analyzer as part
+of an OCR engine can be superior to using a word list simply because
+no sufficiently broad coverage word lists exist.
 
 \section{Related Work}
 \begin{itemize}
@@ -288,8 +298,13 @@ in edit count (ER) when compared to a baseline OCR model. The edit
 reduction, when comparing edit count $C$ to a basline edit count $B$,
 is defined as
 $${\rm ER} = \frac{B - C}{B}$$
-If, the baseline is in fact higher than the count $C$, the edit
+If, the baseline $B$ is in fact better than the count $C$, the edit
 reduction can be negative.
+
+We performed statistical significance tests to asses which of the
+models faired better thand the baseline. Additionally we tested the
+difference between the best model with a word list compared to the
+model using a morphological analyzer. We use a paired Wilcoxon test.
 
 \section{Results}
 
@@ -303,6 +318,8 @@ vocabulary information. The morphological analyzer performed better
 than the other models on the lowest image quality 100 dpi. Otherwise,
 it in fact performed worse than all other models utilizing language
 modelling.
+
+For resolutions 300 and 200 dpi, all language models gave statistically significant improvements over the baseline in the 95\% confidence interval. The best word list model was better than the morphological analyzer. For 100 dpi, only the morphological analyzer performed better than the baseline in the 95\% confidence interval.
 
 \begin{table}[!htb]
 \begin{center}
@@ -321,6 +338,8 @@ Morph. analyzer   & ~25.3\% (593)    & ~30.0\% (885)     & {\bf 5.7\%} (14621)  
 \caption{Edit reduction (and total edit count) for the Finnish novel Elokuu using different models and resolutions.}\label{fin-novel-res}
 \end{center}
 \end{table}
+
+The results for Erzya parallel those of Finnish. The morphological analyzer improves over the word lists only forse the lowes resolution 100 dpi. For resolution 200 dpi, the morphological analyzer does not seem to have any effect.
 
 %\begin{table}[!htb]
 %\begin{center}
