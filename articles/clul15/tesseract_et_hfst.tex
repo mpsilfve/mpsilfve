@@ -173,6 +173,21 @@ require little manual correction. However, 100 dpi usually gives quite
 poor performance. In fact the performance is so poor that manual
 correction might take longer than simply writing the text.
 
+\begin{table}[!htb]
+\begin{center}
+\begin{tabular}{lrr}
+\hline 
+        & Novel~~~~~~~~~~~~~~~~~~   & Newspaper \\
+\hline 
+Finnish & 3219 tokens (24096 characters)  &          \\
+Erzya   & 4539 tokens (58548 characters)  &          \\
+\hline 
+\end{tabular}
+\caption{Numeric description of data sets.}\label{data-table}
+\end{center}
+\end{table}
+
+\subsection{Linguistic Resources}
 For constructing Tesseract models with vocabulary, we used the text
 dumps of the Erzyan and Finnish Wikipedias. We used
 xml-files~\footnote{\url{www.foo.bar/baz} and \url{www.foo.bar/baz}}
@@ -180,7 +195,43 @@ containing the current versions of all articles in the Wikipedias of
 the respective languages. For extracting the text contents, we used
 the utility {\tt wikipedia2text}~\footnote{\url{www.foo.bar/baz}}.
 
-DESCRIBE ANALYZERS
+In addition to Wikipedia text, we used freely available morphological analyzers for Finnish and Erzya. OMorFi \cite{pirinen11} is a broad coverage Finnish morphological analyzer available online\footnote{\url{https://code.google.com/p/omorfi/}}. For Erzya, we used the Erzyan analyzer distributed by the Giellatekno project \cite{moshagen14}.
+
+The coverages of different linguistic resources on test data are shown
+in Tables \ref{fin-coverage} and \ref{myv-coverage}.
+
+\begin{table}[!htb]
+\begin{center}
+\begin{tabular}{lrr}
+\hline 
+                        & Novel   & Newspaper \\
+\hline 
+1K word list            &  32.2\% &         - \\
+10K word list           &  52.8\% &         - \\
+100K word list          &  71.4\% &         - \\
+1000K word list         &  84.5\% &         - \\
+Morphological analyser  &  86.7\% &         - \\
+\hline 
+\end{tabular}
+\caption{Coverages of linguistic resources on Finnish test material.}\label{fin-coverage}
+\end{center}
+\end{table}
+
+\begin{table}[!htb]
+\begin{center}
+\begin{tabular}{lrr}
+\hline 
+                        & Novel     & Newspaper \\
+\hline 
+1K word list            &   28.0\%  &         - \\
+10K word list           &   49.5\%  &         - \\
+68K word list           &   58.6\%  &         - \\
+Morphological analyser  &   80.6\%  &         - \\ 
+\hline 
+\end{tabular}
+\caption{Coverages of linguistic resources on Erzya test material.}\label{myv-coverage}
+\end{center}
+\end{table}
 
 \subsection{Methods}
 We trained six different models for both Finnish and Erzya.
@@ -204,39 +255,41 @@ model ({\tt word-dawg}).
 DESCRIBE ANALYZER MODELS.
 
 \subsection{Evaluation}
-The process of optical character recognition gives rise to different kinds of errors:
-\begin{itemize}
-\item Characters, or entire text segments, may vanish. E.g. ``dog'' can be incorrectly recognized as ``dg''.
-\item Spurious characters may emerge. E.g. noise in the image may be recognized as ``il-\_.:''. 
-\item White-space may be dropped. E.g. ``the dog'' can be recognized as ``thedog''.
-\item Finally characters may be swpped for other
-  characters. E.g. ``dog'' can be recognized as ``d0g''.
-\end{itemize}
+From the point-of-view of evaluation, it is tempting to view OCR as a
+special case of sequence labelling. In sequence labelling tasks, such
+as part-of-speech tagging, words are labelled using part-of-speech
+labels from a set of possible labels. Similarly, an OCR engine labels
+the character glyphs in an image using characters from the
+alphabet. This similarity suggests evaluation using character level
+accuracy. However, the parallel between an OCR engine and
+part-of-speech tagger is not entirely accurate.
 
-The error types above frequently cause optical character recognition
-to produce text, whose length differs substantially from a gold
-standard text. Therefore, we cannot use simple character error rate as
-an evaluation metric. Instead, we measure the number of edits required
-to transform the recognized text into the gold standard text and
-relate that to the maximal number of edits that are required.
+Simple metrics such as character level accuracy cannot be used, since
+the OCR process gives rise to error types, which change the length of
+the text. We classify OCR errors into the following categories:
+\begin{center}
+\begin{tabular}{ll}
+Deletions  & Characters vanish. E.g. ``dog'' is recognized as ``dg''\\
+Insertions & Spurious characters emerge. E.g. noise in the image may \\
+           & be recognized as ``il-\_.:''.\\ 
+Swaps      & Characters may be swapped for other characters. E.g. \\
+           & ``dog'' can be recognized as ``d0g''.
+\end{tabular}
+\end{center}
 
-Formally, we define the evaluation metric, {\it edit rate} (ER), thus:
-Let $T_1$ and $T_2$ be texts and let ${\rm dist}(T_!, T_2)$ be the
-minimum edit distance \cite{levenshtein66} between $T_1$ and $T_2$. Then the edit
-rate of $T_1$ and $T_2$ is
-$${\rm ER}(T_1, T_2) = {\rm dist}(T_1, T_2) / {\rm max}(|T_1|, |T_2|){\rm ,}$$
-where $|T|$ is the length of text $T$.
- 
-Note, that the maximal edit distance of two texts, $T_1$ and $T_2$, is
-always $max(|T_1|, |T_2|)$, because the initial characters of the
-longer text can be swapped and the rest of the characters can be
-deleted. Moreover, if $T_1$ and $T_2$ share no common characters, then
-${\rm dist}(T_1, T_2) = max(|T_1|, |T_2|)$.
+Because the OCR result an the gold standard text can differ
+significantly in length, we first align on character level using the
+unix utility {\tt diff}. We then compute the number of edits required
+to transform the OCR result into the gold standard text and call this
+number the {\it edit count} (EC).
 
-In practice, we use the unix utility {\tt diff} instead of computing
-the exact edit distance. Both texts are transformed into one character
-per line format. The number of edits is computed from the output of
-{\tt diff}.
+For each experiment, we report both raw edit counts and the reduction
+in edit count (ER) when compared to a baseline OCR model. The edit
+reduction, when comparing edit count $C$ to a basline edit count $B$,
+is defined as
+$${\rm ER} = \frac{B - C}{B}$$
+If, the baseline is in fact higher than the count $C$, the edit
+reduction can be negative.
 
 \section{Results}
 
@@ -255,50 +308,49 @@ modelling.
 \begin{center}
 \begin{tabular}{lrrr}
 \hline 
-                  & 300 dpi~~~~ & 200 dpi~~~~ & 100 dpi~~~~ \\
+                  & 300 dpi & 200 dpi & 100 dpi \\
 \hline 
-No language model & ~3.48\%~~~~         & ~5.29\%~~~~         & 68.59\%~~~~         \\
-1000 words        & ~2.43\%~~~~         & ~3.39\%~~~~         & 67.12\%~~~~         \\
-10 000 words      & {\bf ~2.33}\%~~~~   & ~2.93\%~~~~         & 65.91\%~~~~         \\
-100 000 words     & ~2.46\%~~~~         & ~2.96\%~~~~         & 66.64\%~~~~         \\
-1 million words   & ~2.40\%~~~~         & {\bf ~2.83\%~~~~}   & 66.94\%~~~~         \\
-Morph. analyzer   & ~2.66\%~~~~         & ~3.39\%~~~~         & {\bf 64.94\%~~~~}   \\
+No language model & ~0.0\% (794)          & ~0.0\% (1265)          & 0.0\% (15504) \\
+1000 words        & ~32.1\% (539)  & ~36.8\% (799)        & 2.1\% (15172)    \\
+10 000 words      & {\bf ~35.3}\% (514)  & ~44.7\%  (699)  & 4.0\% (14891)   \\
+100 000 words     & ~31.5\% (544)   & ~44.0\%  (708)  & 3.2\%  (15014)  \\
+1 million words   & ~33.5\% (528)   & {\bf ~45.4\%} (691)  & 2.4\% (15131)        \\
+Morph. analyzer   & ~25.3\% (593)    & ~30.0\% (885)     & {\bf 5.7\%} (14621)  \\
 \hline 
 \end{tabular}
-\caption{LER for the Finnish novel Elokuu using different models and resolutions.}\label{fin-novel-res}
+\caption{Edit reduction (and total edit count) for the Finnish novel Elokuu using different models and resolutions.}\label{fin-novel-res}
 \end{center}
 \end{table}
+
+%\begin{table}[!htb]
+%\begin{center}
+%\begin{tabular}{lrrr}
+%\hline 
+%                  & 300 dpi~~~~ & 200 dpi~~~~ & 100 dpi~~~~ \\
+%\hline 
+%No language model & xx.xx\%~~~~   & xx.xx\%~~~~   & xx.xx\%~~~~   \\
+%1000 words        & xx.xx\%~~~~   & xx.xx\%~~~~   & xx.xx\%~~~~   \\
+%10 000 words      & xx.xx\%~~~~   & xx.xx\%~~~~   & xx.xx\%~~~~   \\
+%100 000 words     & xx.xx\%~~~~   & xx.xx\%~~~~   & xx.xx\%~~~~   \\
+%1 million words   & xx.xx\%~~~~   & xx.xx\%~~~~   & xx.xx\%~~~~   \\
+%Morph. analyzer   & xx.xx\%~~~~   & xx.xx\%~~~~   & xx.xx\%~~~~   \\
+%\hline 
+%\end{tabular}
+%\caption{LER for the Finnish newspaper excerpt using different models and resolutions.}\label{myv-novel-res}
+%\end{center}
+%\end{table}
 
 \begin{table}[!htb]
 \begin{center}
 \begin{tabular}{lrrr}
 \hline 
-                  & 300 dpi~~~~ & 200 dpi~~~~ & 100 dpi~~~~ \\
+                  & 300 dpi & 200 dpi & 100 dpi \\
 \hline 
-No language model & xx.xx\%~~~~   & xx.xx\%~~~~   & xx.xx\%~~~~   \\
-1000 words        & xx.xx\%~~~~   & xx.xx\%~~~~   & xx.xx\%~~~~   \\
-10 000 words      & xx.xx\%~~~~   & xx.xx\%~~~~   & xx.xx\%~~~~   \\
-100 000 words     & xx.xx\%~~~~   & xx.xx\%~~~~   & xx.xx\%~~~~   \\
-1 million words   & xx.xx\%~~~~   & xx.xx\%~~~~   & xx.xx\%~~~~   \\
-Morph. analyzer   & xx.xx\%~~~~   & xx.xx\%~~~~   & xx.xx\%~~~~   \\
-\hline 
-\end{tabular}
-\caption{LER for the Finnish newspaper excerpt using different models and resolutions.}\label{myv-novel-res}
-\end{center}
-\end{table}
-
-\begin{table}[!htb]
-\begin{center}
-\begin{tabular}{lrrr}
-\hline 
-                  & 300 dpi~~~~ & 200 dpi~~~~ & 100 dpi~~~~ \\
-\hline 
-No language model &  9.8\%~~~~   &  9.8\%~~~~   & 48.3\%~~~~   \\
-1000 words        &  7.9\%~~~~   &  8.7\%~~~~   & 53.8\%~~~~   \\
-10 000 words      &  7.1\%~~~~   &   7.7\%~~~~   & 47.4\%~~~~   \\
-68K words         &  {\bf 6.9\%}~~~~   &  7.8\%~~~~   & {\bf 46.4}\%~~~~~\\
-Morph. analyzer   &  9.1\%~~~~   &  9.9\%~~~~   & 47.0\%~~~~   \\
-Combination       &  7.0\%~~~~   &  {\bf 7.6}\%~~~~   & 48.3\%~~~~   \\
+No language model &  0.0\% (3257)  &  0.0\% (3224)  &  0.0\% (15788)  \\
+1000 words        &  20.9\% (2576)  &  11.7\% (2846)  & -10.7\%  (17473) \\
+10 000 words      &  29.5\% (2295)  &   {\bf 22.7\%} (2492)  & 1.8\% (15498)  \\
+68K words         &  {\bf 30.9\%} (2249)  &  21.9\% (2517)  & 0.5\% (15702)\\
+Morph. analyzer   &  8.0\% (2996)  &  -0.1\% (3230)  & {\bf 2.8\%} (15353)  \\
 \hline 
 \end{tabular}
 \caption{LER for the Erzyan novel FOO using different models and resolutions.}\label{fin-news-res}
@@ -306,24 +358,27 @@ Combination       &  7.0\%~~~~   &  {\bf 7.6}\%~~~~   & 48.3\%~~~~   \\
 \end{table}
 
 
-\begin{table}[!htb]
-\begin{center}
-\begin{tabular}{lrrr}
-\hline 
-                  & 300 dpi~~~~ & 200 dpi~~~~ & 100 dpi~~~~ \\
-\hline 
-No language model & xx.xx\%~~~~   & xx.xx\%~~~~   & xx.xx\%~~~~   \\
-1000 words        & xx.xx\%~~~~   & xx.xx\%~~~~   & xx.xx\%~~~~   \\
-10 000 words      & xx.xx\%~~~~   & xx.xx\%~~~~   & xx.xx\%~~~~   \\
-100 000 words     & xx.xx\%~~~~   & xx.xx\%~~~~   & xx.xx\%~~~~   \\
-1 million words   & xx.xx\%~~~~   & xx.xx\%~~~~   & xx.xx\%~~~~   \\
-Morph. analyzer   & xx.xx\%~~~~   & xx.xx\%~~~~   & xx.xx\%~~~~   \\
-\hline 
-\end{tabular}
-\caption{LER for the Erzyan newspaper excerpt using different models and resolutions.}\label{myv-news-res}
-\end{center}
-\end{table}
+%\begin{table}[!htb]
+%\begin{center}
+%\begin{tabular}{lrrr}
+%\hline 
+%                  & 300 dpi~~~~ & 200 dpi~~~~ & 100 dpi~~~~ \\
+%\hline 
+%No language model & xx.xx\%~~~~   & xx.xx\%~~~~   & xx.xx\%~~~~   \\
+%1000 words        & xx.xx\%~~~~   & xx.xx\%~~~~   & xx.xx\%~~~~   \\
+%10 000 words      & xx.xx\%~~~~   & xx.xx\%~~~~   & xx.xx\%~~~~   \\
+%100 000 words     & xx.xx\%~~~~   & xx.xx\%~~~~   & xx.xx\%~~~~   \\
+%1 million words   & xx.xx\%~~~~   & xx.xx\%~~~~   & xx.xx\%~~~~   \\
+%Morph. analyzer   & xx.xx\%~~~~   & xx.xx\%~~~~   & xx.xx\%~~~~   \\
+%\hline 
+%\end{tabular}
+%\caption{LER for the Erzyan newspaper excerpt using different models and resolutions.}\label{myv-news-res}
+%\end{center}
+%\end{table}
 
+\section{Error Analysis}
+foo
+ 
 \section{Discussion and Conclusions}
 
 Doesn't seem to be hugely influential :/
