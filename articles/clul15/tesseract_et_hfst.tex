@@ -37,9 +37,9 @@ Dept. of Modern Languages\\
 \begin{abstract}
   {\it Optical Character Recognition} (OCR) can subtantially improve
   the usability of digitized documents. Language modelling using word
-  lists is known to improve OCR quality of English. However, for
-  morphologically rich languages, word lists do not reach high
-  coverage on unseen text. Morphological analyzers offer a more
+  lists is known to improve OCR quality for English. However, for
+  morphologically rich languages, even large word lists do not reach
+  high coverage on unseen text. Morphological analyzers offer a more
   sophisticated approach, which is useful in many language processing
   applications. This paper investigates language modelling in the
   open-source OCR engine Tesseract using morphological analyzers. We
@@ -289,13 +289,13 @@ longer than simply writing the text from scratch.
 
 \subsection{Resources}
 For constructing Tesseract systems with word lists as language models,
-we used the xml-dumps of the
+we used the XML dumps of the
 Erzya\footnote{\url{ftp://wikipedia.c3sl.ufpr.br/wikipedia/myvwiki/20140927/myvwiki-20140927-pages-meta-current.xml.bz2}}
 and
 Finnish\footnote{\url{ftp://wikipedia.c3sl.ufpr.br/wikipedia/fiwiki/20141018/fiwiki-20141018-pages-meta-current.xml.bz2}}
 Wikipedias. We used the utility {\tt
   wp2text}~\footnote{\url{https://github.com/yohasebe/wp2txt}} for
-extracting the text contents from the xml-files.
+extracting the text contents from the XML files.
 
 We formed lists containing the N most frequent word forms for various
 N in the range 1000 up to 1 million for Finnish and 1000 up to 68 000
@@ -319,7 +319,7 @@ the analyzer.
 \begin{center}
 \begin{tabular}{lr}
 \hline 
-                        & Coverage  \\
+Erzya                   & Coverage  \\
 \hline 
 1K word list            &   28.0\%  \\
 10K word list           &   49.5\%  \\
@@ -330,7 +330,7 @@ Morphological analyser  &   80.6\%  \\
 \quad
 \begin{tabular}{lr}
 \hline 
-                        & Coverage \\
+Finnish                 & Coverage \\
 \hline 
 1K word list            &  32.2\% \\
 10K word list           &  52.8\% \\
