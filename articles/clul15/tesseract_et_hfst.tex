@@ -46,9 +46,8 @@ Dept. of Modern Languages\\
   present experiments on two Uralic languages Finnish and
   Erzya. According to our experiments, word lists may still be
   superior to morphological analyzers in OCR even for languages with
-  rich morphology. Our error analysis indicates that using
-  morphological analyzers can cause a large amount of real word errors
-  compared to word lists.
+  rich morphology. Our error analysis indicates that morphological
+  analyzers can cause a large amount of real word OCR errors.
 \end{abstract}
 
 \section{Introduction}
@@ -61,23 +60,22 @@ few applications can deal with images directly. {\it Optical Character
   Recognition} (OCR) can subtantially improve the usability of
 digitized documents for example by allowing search engines to index
 them. In this paper, we investigate improving the quality of OCR for
-languages with rich morphology, that is languages with extensive
+{\it languages with rich morphology}, that is languages with extensive
 inflection, derivation and compounding.
 
 OCR engines can benefit from language modelling, which is a field
 encompassing a variety of techniques that aim at improving the
 function of language processing applications by capturing key
 properties of the target language. Among others, translation software
-and speech recognizers benefit greatly from sophisticated language
-models. In OCR simpler language models can be adequate. Often word
-lists are used.
+and speech recognizers benefit greatly from sophisticated statistical
+language models. In OCR, simpler language models can be
+adequate. Often word lists are used.
 
 Word lists are adequate in applications designed for languages with
 limited morphology such as English. However, morphologically rich
 languages, among others the Uralic languages, require more elaborate
 approaches. For these languages, even extensive word lists are
-unlikely to reach high coverage on previously unseen text because
-of extensive compounding, derivation and inflection \cite{creutz07}.
+unlikely to reach high coverage on previously unseen text \cite{creutz07}.
 
 In contrast to word lists, morphological analyzers
 \cite{koskenniemi83}, which encode the derivational and inflectional
@@ -86,12 +84,11 @@ coverage. Thus it is conceivable that language models utilizing
 morphological analyzers could improve the quality of OCR for
 morphologically rich languages.
 
-In this paper, we present experiments on OCR for two Uralic languages,
+In this paper, we present experiments on OCR for two Uralic languages
 with rich morphology, Finnish and Erzya. We performed the experiments
 using the open-source OCR engine Tesseract \cite{smith07} and
-open-source morphological analyzers for both languages. We used OCR
-systems without language modelling and systems using word lists
-baseline.
+open-source morphological analyzers for both languages. As baselines, we used OCR
+systems without language modelling and systems using word lists.
 
 In light of our experiments, it seems that morphological analyzers do
 help in OCR of morphologically rich languages compared to a baseline
@@ -101,17 +98,16 @@ and Finnish. This result was somewhat surprising, as the morphological
 analyzers had higher coverage on the test material than the word
 lists. Error analysis revealed that the high coverage of the
 morphological analyzers may in fact present a problem for the OCR
-process, as it leads to a substantial increase in real word errors
-compared to word lists.
+process, as it leads to a substantial number of real word errors.
 
 Although we did not get improvements over word lists, it is worth
 pointing out that for some under-resourced minority languages
 morphological analyzers created by linguists represent the best
 readily available lexical resources in machine readable format. The
-reason for this is that digital content on the Internet can be very
-scarce and the orthography of the material may be
-non-standard. Therefore, using a morphological analyzer as part of an
-OCR engine can still be motivated.
+reason for this is that digital content on the Internet can be scarce
+and the orthography of the material may be non-standard. Therefore,
+using a morphological analyzer as part of an OCR engine can still be
+motivated.
 
 The paper is structured as follows. We describe related work in
 Section \ref{rel}. In Section \ref{met}, we describe the Tesseract OCR
@@ -123,7 +119,7 @@ the experiment on Finnish. We conclude the paper in Section
 
 \section{Related Work}
 \label{rel}
-To our knowledge, this is the first investigation of using
+To our knowledge, this is the first investigation of utilizing
 morphological analyzers in OCR. However, other approaches to language
 modelling for OCR of morphologically rich languages have been
 researched.
@@ -133,28 +129,27 @@ by generating additional word forms from stem suffix pairs. In
 contrast to our approach, their method requires no additional
 linguistic resources, since the sets of stems and affixes are
 harvested from the vocabulary. However, we believe this approach is
-unlikely to work well with extensive compounding present in for
-example Finnish because of data sparseness.
+unlikely to work well with languages, that have extensive compounding,
+for example Finnish. Data sparseness will be a grave problem.
 
 There is a large body of literature on spelling correction for
 morphologically rich languages, for example \cite{oflazer94} and
 \cite{pirinen12}, and spelling correction has been successfully
-applied to OCR post-processing. In our work, we wanted to investigate
-changing the language model instead of using post-processing to
-correct errors, because post-processing cannot in principle give as
-good results as improved language modelling. The motivation for this
-is that knowledge about the reliability of predictions of the
-individual characters has already been lost at the post-processing
-stage.
+applied to OCR post-processing. In our work, we wanted to improve the
+language model instead of using post-processing to correct errors,
+because post-processing cannot in principle give as good results as
+improved language modelling. The reason is that knowledge about the
+reliability of predictions of the individual characters has already
+been lost at the post-processing stage.
 
 Lastly, character based statistical language models have been
-investigated, but the results of this approach are not encouraging
+investigated, but the results of this approach are mixed
 \cite{smith11}. It seems that statistical language models do improve
-performance, when the baseline is low, but they may in fact degrade
-the performance of high accuracy OCR systems. Consequently, this
-approach has given good results in the related field of handwritten
-text recognition \cite{marti01}, where the overall performance is much
-lower.
+performance when the baseline is low, but they may in fact degrade
+the performance of high accuracy OCR systems. However, statistical
+language modelling has given good results in the related field of
+handwritten text recognition \cite{marti01}, where the overall
+performance is much lower.
 
 \section{Methods}
 \label{met} In this section, we describe the Tesseract OCR engine, the
@@ -170,52 +165,56 @@ and alphabets, for example Finnish. Tesseract was therefore a natural
 starting point for exploring improvements for OCR of Uralic languages.
 
 The recognition process of Tesseract can be seen as a pipeline
-consisting of four phases \cite{smith07}:
+consisting of four stages \cite{smith07}:
 \begin{enumerate}
 \item Identification of character boundaries.
 \item Grouping of characters into words and lines.
-\item Word Recognition.
+\item Word level recognition.
 \item Resolution of ambiguous word spacing.
 \end{enumerate}
-Our work focuses on the third phase of the pipeline, namely word
-recognition. Word recognition encompasses two sub-tasks: character
-recognition using a static classifier and word recognition using a
+
+Our work focuses on the third stage of the pipeline, namely word level
+recognition. Word level recognition encompasses two sub-tasks: character
+recognition using a character classifier and word recognition using a
 combination of an additional word level classifier and various
-language models. During word recognition, the word level classifier
+language models. During word level recognition, the word level classifier
 and language models give competing suggestions based on the output of
-the character recognizer. These suggestions are weighted using
-heuristic, model specific, weights and the highest scoring suggestion
-becomes the OCR output.
+the character recognizer. 
+%These suggestions are weighted using
+%heuristic, model specific, weights and the highest scoring suggestion
+%becomes the final OCR output word.
+The highest scoring suggestion becomes the OCR output word.
 
 The existing language models in Tesseract are word lists, which are
 compiled into {\it directed acyclic graphs} (DAG) for fast
 processing. Tesseract incorporates a number of different language
 models\footnote{https://code.google.com/p/tesseract-ocr/wiki/TrainingTesseract3},
-for example: A shortlist of {\it frequent word forms}, a more
+for example: A short list of {\it frequent word forms}, a more
 extensive {\it dictionary}, {\it punctuation patters} and a list of
 {\it word forms containing digits}.
 
 Each language model and the adaptive classifier have associated
 weights, which determine their relative importance. For example the
-frequent word model has a higher weight than the dictionary model
-reflecting the higher prior for seeing frequent words. 
+model of frequent word forms has a higher weight than the dictionary
+model reflecting the higher prior for seeing frequent words.
 
-When the character model returns a scored set of possible word
-forms, each of the language models and the word level classifier
-return the highest scoring word form known to the model. These
-weights are further re-scored using the model specific weights.
+When the character model returns a scored set of possible word forms,
+each of the language models and the word level classifier return the
+highest scoring word form known to the model. These suggestions are
+further re-scored using the model specific weights. Finally, the highest
+scoring suggestion is selected.
 
-We do modify this system by replacing the dictionary model with a
+We modify this system by replacing the dictionary model with a
 morphological analyzer.
 
 \subsection{Helsinki Finite-State Technology}
 Helsinki Finite-State Technology (HFST) \cite{linden13} is an
-open-source C++ library for constructing finite-state transducers and
-morphological analyzers based on finite-state
-technology. Morphological analyzers compatible with the HFST library
-exist for several languages. We know of at least fifteen Uralic
-languages\footnote{http://giellatekno.uit.no/all-lang.eng.html} with
-HFST morphological analyzers, for example Erzya and Finnish.
+open-source C++ library and collection of tools for constructing
+finite-state transducers and morphological analyzers based on
+finite-state technology. Morphological analyzers compatible with the
+HFST library exist for several languages. We know of at least fifteen
+Uralic languages\footnote{http://giellatekno.uit.no/all-lang.eng.html}
+with HFST morphological analyzers, for example Erzya and Finnish.
 
 \subsection{Morphological Analyzers as OCR Language Models}
 As mentioned above, Tesseract internally represents language models as
@@ -223,7 +222,9 @@ directed acyclic graphs or DAGs. HFST morphological analyzers are
 finite-state transducers (FST), which are closely related to DAGs. The
 main difference is that finite-state transducers transform strings
 instead of simply accepting or discarding them. Additionally,
-finite-state transducers can be cyclic unlike DAGs.
+finite-state transducers can be cyclic unlike DAGs. By modifying both
+Tesseract and the analyzers, we were able integrate morphological
+analyzers.
 
 There exists a straight-forward conversion ({\it projection})
 from FSTs to finite-state automata, which are identical to DAGs in
@@ -232,19 +233,18 @@ other respects, but may be cyclic like FSTs.
 It turned out, that Tesseract is not in principle incompatible with
 cyclic graphs. The existing implementation simply did not offer a way
 to produce cyclic graphs. Fortunately, it was not difficult to
-implement a sub-class for the Tesseract language modelling class, {\tt
-  Dawg}, which does support cyclic graphs. Additionally, we
-implemented a driver for HFST transducers in optimized lookup format,
-which supports lookup speeds of up to 100 000 words/s
-\cite{silfverberg09}.
+implement a sub-class for the Tesseract language model class, {\tt
+  Dawg}, which does support cyclic graphs. Additionally, we implemented a
+driver for HFST transducers in optimized lookup format, which supports
+lookup speeds of up to 100 000 words/s \cite{silfverberg09}.
 
 HFST morphological analyzers can contain so called flag diacritics
 \cite{beesley03}, which are used to compress the finite-state machine
 by introducing non-determinism in a controlled way. Tesseract employs
-a Viterbi-like algorithm for finding word suggestions, which requires
+a search algorithm for finding word suggestions, which requires
 the language model to be deterministic. Hence it cannot handle flag
 diacritics. However, HFST includes utilities which can be used to
-eliminate the flag diacritics from a finite-state machine without
+eliminate flag diacritics from a finite-state machine without
 changing its behaviour.
 
 All the necessary steps to transform an HFST morphological analyzer
@@ -283,14 +283,14 @@ data were scanned in three different resolutions: 100 dpi, 200 dpi and
 
 Even without language modelling, Tesseract performs quite well on
 scanned images of quality 300 dpi. The result requires relatively
-little manual correction. However, 100 dpi usually gives quite poor
-performance. In fact the performance is so poor that manual correction
-might take longer than simply writing the text.
+little manual correction. In contrast, 100 dpi images usually result
+in very quite poor performance. In fact manual correction may take
+longer than simply writing the text from scratch.
 
 \subsection{Resources}
 For constructing Tesseract systems with word lists as language models,
 we used the xml-dumps of the
-Erzyan\footnote{\url{ftp://wikipedia.c3sl.ufpr.br/wikipedia/myvwiki/20140927/myvwiki-20140927-pages-meta-current.xml.bz2}}
+Erzya\footnote{\url{ftp://wikipedia.c3sl.ufpr.br/wikipedia/myvwiki/20140927/myvwiki-20140927-pages-meta-current.xml.bz2}}
 and
 Finnish\footnote{\url{ftp://wikipedia.c3sl.ufpr.br/wikipedia/fiwiki/20141018/fiwiki-20141018-pages-meta-current.xml.bz2}}
 Wikipedias. We used the utility {\tt
@@ -343,7 +343,7 @@ Morphological analyser  &  86.7\%
 \end{table}
 
 \subsection{Experiments}
-We trained six different OCR systems for Finnish and four systems for Erzya:
+We trained five different OCR systems for Finnish and four systems for Erzya:
 \begin{itemize}
 \item A system without a language model (the baseline).
 \item Systems using 1000 and 10 000 word vocabularies both for Finnish
@@ -367,8 +367,7 @@ the baseline system.
 
 The morphological analyzers, were first processed using the HFST
 utility\\{\tt hfst-fst2tesseract}. We then combined them with a system
-identical to the baseline systems. We did not use both a word list and
-a morphological analyzer.
+identical to the baseline systems. 
 
 \subsection{Evaluation}
 It is tempting to view OCR as a special case of sequence labelling,
@@ -384,7 +383,7 @@ may be deleted. Therefore, we evaluated by measuring the {\it edit
   distance} \cite{levenshtein66} of the OCR result and the gold
 standard.
 
-In practice, we first aligned the text on character level using the
+In practice, we first aligned the texts on character level using the
 Unix utility {\tt diff}. We then computed the number of edits required
 to transform the OCR result into the gold standard text. We call this
 figure the {\it edit count} (EC). For each experiment, we report both
@@ -397,12 +396,11 @@ $${\rm ER} = \frac{B - C}{B}$$
 If, the baseline $B$ is in fact better than the count $C$, the edit
 reduction will be be negative.
 
-We divided the test material into groups according to book page, and
-performed paired one sided Wilcoxon tests to asses the statistical
-significance of our results in the 95\% confidence interval. We
-compared all systems to the baseline model. We additionally compared
-the best word-list system to the system using a morphological
-analyzer.
+We divided the test material into pages, and performed paired one
+sided Wilcoxon tests to asses the statistical significance of our
+results with confidence level 95\%. We compared all systems to
+the baseline model. We additionally compared the best word-list system
+to the system using a morphological analyzer.
 
 \section{Results}
 \label{res}
@@ -476,9 +474,9 @@ analyzer and the best word list system.
 
 We classified errors into two types: real word errors and others. Real
 word errors are errors, where the resulting incorrect word is known by
-the language model, for example a clitizized genitive of
-he/she``Hänenkin'' was recognized erroneously as a clitizized genitive
-of pike ``Hauenkin''. Other errors simply encompass all other error
+the language model, for example a genitive of
+he/she ``Hänen'' was recognized erroneously as the genitive
+of pike ``Hauen''. Other errors simply encompass all other error
 types, common examples include insertion and deletion of punctuation
 and casing errors such as lower case ``v'' being recognized as an
 upper case ``V'' and vice versa.
@@ -491,7 +489,7 @@ word errors.
 \label{disc}
 
 In light of our experiments, it seems that morphological analyzers may
-do more harm than good in OCR. For higher resolutions 200 and 300 dpi,
+do more harm than good in OCR. For higher resolutions, 200 and 300 dpi,
 the morphological analyzers fared worse than even the smallest
 vocabulary of 1000 words. This happens both for Finnish and Erzya. We
 believe, the large amount of real word errors is to blame. However,
@@ -500,12 +498,12 @@ improve performance. It is interesting to compare these results to
 statistical language modelling for OCR, which also improves results
 when performance is low, but can degrade it otherwise \cite{smith11}.
 
-It is interesting to note, that vocabulary size does not seem to be a
-very good predictor of performance. For Finnish, the 10 000 word
-vocabulary performs the best on the material with 300 dpi
-resolution. Similarly, the system with 10 000 word vocabulary performs
-best for Erzya material in 200 dpi resolution. Overall, the results
-for all but the smallest vocabularies lie very close to each other.
+Interestingly, vocabulary size does not seem to be a very good
+predictor of performance. For Finnish, the 10 000 word vocabulary
+performs best on the 300 dpi material with. Similarly, the system with
+10 000 word vocabulary performs best for Erzya material in 200 dpi
+resolution. Overall, the results for all but the smallest vocabularies
+lie very close to each other.
 
 It would seem that the effect of language modelling is already
 exhausted at 10 000 words. Therefore, it is not horribly surprising
@@ -513,8 +511,8 @@ that the morphological analyzer does not achieve better results than
 the systems using word lists. However, the fact that its performance
 is so low was mildly surprising.
 
-In order to limit the number of real word errors, we tried to
-excluding all compounds that had not been attested in text from the
+In order to limit the number of real word errors, we tried excluding
+all compounds that had not been attested in real text from the
 morphological analyzers. Unfortunately, this did not improve the
 results.
 
