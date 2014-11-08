@@ -58,7 +58,7 @@ available. However, simply scanning documents is not enough, because
 few applications can deal with images directly. {\it Optical Character
   Recognition} (OCR) can subtantially improve the usability of
 digitized documents for example by allowing search engines to index
-the documents. In this paper, we investigate improving the quality of
+them. In this paper, we investigate improving the quality of
 OCR for languages with rich morphology.
 
 OCR engines can benefit from language modelling, which is a field
@@ -73,20 +73,19 @@ Word lists are adequate in applications designed for languages with
 limited morphology such as English. However, morphologically rich
 languages, among others the Uralic languages, require more elaborate
 approaches. For these languages, even extensive word lists are
-unlikely to reach very high coverage on previously unseen text because
+unlikely to reach high coverage on previously unseen text because
 of extensive compounding, derivation and inflection \cite{creutz07}.
 
-In contrast to word lists, a morphological analyzer
+In contrast to word lists, morphological analyzers
 \cite{koskenniemi83}, which encodes the derivational and inflectional
 morphology of a language, can achieve substantially higher
 coverage. Thus it is conceivable that language models utilizing
-morphological analyzers could substantially improve the quality of OCR
-for morphologically rich languages.
+morphological analyzers could improve the quality of OCR for
+morphologically rich languages.
 
 In this paper, we present experiments on OCR for two Uralic languages,
 Finnish and Erzya. We utilized the open-source OCR engine Tesseract
-\cite{smith07} together with two open-source morphological analyzers
-for Erzya and Finnish respectively.
+\cite{smith07} together with open-source morphological analyzers.
 
 In light of our experiments, it seems that morphological analyzers do
 help in OCR of morphologically rich languages, but the improvements
@@ -100,14 +99,15 @@ substantial increase in real word errors compared to word lists.
 Although we did not get improvements over word lists, it is worth
 pointing out that for some under-resourced minority languages
 morphological analyzers created by linguists represent the best
-existing lexical resources in digital format. The reason for this is
-that digital content on the internet can be very scarce and the
-orthography may be non-standard. Therefore, using a morphological
-analyzer as part of an OCR engine can still be motivated.
+readily available lexical resources in machine readable format. The
+reason for this is that digital content on the internet can be very
+scarce and the orthography may be non-standard. Therefore, using a
+morphological analyzer as part of an OCR engine can still be
+motivated.
 
 The paper is structured as follows. We describe related work in
-Section \ref{rel}. In Section \ref{met} we describe the Tesseract OCR
-engine, the morphological analyzers and their integration. Section
+Section \ref{rel}. In Section \ref{met}, we describe the Tesseract OCR
+engine, morphological analyzers and their integration. Section
 \ref{exp} details the experimental setup. In Section \ref{res}, we
 present the results of the expeirments. We present a brief error
 analysis of the experiments on Finnish in Section \ref{err} and
@@ -171,26 +171,22 @@ classifies.
 
 Our work focuses on the third phase of the pipeline, namely word
 recognition. Word recognition encompasses two sub-tasks: character
-recognition using a neural network and word level classification using
-a second adaptive classifier and various language models. During word
+recognition using a static classifier and word level classification
+using an adaptive classifier and various language models. During word
 recognition, the adaptive classifier and language models give
-competing suggestions based on the output of character recognizer.
+competing suggestions based on the output of the character
+recognizer. The best scoring suggestion is selected.
 
 We do not modify the character level model in any way. Instead, we
-replace the existing language model of Tesseract with a morphological
-analyzer.
+replace the existing word list based language models of Tesseract with
+a morphological analyzer.
 
 The existing language models in Tesseract are word lists, which are
 compiled into {\it directed acyclic graphs} (DAG) for fast
 processing. Tesseract utilizes a number of different language
 models\footnote{https://code.google.com/p/tesseract-ocr/wiki/TrainingTesseract3},
-for example:
-\begin{itemize}
-\item Most frequent word forms.
-\item Dictionary word forms.
-\item Punctuation patters.
-\item Words containing digits.
-\end{itemize}
+for example: A list of frequent word forms, a more extensive
+dictionary. punctuation patters and word forms containing digits.
 
 Each language model and the adaptive classifier have an associated
 weight. When the character model returns a distribution over possible
@@ -280,7 +276,7 @@ require little manual correction. However, 100 dpi usually gives quite
 poor performance. In fact the performance is so poor that manual
 correction might take longer than simply writing the text.
 
-\subsection{Linguistic Resources}
+\subsection{Resources}
 For constructing Tesseract models with vocabulary, we used the text
 dumps of the
 Erzyan\footnote{\url{ftp://wikipedia.c3sl.ufpr.br/wikipedia/myvwiki/20140927/myvwiki-20140927-pages-meta-current.xml.bz2}}
@@ -389,10 +385,11 @@ $${\rm ER} = \frac{B - C}{B}$$
 If, the baseline $B$ is in fact better than the count $C$, the edit
 reduction will be be negative.
 
-We performed paired one sided Wilcoxon test tests to asses the
-statistical significance of our results. We compared all models to the
-baseline model. We additionally compared the best word-list system to
-the sytem using a morphological analyzer.
+We divided the test material into groups according to book page, and
+performed paired one sided Wilcoxon tests to asses the statistical
+significance of our results. We compared all models to the baseline
+model. We additionally compared the best word-list system to the sytem
+using a morphological analyzer.
 
 \section{Results}
 \label{res}
@@ -475,7 +472,44 @@ word errors.
 
 \section{Discussion and Conclusions}
 \label{disc}
-Doesn't seem to be hugely influential :/
+
+In light of our experiments, it seems that morphological analyzers may
+do more harm than good in OCR. For higher resolutions 200 and 300 dpi,
+the systems utilizing analyzers faired worse than even the smallest
+vocabulary of 1000 words. This happens both for Finnish and Erzya. We
+believe, the large amount of real word errors is to blame.
+
+It is interesting to note, that vocabulary size does not seem to be a
+very good predictor of performance. For Finnish, the 10 000 word
+vocabulary performs the best on the material with 300 dpi
+resolution. Similarly, the model with 10 000 word vocabulary performs
+best for Erzya material in 200 dpi resolution. Overall, the results
+for all but the smallest vocabularies are very close to each other. In
+fact the differences in performance are not statistically significant
+for 10 000 up-to 1 million word vocabularies.
+
+I would seem that the effect of language modelling is already
+exhausted at 10 000 words and after that, the difference in
+performance stems from random fluctuation. From this point of view, it
+is not horribly surprising that the morphological analyzer does not
+achieve better results that the models with word lists. However, the
+fact that its performance is so low was mildly surprising.
+
+If real word errors are discarded, the morphological analyzer in fact
+fares slightly better than the 1 million word system for Finnish. Of
+course, this is not a fair comparison, since it is likely that a
+substantial part of the real word errors would still lead to
+incorrectly recognized words.
+
+In order to limit the number of real word errors, we tried to exclude
+all compounds that had not been attested in text from the
+morphological analyzers. Unfortunately, this did not improve the
+results.
+
+It might be worth trying to include word frequency information into
+the model. However, this remains future work, as it would require
+extensive changes to Tesseract.
+
 \section*{Acknowledgments}
 
 ...
