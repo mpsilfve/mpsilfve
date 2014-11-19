@@ -1,8 +1,6 @@
 A Utility for Generating ASCII Images
 =====================================
 
-This utility includes two tools:
-
 `im2ascii.py` - Convert a bitmap image to plain ASCII or ASCII with bash
                 color codes.
 
