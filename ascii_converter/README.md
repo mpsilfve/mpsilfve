@@ -9,8 +9,6 @@ This utility includes two tools:
 `ascii2im.py` - Convert a plain ASCII image or ASCII image with bash
                 color codes to a bitmap image.
 
-USAGE:
-
 Image to ASCII
 --------------
 
