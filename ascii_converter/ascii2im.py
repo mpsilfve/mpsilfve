@@ -2,7 +2,7 @@
 
  file    ascii2im.py
  Author  Miikka Silfverberg
- brief   Convert a bitmap image to ASCII.
+ brief   Convert an ASCII image to a bitmap image or html.
 
  (C) Copyright 2014, Miikka Silfverberg
  Licensed under the Apache License, Version 2.0 (the "License");
