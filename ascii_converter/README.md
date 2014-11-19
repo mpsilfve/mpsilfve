@@ -26,7 +26,7 @@ If you don't want colors, only plain ASCII, use
 To view an ASCII image with color codes in the terminal (in bash
 shell), use
 
-   `echo -e \`cat pelosi.ascii\``
+   `echo -e \`cat pelosi.ascii\` `
 
 To view a plain ASCII image, use cat or your favorite editor.
 
