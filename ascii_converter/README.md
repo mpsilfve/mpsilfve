@@ -24,7 +24,7 @@ shell), use
 
    <code>echo -e \`cat pelosi.ascii\`</code>
 
-To view a plain ASCII image, use cat or your favorite editor.
+To view a plain ASCII image, use cat or your favorite text editor.
 
 ASCII to Image
 --------------
