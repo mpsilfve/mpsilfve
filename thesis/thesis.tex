@@ -1,0 +1,97 @@
+\documentclass[a4paper, 10pt]{report}
+\usepackage[comma, authoryear]{natbib}
+\usepackage[all]{xy}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{caption}
+\usepackage{xltxtra}
+\usepackage{xunicode}
+\usepackage{subcaption}%,showframe}
+\usepackage{setspace}
+\usepackage{breqn}
+\usepackage{epigraph}
+\usepackage{bibentry}
+
+\renewcommand{\bibsection}{\chapter*{\refname}}
+%\usepackage{etoolbox}
+%\makeatletter
+%\patchcmd{\thebibliography}{%
+%  \chapter*{\bibname}\@mkboth{\MakeUppercase\bibname}{\MakeUppercase\bibname}}{%
+%  \section{References}}{}{}
+%\makeatother
+
+\def\ci{\perp\!\!\!\perp}
+
+\renewcommand{\P}{\mbox{${\rm P}$}}
+\newcommand{\R}{\mbox{$\mathbb R$}}
+\newcommand{\cond}{\mbox{$ \, | \, $}}
+\newcommand{\parcond}{\mbox{$ ; \, $}}
+\DeclareMathOperator*{\argmax}{arg\,max}
+\begin{document}
+% Make arrays a bit spacier.
+\def\arraystretch{1.2}
+
+\clearpage
+\include{title}
+
+\vspace*{\fill}
+\thispagestyle{empty} 
+\begin{quotation}
+\em % optional -- to switch to emphasis (italics) mode
+Nobody reads PhD theses
+
+\medskip
+\raggedleft
+Ancient Proverb
+\end{quotation}
+\vspace*{\fill}
+\onehalfspacing
+\pagenumbering{roman}
+\tableofcontents
+\listoffigures
+\listoftables
+\newpage
+\section*{List of Acronyms}
+\begin{tabular*}{\columnwidth}{@{\extracolsep{\stretch{1}}}*{2}{l}@{}}
+CRF  & Conditional Random Field                          \\
+HMM  & Hidden Markov Model                               \\
+MEMM & Maximum-Entropy Markov Model                      \\
+NB   & Na\"{i}ve Bayes                                   \\
+PGM  & Probabilistic Graphical Model                     \\
+POS  & Part-of-Speech                                    \\
+MAP  & Maximum a posteriori
+\end{tabular*}
+
+\include{acknowl}
+
+\include{abstract}
+
+\pagenumbering{arabic}
+
+\include{intro}
+
+\include{morphology}
+
+\include{ml}
+
+\include{pos}
+
+\include{hmm}
+
+\include{crf}
+
+\include{lem}
+
+\include{conclusions}
+
+\bibliographystyle{apalike}
+\addcontentsline{toc}{chapter}{References}
+\bibliography{mythesis}
+
+\include{contrib}
+
+\addcontentsline{toc}{chapter}{Articles}
+\chapter*{Articles}
+
+\end{document}

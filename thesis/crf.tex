@@ -1,0 +1,46 @@
+\chapter{Conditional Random Fields}
+\section{Basics}
+\cite{Lafferty2001}
+\section{Logistic Regression}
+\begin{itemize}
+\item Detailed view of logistic regression. 
+\item Relation to maximum entropy.
+\item Why are MEMMs not better than HMMs?
+\item Label and observation bias.
+\end{itemize}
+\section{Note on Terminology}
+\begin{itemize}
+\item The term perceptron tagger is commonly found in the litterature, e.g. \cite{Collins2002}.
+\item The model is called a CRF.
+\item The estimator can be a ML, Perceptron, pseudo likelihood, pseudo
+  perceptron...
+\end{itemize}
+
+\section{Inference}
+\begin{itemize}
+\item Inference using Viterbi.
+\end{itemize}
+
+\section{Estimation}
+\begin{itemize}
+\item Iterative process: label data, adjust parameters and repeat.
+\item Use SGD or L-BFGS \citep{Vishwanathan2006} for ML estimation. 
+\item Use averaged perceptron \citep{Collins2002}.
+\item Dev data for adjusting hyper parameters: number of iterations and
+  regularization hyper-parameters, model order.
+\item Problems with exact estimation.
+\item Layered CRF \cite{Mueller2013}, \cite{Weiss2010} and \cite{Charniak2005}.
+\end{itemize}
+
+\section{Approximate Estimation}
+\begin{itemize}
+\item Beam search.
+\item Violation fixing.
+\item Label guessing.
+\end{itemize}
+\section{CRF taggers and Morphological Analyzers}
+
+\section{Enriching the Structured Model}
+\begin{itemize}
+\item Utilizing sub-label structure.
+\end{itemize}
