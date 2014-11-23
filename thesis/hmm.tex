@@ -282,28 +282,90 @@ assignments maximize different objectives. The MM assignment maximizes
 the accuracy of correct states per observations whereas the MAP
 assignment maximizes the number of completely correct state
 sequences. Both objectives are important from the point of view of POS
-tagging. However, they are often quite correlated and, at least in
-POS tagging, it does not matter in practice which of the criteria is
-used \citep{Merialdo1994}.
-
-Most systems, for example \cite{Church1988,Brants2000,Halacsy2007},
-have chosen to use MAP inference. MAP inference is probably preferred
-because it makes inference easier and is faster in practice. Moreover,
-there are inexact variants of MAP inference which are even faster than
-exact MAP search. I will elaborate this further in \ref{hmm-viterbi}.
+tagging. However, they are often quite correlated and, at least in POS
+tagging, it does not matter in practice which of the criteria is used
+\citep{Merialdo1994}. Most systems, for example
+\cite{Church1988,Brants2000,Halacsy2007}, have chosen to use MAP
+inference.
 
 Although, MM inference is more rarely used with HMMs, computing the
 marginals is important both in unsupervised estimation of HMMs and
 discriminative estimation of sequence models. Therefore, I will
-present the relevant algorithm in \ref{hmm-fw-bw}.
- 
+present this algorithm as well.
+
+There are a number of strongly related algorithms for both exact MAP
+and MM inference. I use the Viterbi algorithm for MAP inference and
+the forward-backward algorithm for MM inference
+\citep{Rabiner1989}. Belief propagation introduced by \cite{Peral1982}
+computes the MM assignment and can be modified to compute the MAP
+assignment as well. For sequence models, belief propagation is very
+similar to the forward-backward algorithm. It can, however, be
+extended to cyclic graphs \citep{Weiss2000}. 
+
+Since cyclic models fall beyond the scope of this thesis and both the
+Viterbi and forward-backward algorithms are amenable to well known
+optimizations, which are of great practical importance, I have chosen
+to omit belief propagation. I refer to \cite{Koller2009} for a nice
+treatment of belief propagation and graphical models at large.
+
 \subsection{The Forward Algorithm}
 
+The Viterbi algorithm and forward-backward algorithm are both related
+to the {\it forward algorithm}, which computes the {\it forward
+  probabilities} $f_{t,z}$, that is the probabilities of emitting the
+prefix $x_{[1:t]} = x_1,\ ...,\ x_t$ of observation $x$ and ending up
+in state $z \in Y$.
+
+The forward algorithm works by summing the probabilities of forward
+prefixes illustrated in Figure \ref{hmm-path-prefix}.
+
+\begin{figure}
+\begin{center}
+\caption{foo}\label{hmm-path-prefix}
+\includegraphics[scale=0.5]{forward_prefix}
+\end{center}
+\end{figure}
+
+The definition of the forward probability $f_{t,z}$ is quite similar
+to the marginal probability $p(z, t \cond x\parcond\theta)$ of state
+$z$ at position $t$. However, the forward probability includes no
+information about observation $x$ after position $t$, whereas the
+marginal probability encompasses information about the entire
+observation.
+
+\begin{equation}
+f_{t,z} = \argmax_{y\in Y^T} \prod_{t = 1}^T p(y_t, t \cond x\parcond\theta)
+\end{equation}
+
+The forward algorithm is in fact simply a recursive application of the
+right distributive rule of algebra
+$$(a_1 + ... + a_n)b = a_1 b + ... + a_n b,$$
+for real numbers $a_1$ up to $a_n$ and $b$.
+
+\begin{figure}[!htb]
+\caption{foo.}\label{hmm-trellis}
+\begin{subfigure}{\textwidth}
+\includegraphics[scale=0.65]{trellis_path}
+\caption{Trellis and path.}\label{hmm-ex-trellis-path}
+\end{subfigure}
+\vskip.5cm
+\begin{subfigure}{\textwidth}
+\includegraphics[scale=0.65]{trellis_forward}
+\caption{Forward path prefixes.}\label{hmm-ex-trellis-fw}
+\end{subfigure}
+\vskip.5cm
+\begin{subfigure}{\textwidth}
+\includegraphics[scale=0.65]{trellis_marginal}
+\caption{Marginal paths.}\label{hmm-ex-trellis-marginal}
+\end{subfigure}
+\end{figure}
+ 
 \subsection{The Viterbi Algorithm}
 \label{hmm-viterbi}
 
 \subsection{The Forward-Backward Algorithm}
 \label{hmm-fw-bw}
+
 \section{Estimation}
 %\begin{itemize}
 %\item Counting vs Baum-Welch.
