@@ -9,4 +9,4 @@ thesis.pdf:$(TEX) $(BIB) $(FIG)
 	xelatex thesis
 
 clean:
-	rm -f *.aux *.log *.lot *.blg *.bbl *.lof thesis.pdf thesis-blx.bib thesis-blx.xml *.toc *~
+	rm -f *.aux *.log *.lot *.blg *.bbl *.lof thesis.pdf thesis-blx.bib thesis-blx.xml *.toc *~ *.alg
