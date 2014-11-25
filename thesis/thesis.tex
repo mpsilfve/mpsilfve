@@ -1,17 +1,46 @@
 \documentclass[a4paper, 10pt]{report}
 \usepackage[comma, authoryear]{natbib}
 \usepackage[all]{xy}
+\usepackage{float}
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage{graphicx}
 \usepackage{caption}
 \usepackage{xltxtra}
+%\usepackage{utf8}[inputenc]
 \usepackage{xunicode}
 \usepackage{subcaption}%,showframe}
 \usepackage{setspace}
 \usepackage{breqn}
 \usepackage{epigraph}
 \usepackage{bibentry}
+\captionsetup{compatibility=false}
+
+% Define float-type for algorithms.
+\floatstyle{plaintop}
+\newfloat{algorithm}{!p}{alg}[chapter]
+\floatname{algorithm}{Algorithm}
+
+\usepackage{color}
+\usepackage[procnames]{listings}
+\usepackage{setspace}
+
+\definecolor{keywords}{RGB}{0,155,155}
+\definecolor{comments}{RGB}{155,0,0}
+\definecolor{string}{RGB}{0,155,0}
+\definecolor{green}{RGB}{0,155,0}
+\definecolor{lblue}{RGB}{240,240,255}
+
+\lstset{language=Python, 
+        backgroundcolor=\color{lblue},
+        basicstyle=\ttfamily\small, 
+        keywordstyle=\color{keywords},
+        commentstyle=\color{comments},
+        stringstyle=\color{string},
+        showstringspaces=false,
+        identifierstyle=\color{green},
+        numbers=left,
+        procnamekeys={def,class,continue,break,if,else,for, return}}
 
 \renewcommand{\bibsection}{\chapter*{\refname}}
 %\usepackage{etoolbox}
@@ -51,16 +80,22 @@ Ancient Proverb
 \tableofcontents
 \listoffigures
 \listoftables
+\listof{algorithm}{List of Algorithms}
 \newpage
-\section*{List of Acronyms}
+\section*{Notation}
 \begin{tabular*}{\columnwidth}{@{\extracolsep{\stretch{1}}}*{2}{l}@{}}
+\multicolumn{2}{c}{Acronyms}\\
 CRF  & Conditional Random Field                          \\
 HMM  & Hidden Markov Model                               \\
 MEMM & Maximum-Entropy Markov Model                      \\
 NB   & Na\"{i}ve Bayes                                   \\
 PGM  & Probabilistic Graphical Model                     \\
 POS  & Part-of-Speech                                    \\
-MAP  & Maximum a posteriori
+MAP  & Maximum a posteriori                              \\
+     & \\
+\multicolumn{2}{c}{Mathematical Notation}\\
+$x[1:t]$ & Prefix $(x_1,\ ...,\ x_t)$ of sequence $x = (x_1,\ ...,\ x_t,\ ...,\ x_T)$.\\
+$X^t$    & The cartesian product of $t$ copies of the set $X$.
 \end{tabular*}
 
 \include{acknowl}

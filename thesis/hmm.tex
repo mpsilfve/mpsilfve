@@ -84,7 +84,7 @@ Rain    & $0.2$ &  $0.8$         \\
 \hline
 \end{tabular}
 \end{center}
-\caption{Foo}\label{hmm-ex-1}
+\caption{Foo FIXME}\label{hmm-ex-1}
 \end{table}
 
 Let us assume that Jill observes the nurse for one week. She sees the
@@ -238,7 +238,7 @@ assignment of observation sequence $x$. It is defined by Equation
 p(y\cond x\parcond\theta) = \frac{p(x,y\parcond\theta)}{p(x\parcond\theta)}\label{hmm-cond-prob}
 \end{equation}
 
-Finally, the marginal probability of state $z$ at position $t$ given
+Finally, the posterior marginal probability of state $z$ at position $t$ given
 the observation sequence $x$ is computed by summing, or marginalizing,
 over all state sequence $y$, where $y_t = z$. It is defined by
 Equation \eqref{hmm-marg-prob}
@@ -308,41 +308,13 @@ optimizations, which are of great practical importance, I have chosen
 to omit belief propagation. I refer to \cite{Koller2009} for a nice
 treatment of belief propagation and graphical models at large.
 
-\subsection{The Forward Algorithm}
+Before introducing the Viterbi and forward-backward algorithm, I am
+going to explain the forward algorithm, which is used to compute the
+total probability of an observation and also as part of the
+forward-backward algorithm.
 
-The Viterbi algorithm and forward-backward algorithm are both related
-to the {\it forward algorithm}, which computes the {\it forward
-  probabilities} $f_{t,z}$, that is the probabilities of emitting the
-prefix $x_{[1:t]} = x_1,\ ...,\ x_t$ of observation $x$ and ending up
-in state $z \in Y$.
-
-The forward algorithm works by summing the probabilities of forward
-prefixes illustrated in Figure \ref{hmm-path-prefix}.
-
-\begin{figure}
+\begin{figure}[!p]
 \begin{center}
-\caption{foo}\label{hmm-path-prefix}
-\includegraphics[scale=0.5]{forward_prefix}
-\end{center}
-\end{figure}
-
-The definition of the forward probability $f_{t,z}$ is quite similar
-to the marginal probability $p(z, t \cond x\parcond\theta)$ of state
-$z$ at position $t$. However, the forward probability includes no
-information about observation $x$ after position $t$, whereas the
-marginal probability encompasses information about the entire
-observation.
-
-\begin{equation}
-f_{t,z} = \argmax_{y\in Y^T} \prod_{t = 1}^T p(y_t, t \cond x\parcond\theta)
-\end{equation}
-
-The forward algorithm is in fact simply a recursive application of the
-right distributive rule of algebra
-$$(a_1 + ... + a_n)b = a_1 b + ... + a_n b,$$
-for real numbers $a_1$ up to $a_n$ and $b$.
-
-\begin{figure}[!htb]
 \caption{foo.}\label{hmm-trellis}
 \begin{subfigure}{\textwidth}
 \includegraphics[scale=0.65]{trellis_path}
@@ -358,8 +330,153 @@ for real numbers $a_1$ up to $a_n$ and $b$.
 \includegraphics[scale=0.65]{trellis_marginal}
 \caption{Marginal paths.}\label{hmm-ex-trellis-marginal}
 \end{subfigure}
+\end{center}
 \end{figure}
+
+\subsection{The Forward Algorithm}
+
+Equations \eqref{hmm-map} and \eqref{hmm-mm} reveal, that both MAP
+and MM inference require knowledge of the entire observation $x$. In
+the weather prediction example, the observation is, however, always
+infinite. What kind of inference is possible in this case?
+
+Even when we only know a prefix $x[1:t]$ (of length $t$) of the entire
+observation $x$, we can still compute the {\it belief state}
+\citep{foo} of the HMM given the prefix. The belief state is in fact
+not a single state, but rather a distribution over the set of hidden
+states $Y$. It tells us how likely we are to be in a given state
+$z$ when we have emitted the prefix $x[1:t]$.
+
+To compute the belief state at position $t$, we first need to compute
+the {\it forward probabilities} for each state $z \in Y$. The forward
+probability $f_{t,z}(x)$ of state $z$ at position $t$ is the
+probability of emitting prefix $x[1:t]$ and ending up in state $z \in
+Y$. For example, given the infinite observation $x = (${\sc umbrella},
+{\sc umbrella}, {\sc no umbrella},\ ...$)$, the forward probability
+$f_{3,\textsc{rain}}$ is the probability that the third day is rainy,
+when the nurse had an umbrella on days one and two, but did not have
+one on the third day.
+
+Conceptually, the forward probability is computed by summing over all
+path prefixes up to position $t$, where the state at position $t$ is
+$z$, see Figure \ref{hmm-ex-trellis-fw}. Formally, the forward
+probability is defined by Equation \eqref{forward_prob}.
+\begin{equation}
+f_{t,z} = \sum_{y\in Y^t} \Bigg(i(y_1) \cdot \Bigg(\prod_{u = 1}^{t - 1} t_{y_u}(y_{u + 1}) \Bigg) \cdot \prod_{u = 1}^t e_{y_u}(x_u)\Bigg)\label{forward_prob}
+\end{equation}
+Comparing Equations \eqref{forward_prob} and \eqref{hmm-joint-prob}
+shows that the forward probability represents a prefix of the
+probability path probability $p(x, y \parcond \theta)$.
+
+The belief state and posterior marginal distribution may seem
+similar. They are, however, distinct distributions because the belief
+state disregards all information about observation $x$ after position
+$t$. In contrast, the marginal distribution encompasses information about
+the entire observation. For example the marginal probability of {\sc
+  rain} at position 3 is likely to depend strongly on whether we
+observe {\sc umbrella} on day 4, or not. However, this will have no
+impact on the belief state.
+
+Figure \ref{fw-naive-prob} demonstrates a naive
+approach to computing the forward probabilities. Simply list all
+relevant state sequences, compute the probabilities of each sequence
+and sum them. Unfortunately, the naive approach fails for large
+$t$ because the number of distinct state sequences depends on the sequence length in an exponential manner. 
+
+The complexity of the naive algorithm is $|Y|^t$, which is infeasible.
+For example, $f_{20,\textsc{rain}}(x)$ requires us to sum
+approximately 20 million probabilities and $f_{30,\textsc{rain}}(x)$
+entails summation of approximately 540 million probabilities. Since
+observations in domains such as natural language processing frequently
+reach lengths of $100$, a more efficient approach is necessary.
+
+\begin{figure}[!ftb]
+\begin{center}
+\caption{foo}\label{fw-naive-prob}
+\begin{tabular}{lllr}
+$y_1$ & $y_2$ & $y_3$ & $p$ \\
+\hline
+{\sc clear} & {\sc clear} & {\sc clear} & $(0.6\cdot0.8\cdot0.9\cdot0.2)\cdot0.9\cdot0.8\approx0.062$\\
+{\sc rain}  & {\sc clear} & {\sc clear} & $(0.4\cdot0.2\cdot0.3\cdot0.2)\cdot0.9\cdot0.8\approx0.003$\\
+{\sc clear} & {\sc rain}  & {\sc clear} & $(0.6\cdot0.8\cdot0.1\cdot0.8)\cdot0.3\cdot0.8\approx0.009$\\
+{\sc rain}  & {\sc rain}  & {\sc clear} & $(0.4\cdot0.2\cdot0.7\cdot0.8)\cdot0.3\cdot0.8\approx0.011$\\
+& & & \\
+%\hline
+%\vspace{0.1cm}
+\includegraphics[width=0.5cm]{umbrella} & \includegraphics[width=0.5cm]{umbrella} & \includegraphics[width=0.5cm]{no_umbrella} & \\
+\hline
+        &       & & $\approx0.086$
+\end{tabular}
+\end{center}
+\end{figure}
+
+The belief state can be computed in linear time with regard to $t$
+using the {\it forward algorithm} \citep{Rabiner1989}, which is in
+fact simply a recursive application of the right distributive rule of
+algebra
+$$a_1 \cdot b + ... + a_n \cdot b = (a_1 + ... + a_n)\cdot b$$
+for real numbers $a_1$ up to $a_n$ and $b$. Instead of computing the
+probability separately for each path, the forward probabilities for
+paths of length $t$ are computed incrementally using the forward
+probabilities of paths of length $t - 1$.
+
+Examine Figure \ref{fw-naive-prob}. By grouping rows one and two, as
+well as three and four into pairs, we can see that
+$$f_{3,\textsc{clear}} = (f_{2, \textsc{rain}}\cdot t_{\textsc{rain}}(\textsc{clear}) + f_{2, \textsc{clear}} \cdot t_{\textsc{clear}}(\textsc{clear})) \cdot e_{\textsc{clear}}(\textsc{no\ umbrella})$$
+Generalizing, we get the recursion
+$$f_{t+1, z} = \Bigg(\sum_{z'\in Y} f_{t, z'}\cdot t_{z'}(z) \Bigg) \cdot e_{z}(x_{t+1})$$
  
+\begin{algorithm}[!p]
+\caption{The forward algorithm in Python 3.}\label{forward-algorithm}
+\begin{lstlisting}
+def forward(x, i_prob, e_prob, tr_prob): 
+    """
+        x       - The observation as a list.
+        i_prob  - Initial state distribution.
+        e_prob  - Emission distributions.
+        tr_prob - Transition distributions.
+
+        Return the trellis of forward probabilities. 
+    """
+
+    assert(not x.empty()) 
+
+    trellis = {}
+
+    # Indexing in python starts at 0.
+    x_1 = x[0]
+    T   = len(x) + 1
+
+    # Set final state F. States are consequtive integers 
+    # in the range [0, F]. 
+    F = len(i_prob) - 1 
+
+    # Initialize first trellis column.
+    for z in range(F):
+        trellis[(1,z)] = i_prob[z] * e_prob[z][x_1]
+
+    # Set all except the final column.
+    for t in range(2, T):
+        trellis[(t, z)] = 0
+
+        x_t = x[t - 1]
+
+        for z in range(F):
+            for s in range(F):
+                trellis[(t, z)] = (trellis[(t - 1, s)] * 
+                                   tr_prob[s][z])
+
+            trellis[(t, z)] *= em_prob[z][x_t]
+
+    # Set the last column.
+    for z in range(s_count):
+        trellis[(T + 1, z)] = trellis[(T, z)] * tr_prob[z][F]
+
+    return trellis
+\end{lstlisting}
+\end{algorithm}
+
+
 \subsection{The Viterbi Algorithm}
 \label{hmm-viterbi}
 

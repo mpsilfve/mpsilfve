@@ -14,7 +14,7 @@
    id="svg2"
    version="1.1"
    inkscape:version="0.48.3.1 r9886"
-   sodipodi:docname="hmm-ex-graph-2.pdf">
+   sodipodi:docname="hmm-ex-graph-2.svg">
   <defs
      id="defs4">
     <marker
@@ -132,7 +132,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -237,42 +237,38 @@
        d="m 155.71429,486.29074 c 0,14.00436 -11.35278,25.35714 -25.35714,25.35714 C 116.35278,511.64788 105,500.2951 105,486.29074 c 0,-14.00436 11.35278,-25.35714 25.35715,-25.35714 14.00436,0 25.35714,11.35278 25.35714,25.35714 z" />
     <text
        xml:space="preserve"
-       style="font-size:14px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Serif;-inkscape-font-specification:Serif"
-       x="410.28171"
-       y="510.07034"
+       style="font-size:14px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:DejaVu Serif;-inkscape-font-specification:DejaVu Serif"
+       x="402.01364"
+       y="509.91653"
        id="text3046-2"
        sodipodi:linespacing="125%"><tspan
          sodipodi:role="line"
          id="tspan3048-1"
-         x="410.28171"
-         y="510.07034">Clear</tspan></text>
-    <g
-       id="g5135"
-       transform="translate(8.3863448,-0.5357125)">
-      <path
-         d="m 155.71429,486.29074 c 0,14.00436 -11.35278,25.35714 -25.35714,25.35714 C 116.35278,511.64788 105,500.2951 105,486.29074 c 0,-14.00436 11.35278,-25.35714 25.35715,-25.35714 14.00436,0 25.35714,11.35278 25.35714,25.35714 z"
-         sodipodi:ry="25.357143"
-         sodipodi:rx="25.357143"
-         sodipodi:cy="486.29074"
-         sodipodi:cx="130.35715"
-         id="path2989-9-2"
-         style="fill:#cccccc;stroke:#000000;stroke-width:1.79190946;stroke-miterlimit:4;stroke-dasharray:none"
-         sodipodi:type="arc"
-         transform="matrix(1.7531113,0,0,0.7105888,-12.382715,159.26759)" />
-      <text
-         inkscape:transform-center-y="17.142857"
-         inkscape:transform-center-x="12.142857"
-         sodipodi:linespacing="125%"
-         id="text3050-4"
-         y="510.07034"
-         x="200.78752"
-         style="font-size:14px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Serif;-inkscape-font-specification:Serif"
-         xml:space="preserve"><tspan
-           y="510.07034"
-           x="200.78752"
-           id="tspan3052-2"
-           sodipodi:role="line">Rain</tspan></text>
-    </g>
+         x="402.01364"
+         y="509.91653">CLEAR</tspan></text>
+    <path
+       transform="matrix(1.7531113,0,0,0.7105888,-3.9963702,158.73188)"
+       sodipodi:type="arc"
+       style="fill:#cccccc;stroke:#000000;stroke-width:1.79190946;stroke-miterlimit:4;stroke-dasharray:none"
+       id="path2989-9-2"
+       sodipodi:cx="130.35715"
+       sodipodi:cy="486.29074"
+       sodipodi:rx="25.357143"
+       sodipodi:ry="25.357143"
+       d="m 155.71429,486.29074 a 25.357143,25.357143 0 1 1 -50.71429,0 25.357143,25.357143 0 1 1 50.71429,0 z" />
+    <text
+       xml:space="preserve"
+       style="font-size:14px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:DejaVu Serif;-inkscape-font-specification:DejaVu Serif"
+       x="205.23294"
+       y="509.28854"
+       id="text3050-4"
+       sodipodi:linespacing="125%"
+       inkscape:transform-center-x="12.142857"
+       inkscape:transform-center-y="17.142857"><tspan
+         sodipodi:role="line"
+         id="tspan3052-2"
+         x="205.23294"
+         y="509.28854">RAIN</tspan></text>
     <path
        style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-end:url(#Arrow1Lend)"
        d="m 433.47794,485.60606 c 0,0 9.18699,-17.72419 9.0437,-27.02338 -0.14461,-9.38441 -6.36129,-21.18424 -12.97227,-21.29116 -7.19758,-0.11641 -13.53469,12.26556 -13.32939,22.00545 0.16587,7.86942 11.02809,26.30909 11.02809,26.30909"
@@ -301,15 +297,15 @@
        d="m 155.71429,486.29074 c 0,14.00436 -11.35278,25.35714 -25.35714,25.35714 C 116.35278,511.64788 105,500.2951 105,486.29074 c 0,-14.00436 11.35278,-25.35714 25.35715,-25.35714 14.00436,0 25.35714,11.35278 25.35714,25.35714 z" />
     <text
        xml:space="preserve"
-       style="font-size:14px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans;-inkscape-font-specification:Sans"
-       x="322.04736"
-       y="612.76685"
+       style="font-size:14px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:DejaVu Serif;-inkscape-font-specification:DejaVu Serif"
+       x="322.5683"
+       y="611.74774"
        id="text3036"
        sodipodi:linespacing="125%"><tspan
          sodipodi:role="line"
          id="tspan3038"
-         x="322.04736"
-         y="612.76685">f</tspan></text>
+         x="322.5683"
+         y="611.74774">F</tspan></text>
     <path
        style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-end:url(#Arrow1Lend-7)"
        d="m 344.18788,420.16152 68.18529,66.92261"
