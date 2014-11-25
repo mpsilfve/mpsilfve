@@ -377,11 +377,12 @@ the entire observation. For example the marginal probability of {\sc
 observe {\sc umbrella} on day 4, or not. However, this will have no
 impact on the belief state.
 
-Figure \ref{fw-naive-prob} demonstrates a naive
-approach to computing the forward probabilities. Simply list all
-relevant state sequences, compute the probabilities of each sequence
-and sum them. Unfortunately, the naive approach fails for large
-$t$ because the number of distinct state sequences depends on the sequence length in an exponential manner. 
+Figure \ref{fw-naive-prob} demonstrates a naive approach to computing
+the forward probabilities. Simply list all relevant state sequences,
+compute the probabilities of each sequence and sum
+them. Unfortunately, the naive approach fails for large $t$ because
+the number of distinct state sequences depends on the sequence length
+in an exponential manner.
 
 The complexity of the naive algorithm is $|Y|^t$, which is infeasible.
 For example, $f_{20,\textsc{rain}}(x)$ requires us to sum
@@ -403,7 +404,7 @@ $y_1$ & $y_2$ & $y_3$ & $p$ \\
 & & & \\
 %\hline
 %\vspace{0.1cm}
-\includegraphics[width=0.5cm]{umbrella} & \includegraphics[width=0.5cm]{umbrella} & \includegraphics[width=0.5cm]{no_umbrella} & \\
+~~\includegraphics[width=0.5cm]{umbrella} & ~~\includegraphics[width=0.5cm]{umbrella} & ~~\includegraphics[width=0.5cm]{no_umbrella} & \\
 \hline
         &       & & $\approx0.086$
 \end{tabular}
@@ -415,17 +416,41 @@ using the {\it forward algorithm} \citep{Rabiner1989}, which is in
 fact simply a recursive application of the right distributive rule of
 algebra
 $$a_1 \cdot b + ... + a_n \cdot b = (a_1 + ... + a_n)\cdot b$$
-for real numbers $a_1$ up to $a_n$ and $b$. Instead of computing the
-probability separately for each path, the forward probabilities for
-paths of length $t$ are computed incrementally using the forward
-probabilities of paths of length $t - 1$.
+for real numbers $a_1$ up to $a_n$ and $b$. 
 
-Examine Figure \ref{fw-naive-prob}. By grouping rows one and two, as
-well as three and four into pairs, we can see that
+Instead of computing the probability separately for each path, the
+forward probabilities for longer paths are computed incrementally
+using the forward probabilities of shorter paths. Examine Figure
+\ref{fw-naive-prob}. By grouping rows one and two, as well as three
+and four into pairs, it is easy to see that
 $$f_{3,\textsc{clear}} = (f_{2, \textsc{rain}}\cdot t_{\textsc{rain}}(\textsc{clear}) + f_{2, \textsc{clear}} \cdot t_{\textsc{clear}}(\textsc{clear})) \cdot e_{\textsc{clear}}(\textsc{no\ umbrella})$$
-Generalizing, we get the recursion
-$$f_{t+1, z} = \Bigg(\sum_{z'\in Y} f_{t, z'}\cdot t_{z'}(z) \Bigg) \cdot e_{z}(x_{t+1})$$
- 
+Generalizing, we get the recursion in Equation \eqref{fw-rec}.
+\begin{equation}
+f_{t, z} = \left\{
+\begin{aligned}
+&i(z) \cdot e_{z}(x_1)  & , &\  t = 1\\
+&\Bigg(\sum_{z'\in Y} f_{t - 1, z'}\cdot t_{z'}(z) \Bigg) \cdot e_{z}(x_{t}) & ,&\ 1 < t \le T\\
+&\sum_{z'\in Y} f_{T, z'}\cdot t_{z'}(F) & ,&\  t = T + 1,\ z = F.
+\end{aligned}
+\right.
+\label{fw-rec}\end{equation}
+
+The base case in Equation \eqref{fw-rec}, for $t = 1$, has no
+transition probability, but it does have the initial probability. The
+forward probability $f_{T + 1, F} = p(x \parcond \theta)$. In fact one
+of the principal applications for the forward algorithm is computing
+the total probability of an observation. The other application is as
+part in computing the marginal distributions over positions.
+  
+The forward algorithm is outlined in Algorithm
+\ref{forward-algorithm}. Assuming that accessing the data structures
+{\tt x}, {\tt i_prob}, {\tt e_prob}, {\tt tr_prob} and {\tt trellis}
+is constant time, the complexity of the algorithm is dominated by the
+three nested loops on lines \ref{start-cplx} up to
+\ref{stop-cplx}. This shows that the complexity of the forward
+algorithm is linear with regard to the length of the sequence and
+quadratic with regard to the hidden state set.
+
 \begin{algorithm}[!p]
 \caption{The forward algorithm in Python 3.}\label{forward-algorithm}
 \begin{lstlisting}
@@ -455,7 +480,7 @@ def forward(x, i_prob, e_prob, tr_prob):
     for z in range(F):
         trellis[(1,z)] = i_prob[z] * e_prob[z][x_1]
 
-    # Set all except the final column.
+    # Set all except the final column.(*@\label{start-cplx}@*)
     for t in range(2, T):
         trellis[(t, z)] = 0
 
@@ -466,7 +491,7 @@ def forward(x, i_prob, e_prob, tr_prob):
                 trellis[(t, z)] = (trellis[(t - 1, s)] * 
                                    tr_prob[s][z])
 
-            trellis[(t, z)] *= em_prob[z][x_t]
+            trellis[(t, z)] *= em_prob[z][x_t](*@\label{stop-cplx}@*)
 
     # Set the last column.
     for z in range(s_count):
