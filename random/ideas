@@ -1,0 +1,4 @@
+Parser where each clause type has an attached log-linear language
+model, which generates the clause. Additionally, regular PCFG type
+rewrite scores are used. S (generate: the dog eats) -> NP (generate:
+the dog) VP (generate: eats).
