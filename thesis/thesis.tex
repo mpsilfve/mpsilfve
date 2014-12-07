@@ -1,4 +1,4 @@
-\documentclass[a4paper, 10pt]{report}
+\documentclass[officiallayout,final]{unihelcompling}
 \usepackage[comma, authoryear]{natbib}
 \usepackage[all]{xy}
 \usepackage{float}
@@ -14,7 +14,15 @@
 \usepackage{breqn}
 \usepackage{epigraph}
 \usepackage{bibentry}
+\usepackage{fancyhdr}
+\usepackage{fancyvrb}
+\usepackage{pdfpages}
+%\setcounter{tocdepth}{1}
+%\setcounter{chapter}{1}
 \captionsetup{compatibility=false}
+
+\usepackage{multirow}
+\usepackage[normalem]{ulem}
 
 % Define float-type for algorithms.
 \floatstyle{plaintop}
@@ -33,7 +41,7 @@
 
 \lstset{language=Python, 
         backgroundcolor=\color{lblue},
-        basicstyle=\ttfamily\small, 
+        basicstyle=\ttfamily\footnotesize, 
         keywordstyle=\color{keywords},
         commentstyle=\color{comments},
         stringstyle=\color{string},
@@ -44,12 +52,8 @@
 \lstset{escapeinside={(*@}{@*)}}
 
 \renewcommand{\bibsection}{\chapter*{\refname}}
-%\usepackage{etoolbox}
-%\makeatletter
-%\patchcmd{\thebibliography}{%
-%  \chapter*{\bibname}\@mkboth{\MakeUppercase\bibname}{\MakeUppercase\bibname}}{%
-%  \section{References}}{}{}
-%\makeatother
+
+\setmainfont[Mapping=tex-text]{Liberation Serif}
 
 \def\ci{\perp\!\!\!\perp}
 
@@ -57,14 +61,23 @@
 \newcommand{\R}{\mbox{$\mathbb R$}}
 \newcommand{\cond}{\mbox{$ \, | \, $}}
 \newcommand{\parcond}{\mbox{$ ; \, $}}
+\newcommand{\fw}{\mbox{${\rm fw}$}}
+\newcommand{\bw}{\mbox{${\rm bw}$}}
 \DeclareMathOperator*{\argmax}{arg\,max}
+
+\include{title_tktla}
+
 \begin{document}
+\bibstyle{apa}
+
+
 % Make arrays a bit spacier.
 \def\arraystretch{1.2}
 
 \clearpage
-\include{title}
-
+%\include{title}
+\frontmatter
+\maketitle
 \vspace*{\fill}
 \thispagestyle{empty} 
 \begin{quotation}
@@ -77,13 +90,21 @@ Ancient Proverb
 \end{quotation}
 \vspace*{\fill}
 \onehalfspacing
+
 \pagenumbering{roman}
+%\include{abstract}
+\pagenumbering{arabic}
+
+\mainmatter
+
 \tableofcontents
 \listoffigures
 \listoftables
 \listof{algorithm}{List of Algorithms}
-\newpage
-\section*{Notation}
+\addcontentsline{toc}{chapter}{List of Algorithms}
+
+\chapter*{Notation}
+\addcontentsline{toc}{chapter}{Notation}
 \begin{tabular*}{\columnwidth}{@{\extracolsep{\stretch{1}}}*{2}{l}@{}}
 \multicolumn{2}{c}{Acronyms}\\
 CRF  & Conditional Random Field                          \\
@@ -100,10 +121,6 @@ $X^t$    & The cartesian product of $t$ copies of the set $X$.
 \end{tabular*}
 
 \include{acknowl}
-
-\include{abstract}
-
-\pagenumbering{arabic}
 
 \include{intro}
 
@@ -125,9 +142,18 @@ $X^t$    & The cartesian product of $t$ copies of the set $X$.
 \addcontentsline{toc}{chapter}{References}
 \bibliography{mythesis}
 
+\addcontentsline{toc}{chapter}{Contributions}
 \include{contrib}
 
 \addcontentsline{toc}{chapter}{Articles}
 \chapter*{Articles}
+
+\includepdfset{pagecommand={}}
+\includepdf[scale=0.9,pages=-]{Silfverberg_Linden_2011.pdf}
+\includepdf[scale=0.9,pages=-]{Pirinen_Silfverberg_Linden_2012.pdf}
+\includepdf[scale=0.9,pages=-]{ruokolainen_silfverberg_kurimo_linden_2014.pdf}
+\includepdf[scale=0.9,pages=-]{silfverberg_ruokolainen_linden_kurimo2014.pdf}
+
+\cite{Rabiner1989}
 
 \end{document}

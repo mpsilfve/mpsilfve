@@ -1,4 +1,73 @@
 \chapter{Part-of-Speech Tagging}
+
 \section{Background}
 \section{Statistical Part-of-Speech Taggers}
+
+Morphological disambiguation and part-of-speech tagging are
+interesting tasks from the perspective of machine learning because
+they represent labeling tasks where both the set of inputs and outputs
+are unfathomably large. Since each word in a sentence $x = (x_1,\
+...,\ x_T)$ of length $T$ receives one label, the complete sentence
+has $n^T$ possible labels $y = (y_1,\ ...,\ y_T)$ when the POS label
+set has size $n$.
+
+The exact number of potential English sentences of any given length,
+say ten, is difficult to estimate because all strings of words are not
+valid sentences\footnote{Moreover, it is not easy to say how many word
+  types the English language includes.}. However, it is safe to say
+that it is very large -- indeed much larger than the combined number
+of sentences in POS annotated English language corpora humankind is
+likely to ever produce. Direct ML-estimation of the conditional
+distributions $p(y\cond x)$, for POS label sequences $y$ and sentences
+$x$, by counting is therefore impossible.
+
+Because the POS labels of words in a sentence depend on each other,
+predicting the label $y_t$ for each position $t$ separately is not an
+optimal solution. Consider the sentence ``The police dog me constantly
+although I haven't done anything wrong!''. 
+
+The labels of the adjacent words ``police'', ``dog'', ``me'' and
+``constantly'' help to disambiguate each other. A priori, we think
+that ``dog'' is a noun since the verb ``dog'' is quite rare. This
+hypothesis is supported by the preceding word ``police'' because
+``police dog'' is an established noun--noun collocation. However, the
+next word ``me'' can only be a pronoun, which brings this
+interpretation into question. The fourth word ``constantly'' is an
+adverb, which provides additional evidence against a noun
+interpretation of ``dog''. In total, the evidence points toward a verb
+interpretation for ``dog''.
+
+The disambiguation of the POS label for ``dog'' utilizes both so
+called {\it unstructured} and {\it structured} information. The
+information that ``police dog'' is a frequent nominal compound is
+unstructured information, because it refers only to the POS label (the
+prediction) of the word ``dog''. The information that verbs are much
+more likely to be followed by pronouns than nouns is a piece of
+structured information because it refers to the combination of several
+POS labels. Structured information refers to the combination of
+predictions. Both kinds of information are very useful, but a model
+which predicts the label $y_t$ for each position in isolation cannot
+utilize structured information.
+
+Even though structured information is useful, structure is probably
+mostly useful in a limited way. For example the labels of ``dog'' and
+``anything'' in the example are not especially helpful for
+disambiguating each other. It is probably a sensible assumption that
+the further apart two words are situated in the sentence, the less
+likely it is that they can significantly aid in disambiguating each
+other. However, this does not mean that the interpretations of words
+that are far apart cannot depend on each other -- in fact they
+frequently do. For example embedded clauses introduce long range
+dependencies inside sentences.
+
+It is said that machine learning is sophisticated counting of
+co-occurrences. This statement applies extremely well to POS
+tagging. Counting is an adequate approach to capturing correlations
+between the labels of words inside a small window (in the league of
+five words), because most adjacent words indeed do depend on each
+other is some way. However, sophisticated counting fails for larger
+windows, because the number of meaningful dependencies in large
+windows is negligible in comparison to the space of possibilities.
+
+
 \section{Morphological Disambiguation}
