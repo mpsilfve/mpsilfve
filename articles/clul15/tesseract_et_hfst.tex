@@ -35,13 +35,13 @@ Dept. of Modern Languages\\
 \maketitle
 
 \begin{abstract}
-\noindent Optical Character Recognition (OCR) can subtantially improve
-  the usability of digitized documents. Language modelling using word
+\noindent Optical Character Recognition (OCR) can substantially improve
+  the usability of digitized documents. Language modeling using word
   lists is known to improve OCR quality for English. For
   morphologically rich languages, however, even large word lists do not reach
   high coverage on unseen text. Morphological analyzers offer a more
   sophisticated approach, which is useful in many language processing
-  applications. This paper investigates language modelling in the
+  applications. This paper investigates language modeling in the
   open-source OCR engine Tesseract using morphological analyzers. We
   present experiments on two Uralic languages Finnish and
   Erzya. According to our experiments, word lists may still be
@@ -57,13 +57,13 @@ of printed matter is crucial for the viability of minority languages. It
 also serves the linguistic community by making printed media widely
 available. Simply scanning documents, however, is not enough because
 few applications can deal with images directly. {\it Optical Character
-  Recognition} (OCR) can subtantially improve the usability of
+  Recognition} (OCR) can substantially improve the usability of
 digitized documents for example by allowing search engines to index
 them. In this paper, we investigate improving the quality of OCR for
 {\it languages with rich morphology}, that is languages with extensive
 inflection, derivation and compounding.
 
-OCR engines can benefit from language modelling, which is a field
+OCR engines can benefit from language modeling, which is a field
 encompassing a variety of techniques that aim at improving the
 function of language processing applications by capturing key
 properties of the target language. For example, translation software
@@ -93,7 +93,7 @@ word lists.
 
 In light of our experiments, it seems that morphological analyzers do
 help in OCR of morphologically rich languages compared to a baseline
-without language modelling. We were, however, unable to get improvements
+without language modeling. We were, however, unable to get improvements
 over using word lists harvested from the Wikipedia databases for Erzya
 and Finnish. This result is somewhat surprising, as the morphological
 analyzers have higher coverage on the test material than the word
@@ -250,7 +250,7 @@ a search algorithm for finding word suggestions that requires that
 the language model be deterministic. Hence, it cannot handle flag
 diacritics. Fortunately, HFST includes utilities which can be used to
 eliminate flag diacritics from a finite-state machine without
-changing its behaviour.
+changing its behavior.
 
 All the necessary steps to transform an HFST morphological analyzer
 into a Tesseract language model have been incorporated into the HFST
@@ -399,7 +399,7 @@ The edit reduction, ER, from a baseline $B$ to an improved edit
 count $C$ is
 $${\rm ER} = \frac{B - C}{B}$$
 If, the baseline $B$ is in fact better than the count $C$, ER will be
-be negative.
+negative.
 
 We divided the test material into pages, and performed paired one
 sided Wilcoxon tests to asses the statistical significance of our
@@ -414,11 +414,11 @@ In this section we show the results for Finnish in Table
 \ref{myv-novel-res}. 
 
 For the Finnish novel, all systems utilizing some kind of language
-modelling fared better than the baseline system without any kind of
+modeling fared better than the baseline system without any kind of
 vocabulary information. The morphological analyzer performed better
 than the other systems on the lowest image quality 100 dpi. Otherwise,
 it in fact performed worse than the other systems utilizing language
-modelling.
+modeling.
 
 For resolutions 300 and 200 dpi, all language models gave
 statistically significant improvements over the baseline in the 95\%
@@ -467,7 +467,7 @@ No language model &  0.0\% (3257)  &  0.0\% (3224)  &  0.0\% (15788)  \\
 Morph. analyzer   &  8.0\% (2996)  &  -0.1\% (3230)  & {\bf 2.8\%} (15353)  \\
 \hline 
 \end{tabular}
-\caption{LER for the Erzyan novel Ава using different systems and resolutions.}\label{myv-novel-res}
+\caption{LER for the Erzya novel Ава using different systems and resolutions.}\label{myv-novel-res}
 \end{center}
 \end{table}
 
@@ -529,7 +529,7 @@ require extensive changes to Tesseract.
 We, the authors, want to thank Jussi-Pekka Hakkarainen, Timo Honkela
 and Krister Lind\'{e}n for helpful ideas. We also want to thank Tommi
 Pirinen for creating OMorFi and the HFST team for maintaining the HFST
-toolkit. Additionally, we want to thank the KONE foundation for
+toolkit. Additionally, we want to thank the Kone Foundation for
 funding this research. Finally, all three anonymous reviewers made
 great suggestions for improvement and pointed out related
 work. We are in your debt!
