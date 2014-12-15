@@ -286,7 +286,7 @@ effect of different language models on scanned material of varying
 quality, the data were scanned in different resolutions: 100, 200 and
 300 dpi.
 
-Even without language modelling, Tesseract performs quite well on
+Even without language modeling, Tesseract performs quite well on
 scanned images of quality 300 dpi. The result requires relatively
 little manual correction. In contrast, 100 dpi images usually result
 in quite poor performance. In fact, manual correction may take
@@ -311,7 +311,7 @@ In addition to Wikipedia text, we used freely available morphological
 analyzers for Finnish and Erzya. OMorFi \cite{pirinen11} is a broad
 coverage Finnish morphological analyzer available
 online\footnote{\url{https://code.google.com/p/omorfi/}}. For Erzya,
-we used the Erzyan analyzer distributed by the Giellatekno project
+we used the Erzya analyzer distributed by the Giellatekno project
 \cite{moshagen14}.
 
 The coverages of different linguistic resources on test data are shown
@@ -342,7 +342,7 @@ Finnish                 & Coverage \\
 1000K word list         &  84.5\% \\
 Morphological analyser  &  86.7\% 
 \end{tabular}
-\caption{Coverages of linguistic resources on the text tokens of the Erzyan and Finnish test
+\caption{Coverages of linguistic resources on the text tokens of the Erzya and Finnish test
   material.}\label{fin-myv-coverage}
 \end{center}
 \end{table}
@@ -441,7 +441,7 @@ No language model & ~0.0\% (794)          & ~0.0\% (1265)          & 0.0\% (1550
 Morph. analyzer   & ~25.3\% (593)    & ~30.0\% (885)     & {\bf 5.7\%} (14621)      \\
 \hline 
 \end{tabular}
-\caption{Edit reduction (and total edit count) for the Finnish novel Elokuu using different systems and resolutions.}\label{fin-novel-res}
+\caption{ER (and edit counts) for the Finnish novel Elokuu using different systems and resolutions.}\label{fin-novel-res}
 \end{center}
 \end{table}
 
@@ -467,7 +467,7 @@ No language model &  0.0\% (3257)  &  0.0\% (3224)  &  0.0\% (15788)  \\
 Morph. analyzer   &  8.0\% (2996)  &  -0.1\% (3230)  & {\bf 2.8\%} (15353)  \\
 \hline 
 \end{tabular}
-\caption{LER for the Erzya novel Ава using different systems and resolutions.}\label{myv-novel-res}
+\caption{ER (and edit counts) for the Erzya novel Ава using different systems and resolutions.}\label{myv-novel-res}
 \end{center}
 \end{table}
 
@@ -500,7 +500,7 @@ vocabulary of 1000 words. This happens both for Finnish and Erzya. We
 believe, the large amount of real word errors is to blame. However,
 for the lowest image quality 100 dpi, the morphological analyzers do
 improve performance. It is interesting to compare these results to
-statistical language modelling for OCR, which also improves results
+statistical language modeling for OCR, which also improves results
 when performance is low, but can degrade it otherwise \cite{smith11}.
 
 Interestingly, vocabulary size does not seem to be a very good
@@ -510,7 +510,7 @@ performs best on the 300 dpi material with. Similarly, the system with
 resolution. Overall, the results for all but the smallest vocabularies
 lie very close to each other.
 
-It would seem that the effect of language modelling is already
+It would seem that the effect of language modeling is already
 exhausted at 10 000 words. Therefore, it is not horribly surprising
 that the morphological analyzer does not achieve better results than
 the systems using word lists. The fact that its performance
