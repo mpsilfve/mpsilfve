@@ -60,7 +60,7 @@ few applications can deal with images directly. {\it Optical Character
   Recognition} (OCR) can substantially improve the usability of
 digitized documents for example by allowing search engines to index
 them. In this paper, we investigate improving the quality of OCR for
-{\it languages with rich morphology}, that is languages with extensive
+languages with rich morphology, that is languages with extensive
 inflection, derivation and compounding.
 
 OCR engines can benefit from language modeling, which is a field
@@ -164,6 +164,7 @@ HFST finite-state library, HFST morphological analyzers, and the
 process of combining these utilities.
 
 \subsection{Tesseract}
+\label{lm}
 The Tesseract\footnote{https://code.google.com/p/tesseract-ocr/} OCR
 engine \cite{smith07} was originally developed at HP Labs between 1984
 and 1995 for high quality OCR of English. In 2005 it was released as
@@ -198,7 +199,7 @@ extensive {\it dictionary}, {\it punctuation patterns} and a list of
 {\it word forms containing digits}.
 
 Each language model and the adaptive classifier have associated
-weights which determine their relative importance. For example the
+weights which determine their relative importance. For example, the
 frequent word model has a greater weight than the dictionary
 model reflecting the higher prior for seeing frequent words.
 
@@ -209,7 +210,7 @@ further re-scored using the model specific weights. Finally, the highest
 scoring suggestion is selected.
 
 We modify this system by replacing the word lists with a morphological
-analyzer. The associated weight for the analyzer was the same as for
+analyzer. The associated weight for the analyzer is the same as for
 the dictionary model in the original system.
 
 \subsection{Helsinki Finite-State Technology}
@@ -240,7 +241,7 @@ cyclic graphs. The existing implementation simply did not offer a way
 to produce cyclic graphs. Fortunately, it was not difficult to
 implement a sub-class for the Tesseract language model class, {\tt
   Dawg}, which does support cyclic graphs. Additionally, we implemented a
-driver for HFST transducers in optimized lookup format, which supports
+driver for HFST automata in optimized lookup format, which supports
 lookup speeds of up to 100 000 words/s \cite{silfverberg09}.
 
 HFST morphological analyzers can contain so called flag diacritics
@@ -508,13 +509,16 @@ predictor of performance. For Finnish, the 10 000 word vocabulary
 performs best on the 300 dpi material with. Similarly, the system with
 10 000 word vocabulary performs best for Erzya material in 200 dpi
 resolution. Overall, the results for all but the smallest vocabularies
-lie very close to each other.
+lie very close to each other. All OCR results are better for Finnish,
+which probably reflects the quality of the baseline models.
 
 It would seem that the effect of language modeling is already
-exhausted at 10 000 words. Therefore, it is not horribly surprising
-that the morphological analyzer does not achieve better results than
-the systems using word lists. The fact that its performance
-is so low, however, was mildly surprising.
+exhausted at 10 000 words.\footnote{This may be a consequence of
+  Tesseract's approach to language modeling described in Section
+  \ref{lm}.}  Therefore, it is not horribly surprising that the
+morphological analyzer does not achieve better results than the
+systems using word lists. The fact that its performance is so low,
+however, was mildly surprising.
 
 In order to limit the number of real word errors, we tried excluding
 all compounds that had not been attested in real text from the
@@ -527,12 +531,10 @@ require extensive changes to Tesseract.
 
 \section*{Acknowledgments}
 We, the authors, want to thank Jussi-Pekka Hakkarainen, Timo Honkela
-and Krister Lind\'{e}n for helpful ideas. We also want to thank Tommi
-Pirinen for creating OMorFi and the HFST team for maintaining the HFST
-toolkit. Additionally, we want to thank the Kone Foundation for
-funding this research. Finally, all three anonymous reviewers made
-great suggestions for improvement and pointed out related
-work. We are in your debt!
+and Krister Lind\'{e}n for helpful ideas and Tommi Pirinen for
+creating OMorFi. Additionally, we want to thank the Kone Foundation
+for funding. Finally, all three anonymous reviewers made useful
+suggestions. We are in your debt!
 
 \bibliographystyle{unsrt}
 \bibliography{fiwclul2015}
