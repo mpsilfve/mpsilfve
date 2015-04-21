@@ -1,13 +1,380 @@
 \chapter{Conditional Random Fields}
+
+\section{Discriminative modeling}
+
+As seen in Chapter \ref{chapter:hmm}, the HMM POS tagger can be viewed
+as a state machine which alternates between sampling observations,
+that is words, from a state specific observation distributions, and
+sampling successor states, that is the morphological labels, from
+state specific transition distributions. Each emission and each
+successor state is conditioned {\it solely} on the current
+state. These independence assumptions are harsh. For example the
+Finnish  cannot be adequately modeled, because the model does not
+include direct information about neighboring words in a sentence.
+
+Although information about for example word collocations and
+orthography is quite useful in morphological labeling, it is often
+difficult to incorporate more elaborate contextual information in a
+generative model. As \cite{Sutton2012} note, there are two principal
+methods of doing this are improving the emissions model, which may be
+intractable because the model needs to account for complex
+dependencies between words in a sentence and their orthographic
+features, and replacing the usual emission model with for example a
+Naive Bayes' model.
+
+In a domain closely related to morphological labeling, namely
+biomedical entity extraction,\cite{Ruokolainen2013} show that the
+Naive Bayes approach fails. In fact, adding richer context modeling
+such as adjacent words, worsens the performance of the modeling. One
+reason for this may be that overlapping information sources tend to
+cause the Naive Bayes model to give overly confident probability
+estimates \citep{Sutton2012}. Combining them in a structured manner
+can therefore be problematic.
+
+In contrast to generative sequence models, discriminative sequence
+models such as Maximum Entropy Markov Models \citep{Ratnaparkhi1998}
+and Conditional Random Fields \citep{Lafferty2001} can incorporate
+overlapping sources of information. They model the conditional
+distribution of label sequences $p(y\cond x)$ directly instead of
+modeling the joint distribution $p(x,\ y)$. Therefore, they do not
+need to model the distribution of sentences at all. 
+
+Discriminative models assign probabilities $p(y\cond x)$ for label
+sequences $y$ and word sequences $x$ by extracting local features from
+the input sentence and label sequence. Examples of local features
+include {\it $x_t$ is ``dog'' and $y_t$ is ``NN''} and {\it $y_{t-1}$ is ``DT'' and
+  $y_t$ is ``NN''}. Each feature is associated with a parameter value and the
+parameter values are combined to give the conditional likelihood of
+the entire label sequence. Naturally, the label sequence which
+maximizes the conditional likelihood given sentence $x$ is the label
+sequence returned by the discriminative POS tagger.
+
+In generative models, emissions and transitions are independent. Both
+are determined exclusively based on the current label. Contrastingly,
+in discriminative models, there are no emissions or
+transitions. Instead, it is customary to speak about unstructured
+features relating exclusively to the input sentence, and structured
+features, which incorporate information about the label
+sequence. Simplifying a bit, discriminative models make no
+independence assumptions among features relating to a single position
+in the sentence. This allows for improved fit to training data but
+parameter estimation becomes more complex as we shall soon
+see. Moreover, discriminative models are more prone to
+over-fitting. This is of course the famous bias-variance trade-off
+\citep{Geman1992}.
+
+
+\section{Maximum Entropy Modeling}
+\label{sec:me}
+
+\subsection{Example}
+\label{sec:maxent-ex}
+
 \section{Basics}
+\label{crf:basics}
+
+I will now describe a CRF POS tagger from a practical
+point-of-view. The tagging procedure encompasses two stages: feature
+extraction and inference using an exact or approximate inference
+algorithm. Whereas inference in CRFs is very similar to inference in
+HMMs, we did not discuss feature extraction in association to
+HMMs. This is because HMM taggers use a restricted set of features
+(the current word and preceding labels).
+
+\begin{tabular}{lcccc}
+$y$ & DT & NN & VBZ & .\\
+$x$ & The & dog & eats & .
+\end{tabular}
+
+Features are true logical propositions, which connect aspects of the
+input sentence with labels or parts of the label sequence. Given
+sentence $x$ and label sequence $y$ of length $n$, we extract features
+at every position $t$ in the sentence. For example at position $2$ in
+sentence $x$, we could extract {\it The current word $x_t$ is ``dog''
+  and the label is ``NN''} and {\it The previous label is ``DT'' and
+  the current label is ``NN''}. We could, however, not extract the
+same feature {\it The current word is ``dog'' and the label is ``NN''}
+at position $1$, because this proposition is false when $t = 1$ (the
+word at position 1 is ``The'' and the label is ``VBZ'').
+
+Features are conjunctions of two parts: a feature template, for
+example {\it The current word is ``dog''} and a label {\it the
+  label is ``NN''}. The set of features recognized by a CRF POS tagger
+contains all conjunctions $f \& y$ of feature templates $f$
+present in the training data and labels $y$. For example, the tagger
+would know {\it The current word is ``dog'' and the label is ``DT''}
+although it is unlikely that this feature would ever be observed in
+actual training data.
+
+\cite{Ratnaparkhi1996} introduced a rather rudimentary feature set and
+variations of this feature set are commonly used in the literature
+(for example \cite{Collins2002} and \cite{Lafferty2001}). Let $W$ be
+the set of word forms in the training data. Additionally let $P$ and
+$S$ be the sets of prefixes and suffixes of maximal length $4$ of all
+words $w \in W$. Then, the Ratnaparkhi feature set contains the
+unstructured feature templates in Table \ref{tab:uratna} and the
+structured feature templates in Table \ref{tab:sratna}.
+
+\begin{table}[!htb]
+\begin{tabular}{ll}  
+Feature template & Example\\
+\hline
+The current word is $w$ & The current word is ``dog''\\
+The current word has prefix $p$ & The current word has prefix ``d-''\\
+The current word has suffix $s$ & The current word has suffix ``-og''\\
+The current word contains a digit & \\
+The current word contains a hyphen & \\
+The current word contains a upper case letter & \\
+The previous word is $w$ & The previous word is ``The''. \\
+The next word is $w$ & The next word is ``eats''. \\
+The word before the previous word is $w$ & \\
+The word after the next word is $w$ & \\
+\end{tabular}
+\caption{foo}\label{tab:uratna}
+\end{table}
+
+\begin{table}[!htb]
+\begin{tabular}{ll}
+Feature template & Example\\
+\hline
+The label of the previous word is $y$ & The label of the previous word is ``NN''. \\
+The label of the previous two words are $y'$ and $y$ & The labels of the two previous words are\\
+ & ``DT'' and ``NN''. 
+\end{tabular}
+\caption{foo}\label{tab:sratna}
+\end{table}
+
+These feature templates are then combined with all labels occurring in
+the training set. It is instructive to try to estimate the number of
+features when using a realistic training set of size around a million
+words. The number of features is be $O(\max(|Y|^2,\ |W|)\cdot
+|Y|)$. For small label sets and large training data, the bulk of the
+feature set tends to consist of unstructured features. However, for
+large label sets in the order of $1,000$ labels, there will be a
+significant number of structured features (one billion in this
+case). This necessitates either dropping second order structured
+features or using sparse feature representations. All structured
+features simply cannot be represented in memory. We will see
+techniques to circumvent these problems. Especially the averaged
+perceptron is essential.
+
+It is common to represent the CRF using linear algebra. Each position
+$t$ in the sentence is represented as a vector $\phi_t$ whose
+dimensions correspond to the entire space of possible features. The
+selection of features is finite because it is limited by the training
+data. There are only finitely many word forms, suffixes, morphological
+labels and so on in the training data. The elements of each vector
+$\phi_t$ represent activations of features. In the present work all
+elements are either $0$ or $1$ mirroring false and true truth values,
+but other activations in $\mathbb{R}$ can also be used, if the truth
+values of the feature propositions exist on a non-binary scale.
+
+In order to represent sentence positions as vectors, we need an
+injective index function $I$ which maps features onto consecutive
+integers starting at 1. For each feature $f$, $I(f)$ will be an
+element in $\phi_t$. In a concrete implementations, the index function
+$I$ could be implemented as a hash function.
+ 
+Given a sentence $x$ and label sequence $y$, we can extract the set of features
+$F_t(x)$ for each position $t$ in $x$. Let $\phi_t \in \mathbb{R}^N$ be a vector defined by
+$$\phi_t(i) = 1,\ {\rm\ if}\ i \le N\ {\rm and}\ I(f) = i\ {\rm for\ some\ }f\in F_t$$
+all other entries in $\phi_t$ are $0$. 
+
+Given a parameter vector $\omega \in \mathbb{R}^N$, the probability $p(y|x)$ is
+$$p(y|x) \propto \prod_{t = 1}^T \exp(\omega^\top \phi_t)$$
+Specifically, the same parameter vector $\omega$ is shared by all
+sentence positions and the probability $p(y|x)$ is a log linear
+combination of parameter values in $\omega$.
+
 \cite{Lafferty2001}
 \section{Logistic Regression}
-\begin{itemize}
-\item Detailed view of logistic regression. 
-\item Relation to maximum entropy.
-\item Why are MEMMs not better than HMMs?
-\item Label and observation bias.
-\end{itemize}
+%\begin{itemize}
+%\item Detailed view of logistic regression. 
+%\item Relation to maximum entropy.
+%\item Why are MEMMs not better than HMMs?
+%\item Label and observation bias.
+%\end{itemize}
+
+The simplest Conditional Random Field is the {\it Logistic Regression
+  Model} (LRM). It is an unstructured probabilistic discriminative
+model. In this section, I will present a formal treatment of the
+LRM because it aids in understanding more general
+CRFs.
+
+\subsection{The Model}
+\label{sec:lr-model}
+
+Regular linear regression models a {\it real valued quantity} $y$
+based on independent variables $x_1$, ..., $x_n$. In contrast the LRM
+is a regression model which models {\it the probability} that an
+observation $x$ belongs to a class $y$ in a finite class set $Y$. For
+example, the logistic classifier can be used to model the probability
+of a tumor belonging to the class {\sc MALIGNANT} or BENIGN. The
+probability is based on quantifiable information about the tumor such
+as its size, shape and the degrees of expression of different genes in
+the tumor cells. These quantifiable information sources are the {\it
+  feature templates} of the logistic classifier and combined with
+class labels they make up the features of the
+model. %In concrete terms, let $f$ be the feature template {\it Tumor diameter greater then 5 cm} and $y$ be the class MALIGNANT, then we can form a feature $f \& y$ ``{\it Tumor diameter greater than 5 cm} and the tumor is MALIGNANT''.
+
+The material at hand deals with linguistic data where most information
+sources are binary, for example whether a word ends in suffix ``-s''
+and whether a word is preceded by the word ``an''. In other domains
+such as medical diagnostics, more general features can be used. These
+can be real valued numerical measurements such as the diameter of a
+tumor. This treatment of logistic classifiers will focus on the binary
+valued case. When using binary features, we can equate the example $x$
+with the set of feature templates $F_x \subset F$ that it {\it
+  activates}, that is {\it Tumor diameter $\geq$ 5 cm}, {\it Preceded
+  by ``an''} and so on. Examples that activate the exactly same
+feature templates will be indistinguishable from the point of view of the
+Logistic Regression model.
+
+The logistic classifier associates each combination of a feature
+template and class with a unique feature and a corresponding real
+valued parameter. Intuitively, the logistic classifier models
+correlations of feature templates and classes by changing the
+parameter values of the associated features. For example, it might
+associate the feature template {\it Tumor diameter $\geq$ 5 cm} more
+strongly with the class MALIGNANT than the class BENIGN if large
+tumors are cancerous more often than smaller ones. This could be
+reflected in the parameter values of the model that correspond to the
+features $f =$ {\it Tumor diameter $\geq$ 5 cm and class is MALIGNANT}
+and $f' =$ {\it Tumor diameter $\geq$ 5 cm and class is BENIGN} so
+that the parameter value for $f$ is greater than the parameter value
+for $f'$. In general parameter values, however, also depend on other
+features and feature correlations in the model. Therefore we can say
+that the parameter value of, $f$ will be guaranteed to be greater than
+the parameter value of $f'$ when $f$ is the sole feature template and
+the model accurately reflects the original distribution of class
+labels among examples. In the general case, where there are several
+feature templates, this might fail to hold.
+
+Formalizing the notation used in Section \ref{crf:basics}, let $F$ be
+a finite set of feature templates and $Y$ a finite set of
+classes. Each combination of feature template $f \in F$ and class $y
+\in Y$ corresponds to a unique feature. Therefore, the model will have
+$|F \times Y|$ features in total. Let $\theta$ be a real valued
+parameter vector in $\R^{|F \times Y|}$ and let ${\mathrm I}$ be a
+1-to-1 index function which maps each combination of feature template
+and class onto the indexes of $\theta$, that is $1 \leq {\mathrm I}(f,
+y) \leq |F \times Y|$.
+
+For each example $x$, let $F_x$ be the set of feature templates that $x$ activates and let $y \in Y$ be a class. Then the feature vector associated with $x$ and $y$ is $\phi(x,y) = \{0, 1\}^{|F \times Y|}$ defined by
+\[
+  \phi(x,y)[i] = \left\{
+  \begin{array}{ll}
+  1 & {\rm iff\ } i = {\mathrm I}(f,y) {\rm\ for\ some\ }f \in F_x{\rm,} \\ 
+  0 & {\rm otherwise.}  
+  \end{array}
+  \right.
+\]
+
+%$$F_y(I(f, y)) = 1\ {\rm iff\ }f \& y\ {\rm is\ true}.$$
+
+Now the conditional probability $p(y\cond x)$ defining the Logistic
+classifier is given by Equation \eqref{eq:logistic}. The equation
+defines a probability distribution over the set of classes $Y$ because
+each quantity $p(y\cond x\parcond\theta)$ is a positive real and the
+quantities sum to 1. 
+
+\begin{equation}
+p(y\cond x\parcond \theta) = \frac{\exp(\theta^\top \phi(x,y))}{\sum_{z \in Y}\exp(\theta^\top \phi(x,z))}\label{eq:logistic}
+\end{equation}
+
+Often a special bias term is used in Equation \ref{eq:logistic}. It is 
+
+The Logistic Regression Model is log-linear as demonstrated by
+Equation \ref{eq:logistic,log}, which represents the model using a
+cost function.
+
+\begin{equation}
+-\log p(y\cond x\parcond \theta) = log(\Z(x;\theta)) - \theta^\top F_y(x),\ {\rm where}\ Z(x;\theta) = \sum_{z \in Y}\exp(\theta^\top F_{z}(x))\label{eq:logistic,log}
+\end{equation}
+
+
+Given labeled training data $\data = \{(x_1,\ y_1),\ ...,\
+(x_n,\ y_n)\}$, there exist several options for estimating the
+parameters $\theta$. The most commonly used is the maximum likelihood,
+or equivalently minimum cost, estimation. The minimum cost estimate
+for the parameters $\theta$ using $\data$ is given by equation
+\eqref{eq:logistic,ml}, where $\Z(\mathcal{D};\theta) = \sum_{(x,\ y) \in
+  \mathcal{D}} \Z(x;\theta)$ is the partition function of the entire
+data set $\data$.
+
+\begin{equation}
+\theta = \argmin_{\theta'}\Big( \log(\Z(\mathcal{D};\theta)) - \sum_{(x,\ y) \in \mathcal{D}} {\theta'}^\top F_y(x)\Big)\label{eq:logistic,ml}
+\end{equation}
+
+The probability $p(y\cond x\parcond \theta)$ has exponential form,
+which means that the probability is proportional to a product of
+factors of the form $e^{ap}$, where $a$ is an activation (0 or 1) and
+$p$ is a parameter. This has three significant consequences:
+
+\begin{enumerate}
+\item The function $\theta \mapsto p(y\cond x\parcond \theta)$ is smooth,
+\item it is convex,
+\item there exists a {\it unique} $\theta$ maximizing the likelihood of the training data $\mathcal{D}$, and
+\item the model $p(y\cond x\parcond \theta)$ is maximally unbiased. 
+\end{enumerate}
+
+Smoothness follows from the fact that each factor $a \mapsto e^{ap}$
+is smooth and products and sums of smooth functions are
+smooth. Convexity of the likelihood follows by a straightforward application of the Hölder inequality \cite{}. Property 3 is a consequence of properties 1 and 2 and
+Property 4 follows from the discussion in Section \ref{sec:me}.
+
+The log-linear form of the logistic classifier is motivated by the
+concept of maximum entropy, which was introduced in Subsection
+\ref{sec:maxent-ex}. 
+
+Although the maximization in Equation \ref{eq:logistic} cannot be
+solved for exactly in general, the convexity and smoothness of
+$p(y\cond x\parcond \theta)$ mean that efficient numerical methods can
+be used for approximating the maximum to an arbitrary precision.
+
+\section{The Logistic Regression Model as a Classifier}
+
+Inference for a Logistic Regression Model means finding the
+probability of each class label $y \in Y$ given example $x$. The full
+computation of the probability is, however, not needed when the model
+is used as a classifier. For simply finding the class $y_{max}$ which
+maximizes the conditional likelihood in equation
+\ref{eq:logistic,inference} given fixed parameters $\theta$ it is
+sufficient to maximize the numerator of $p(y \cond x\parcond\theta)$.
+
+\begin{equation}y_{max} = \argmax_{y \in Y} p(y\cond x\parcond \theta) = \argmax_{y\in Y} \frac{\exp(\theta^\top \phi(x,y))}{\Z(x;\theta)} = \argmax_{y \in Y} \exp(\theta^\top \phi(x,y))\label{eq:logistic,inference}\end{equation}
+
+To avoid underflow when using finite precision real numbers (such as
+floating-point numbers), the maximization is usually rephrased as the
+minimization of a cost-function in Equation
+\ref{eq:logistic,inference,log}
+
+\begin{equation}y_{max} = \argmin_{y\in Y} \theta^\top \phi(x,y)\label{eq:logistic,inference,log}\end{equation}
+
+From a practical implementation perspective, the minimization in
+Equation \ref{eq:logistic,inference,log} boils down to computing one
+inner product $\theta^\top \phi(x,y)$ for each label $y \in Y$ and
+finding the minimum. Using a suitable sparse approach each of the
+inner products can be computed in $\O(|F_x|)$ time, where $F_x$ is the
+set of feature templates activated by example $x$. Therefore, the
+worst-case complexity of classification is dependent on the size of
+the label set $Y$ and the number of feature templates $f \in F$, that
+is the complexity is $\O(|Y||F|)$.
+
+\section{Estimation}
+
+As seen in Section \ref{lr-model}, the Logistic Regression Model is
+smooth, that is the likelihood $p(y_1 \cond x_1 \parcond \theta)
+... p(y_n \cond x_n \parcond \theta)$ of a labeled training data set
+$\mathcal{D} = \{(x_1,y_1), ...,(x_n,y_n)\}$ is a smooth function of
+the parameter vector $\theta$. This allows formulation of the
+parameter estimation task for the Logistic Regression Model as a
+optimization task whose solution can be approximated using numerical
+techniques.
+
+
+\section{CRF -- A Structured Logistic Classifier}
+
 \section{Note on Terminology}
 \begin{itemize}
 \item The term perceptron tagger is commonly found in the litterature, e.g. \cite{Collins2002}.

@@ -1,4 +1,5 @@
 \chapter{Hidden Markov Models}
+\label{chapter:hmm}
 
 AN INTRO
 
@@ -798,21 +799,61 @@ used for example Kneser-Ney \citep{foo}.
 
 Many systems such as the HMM tagger by \cite{Brants2000} do not smooth
 emission probabilities for words seen in the training corpus. However,
-so words not seen in the training corpus, or out-of-vocabulary (OOV)
-words still require special processing. The simplest method is to
-estimate combined statistics for all words ocurring one time in the
-training corpus and use these statistics for OOV words
+words {\it not} seen in the training corpus, or out-of-vocabulary
+(OOV) words still require special processing. The simplest method is
+to estimate combined statistics for all words occurring one time in
+the training corpus and use these statistics for OOV words
 \citep{foo}. Lidstone smoothing is another similar approach
-\citep{foo}. \cite{Brants2000} and \cite{SamuelssonXX} build models to
-guess the analysis of OOV words using suffixes of the word. This
-approach seems to perform the best. 
+\citep{foo}. Another approach would be to build models to guess the
+analysis of OOV words using the longest suffix of the word shared with
+a word in the training data.
+
+\cite{Brants2000} employs a specialized emission model for OOV words,
+which combines both approaches. It assigns a probability $p(y|x)$ for
+any label $y \in \mathcal{Y}$ and an arbitrary word $x$ based on
+suffixes $s_i$ of the word different lengths. The subscript $i$
+indicates suffix length.
+
+The model uses relative frequencies $\hat{p}(y|s_i)$ of label $y$ given
+each suffix $s_i$ of $x$ that occurs in the training data. The
+frequencies for different suffix lengths are recursively combined into
+probability estimates $p(y|s_i)$ using successive interpolations
+$$p(y|s_{i+1}) = \frac{\hat{p}(y|s_{i+1}) + \theta \cdot p(y|s_{i})}{1 + \theta}.$$
+The base case $p(y|s_0)$, for the empty suffix $s_0$, is given by the
+overall frequency of label type $y$ in the training data,
+i.e. $p(y|s_0) = \hat{p}(y)$, and the interpolation coefficient
+$\theta$ is the variance of the frequencies of label types in the
+training data
+$$\theta = \frac{1}{|\mathcal{Y}| - 1} \sum_{y\in \mathcal{Y}} (\hat{p} - \hat{p}(y))^2.$$
+Here $\hat{p}$ is the average frequency of a label type. Finally,
+$p(y|x) = p(y|s_I)$, where $s_I$ is the longest suffix of $x$ that
+occurs in the training data. However, a maximal suffix length is
+imposed to avoid over-fitting. \cite{Brants2000} uses $10$ for
+English. Moreover, the training data for the emission model is
+restricted to include only ``rare'' words, that is words whose
+frequency does not exceed a given threshold. This is necessary,
+because the distribution labels for OOV words usually differs
+significantly from the overall label distribution in the training
+data.
+
+\cite{Brants2000} does not discuss the choice of $\theta$ in great
+length. It is, however, instructive to consider the effect of the
+magnitude of $\theta$ on the emission model.  When the variance of
+label type frequencies, that is $\theta$, is great, shorter suffixes
+and the prior distribution of label types will weigh more than long
+suffixes. This is sensible as (1) a high $\theta$ implies that the
+distribution of words into label types is eschewed a priori and (2)
+long suffix statistics are sparse and thus prone to overfitting. When
+$\theta$ is low, the prior distribution of word classes is closer to
+the even distribution. Therefore, there is no choice but to trust
+longer suffixes more.
 
 For morphologically complex languages, the smoothing scheme employed
 by \cite{Brants2000} may be inferior to a longest suffix approach
 utilized by \cite{Silfverberg2011} and \cite{Linden2009}. This may
 happen because productive compounding. For languages with writing
 systems that radically differ from English, such as Mandarin Chinese,
-suffix based methods work poorly. Other methdos, such as basing the
+suffix based methods work poorly. Other methods, such as basing the
 guess on all symbols in the word, may work better. \cite{Huang2007}
 smooth symbol emission probabilities using geometric mean.
  

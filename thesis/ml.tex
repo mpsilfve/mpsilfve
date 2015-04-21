@@ -1,18 +1,323 @@
 \chapter{Machine Learning}
 
-\begin{itemize}
-\item Rule-based vs. machine learning approaches.
-\item The basic machine learning tasks: classification and clustering.
-\item The basic machine learning approaches: supervised and
-  unsupervised learning.
-\end{itemize}
+This section outlines the basic methodology followed in machine
+learning approaches to Natural Language Processing. I will briefly
+discuss machine learning from a general point of view and then present
+supervised machine learning in more detail using linear regression as
+example. I will then present on the different kinds of classifiers
+applied in NLP; both unstructured and structured.
+
+\subsection{Overview}
+%\begin{itemize}
+%\item Rule-based vs. machine learning approaches.
+%\item The basic machine learning tasks: classification and clustering.
+%\item The basic machine learning approaches: supervised and
+%  unsupervised learning.
+%\end{itemize}
+
+Approaches to Natural Language Processing can be broadly divided into
+two groups: rule-based and machine learning approaches. Rule-based
+approaches utilize hand crafted rules for tasks such as text labeling
+or machine translation. Machine learning approaches solve the same set
+of problems using data driven (usually statistically motivated) models
+and samples from the problem domain, which are used to estimate model
+parameters.
+
+This thesis focuses on extending machine learning techniques to the
+domain of morphologically complex languages, where they have been
+applied less frequent than for morphologically more straightforward
+languages like English. I want to emphasize that the thesis should not
+be seen as an attack against the rule-based paradigm for Natural
+Language Processing. It is simply an investigation into extension of
+machine learning techniques.
+
+Machine learning and hand crafted rules have their respective merits
+and short-comings. Rule-based methods can often give much better
+results and so on.
+
+Machine Learning is can be divided into two fields supervised and
+unsupervised Machine Learning. Supervised machine translation uses a
+training material with hand crafted annotations. An example would be a
+set of images with associated key words, where the task is to build a
+system which can associate previously unseen images with appropriate
+key words.
+
+Supervised machine learning is typically employed for tasks such as
+labeling (that is classification) and translation. Typical examples of
+tasks include Part-of-Speech labeling and speech recognition where
+annotations consist of POS labels for the words in some text and
+written sentences corresponding to an acoustic speech signal
+respectively.
+
+In contrast to supervised machine translation, unsupervised approaches
+exclusively utilize unannotated data. Unsupervised machine learning is
+most often used for various kinds of clustering tasks, that is
+grouping sets of examples into subsets of similar examples. 
+
+In Natural Language processing, supervised learning approaches are
+most often used (for example ...). Unsupervised approaches, however,
+can also be useful for e.g. exploratory data analysis (...).
+
+This thesis focuses on supervised machine learning.
 
 \section{Supervised Learning}
+%\begin{itemize}
+%\item Example: linear regression.
+%\item Estimation from a sample.
+%\item Convexity, smoothness.
+%\item Regularization.
+%\item Methodology: Training, development and test sets. 
+%\item Significance testing.
+%\end{itemize}
+
+In this section, I will illustrate the key concepts and techniques in
+supervised Machine Learning using the simple example of linear regression. I will explain the plain linear regression model and show how it can be fitted using training data. I will then briefly present ridge regression which is a regularized version of linear regression.
+
+I chose linear regression as example because it is a simple model yet
+can be used to illustrate data driven techniques. Moreover, the model
+has several tractable properties such as smoothness and
+convexity. Additionally, it can be seen as the simplest example of a
+linear classifier which is a category of models encompassing
+
+\subsection{Basic Concepts}
+
+\paragraph{Linear Regression} As a simple example, imagine a person
+called Jill who is a real estate agent. She is interested in
+constructing an application, for use by prospective clients, which
+would give rough estimates for the selling price of a property. Jill
+knows that a large number of factors affect housing prices but there
+are a few very robust quantifiable predictors of price that are easy
+to measure.
+
+Jill decides to base the model on the following predictors:
+\begin{enumerate}
+\item The living area.
+\item The number of rooms.
+\item The number of bathrooms.
+\item Size of the yard.
+\item Distance of the house from the city center.
+\item Age of the house.
+\item Amount of time since the last major renovation.
+\end{enumerate}
+
+Jill decides to use the simplest model which seems reasonable. This
+model is {\it linear regression} which models {\it the dependent
+  variable} house price as a linear combination of the independent
+variables listed above and parameter values in $\R$. The linear
+regression model is probably not accurate. It fails in several
+regards. For example, increasing age of the house probably reduces the
+price up to a point but very old houses can in fact be more expensive
+then newly built houses especially if they have been renovated lately.
+Although, the linear model is unlikely to be entirely accurate, Jill is
+happy with it because the intention is just to give a ball park
+estimate of the price for the average prospective client.
+
+To formalize the linear regression model, let us call the dependent
+variable price $y$ and each of the independent variables living area,
+number of rooms and so on $x_i$. Given a vector $x = (x[1], ...,
+x[n])^\top \in \R^n$, which combines the independent
+variables\footnote{In reality, each of the predictors would probably
+  be transformed to give all of them the same average and
+  variance. Although this ii not required in theory, it tends to give
+  a better model \cite{someone}.}, and a parameter vector $\theta \in
+\R^n$ the linear regression model is given in Equation
+\ref{eq:linreg}.
+
+\begin{equation}
+y(x\parcond \theta) = x^\top\theta\label{eq:linreg}
+\end{equation}
+
+Two questions immediately arise: How to compute the price given
+parameters and predictors and how to compute the parameter vector
+$\theta$. These questions are common for all supervised learning
+problems also when using other models than the linear regression
+model.
+
+\paragraph{Inference} The first question concerns {\it inference},
+that is finding the most likely value for the dependent variable given
+the independent variables. In the case of linear regression, the
+answer to this question is straightforward. To compute the price,
+simply perform the inner product in Equation \ref{eq:linreg}. The
+question is, however, not entirely settled because one might also ask
+for example how close to the actual price the estimate $y$ is likely
+to be. A related question would be to provide an upper and lower bound
+for the price so that the actual price is very likely to be inside the
+provided bounds. To answer these questions, one would have to model
+the expected error.
+
+Inference is very easy and also efficient in the case of linear
+regression. With more complex model such as structured graphical
+models used in this thesis, it can however be an algorithmically and
+computationally more challenging problem. The principle is still the
+same: Find the $y$ which is most likely given the input parameters.
+
+\paragraph{Estimation} The second question concerns {\it estimation of
+  model parameters} and it is more complex than the question of
+inference. First of all, Jill needs training data. She also needs to
+decide upon an {\it estimator}, that is, a method for estimating the
+parameters $\theta$.
+
+In the case of house price prediction, Jill can simply use data about
+houses she has brokered in the past. She decides to use a training
+data set $\mathcal{D} = \{(x_1, y_1), ..., (x_T, y_T)\}$, where each
+$x_t = (x_t[1] ... x_t[n])$ is a vector of independent variable values
+(living area, age of the house and so on) and $y_t$ is the dependent
+variable value, that is the final selling price of the house. Now Jill
+needs to make a choice. How many training examples $(x_t, y_t)$ does
+she need? The common wisdom is that more data is always better,
+however, this has bearing on how the parameters need to be
+estimated. In any case, the number of data points in the training data
+should ideally be higher than the number of parameters that need to be
+estimated. When one cannot accomplish this, one encounters the so
+called {\it data sparsity problem}.
+
+\paragraph{Data Sparsity} Whereas getting sufficient training data is
+fairly easy in the case of housing prices, it is vastly more difficult
+to accomplish with more complicated models in natural language
+processing. Therefore, one central question in this thesis is how to
+counteract {\it data sparsity}.
+
+\paragraph{Cost Functions} The objective in estimation is to find a
+parameter vector $\theta$ which in some sense minimizes the error of
+the house price predictions $y(x_t\parcond \theta)$ when compared to
+the actual realized house prices $y_t$ in the training data. The usual
+minimization criterion used with linear regression is the least square
+sum criterion given in Equation \ref{eq:lss}. It is minimized by a
+parameter vector $\theta$ which gives as small square errors $|y_t -
+y(x_t \parcond \theta)|^2$ as possible.
+
+\begin{equation}
+\theta = \argmin_{\theta' \in \R^n} \sum_{x_t \in \mathcal{D}} | y_t - y(x_t\parcond \theta')|^2\label{eq:lss}
+\end{equation}
+
+The square sum is an example of a {\it cost function} (also
+called the objective function). A cost function assigns a non-negative
+real cost for each parameter vector. Using the concept of cost
+function, the objective of estimation can be reformulated: Find the
+parameter vector $\theta$ that minimizes the cost of the training
+data.
+
+\paragraph{The Exact Solution} In the case of linear regression, there
+is a well known exact solution for $\theta$ which utilizes linear
+algebra. The solution is given in Equation \ref{eq:lss-exact}. The
+matrix $X \in \R^T_n$ is defined by $X_{t,i} = x_t[i]$ and its
+More-Pennrose pseudoinverse $X^+ \in \R^n_T$ is defined as $X^+ =
+(X^\top X)^{-1}X^\top$. The vector $Y \in R^T$ is simply the vector of
+realized house prices $y_t$. The solution $\theta$ exists only when
+none of the independent variables are linear combinations of each
+other in the training data.
+
+\begin{equation}
+\theta = X^+ Y \label{eq:lss-exact}
+\end{equation}
+
+\paragraph{Iterative Estimation} Although the linear regression model
+is simple enough so that it can be estimated exactly, the same does
+not hold for most more complex models such as the Conditional Random
+Field investigated in this thesis. Moreover, the exact solution might
+often not be the one that is desired. Often the training data is quite
+sparse, that is there is too little of it compared to the amount of
+parameters that need to be estimated. Therefore, the model may {\it
+  over-fit} the training data and fail to generalize well to examples
+not included in the training data. 
+
+\paragraph{Regularization} Due to the problem of over-fitting, a family
+of heuristic techniques called {\it regularization} is often
+employed. They aim to transform the original problem in a way which
+will penalize both deviance from the gold standard and ``complexity''
+of the solution $\theta$. Regularization can be seen to convey the
+same idea as Occam's Maxim which states that a simpler explanation for
+a phenomenon should be preferred when compared to a more complex
+explanation yielding equivalent results. Of course, this does not
+explain what is meant by a ``complex'' parameter vector $\theta$.
+
+To illustrate simple and complex parameter vectors, examine a case of
+linear regression where the dependent variable $y$ and the predictors
+$x_i$ have mean $0$ and variance $1$ in the training data. This may
+seem restrictive but in fact any linear regression problem can easily
+be transformed into this form by applying an affine transformation $z
+\mapsto az - b$. When doing inference, this affine transformation can
+simply be reversed by applying $z \mapsto a^{-1} (z + b)$. The
+simplest parameter vector $\theta$ is clearly the zero vector $\theta
+= (0 ... 0)^\top$. It corresponds to the hypothesis that the
+predictors $x_i$ have no effect on the dependent variable
+$y$. According to this hypothesis, the prediction is always the
+average of the dependent variable values in the training data.
+
+The zero solution to a linear regression problem is simple but also
+totally biased. Because we are assuming that the independent variables
+$x_i$ explain the dependent variable $y$, a model that completely
+disregards them is unlikely to give a good fit to the training
+data. By introducing a regularization term into the cost function, we
+can however encourage simple solutions while at the same time also
+preferring solutions that give a good fit. There are several ways to
+accomplish this but the most commonly used are so called $L_1$ and
+$L_2$ regularization. These are general regularization methods that
+are employed in many models in machine learning.
+
+The $L_1$ regularized cost function for linear regression is given in
+Equation \ref{eq:lss-l1}. $L_1$ regularization, also called LASSO
+regularization \cite{somone}, enforces solutions where many of the
+parameter values are $0$. These are also called sparse parameters. It
+is suitable in the situation where the model is over specified, that
+is, many of the predictors might not be necessary for good prediction. The expression is a sum 
+
+\begin{equation}
+\theta = \argmin_{\theta' \in \R^n} \sum_{x_t \in \mathcal{D}} | y_t - y(x_t\parcond \theta')|^2 + \lambda \sum_i |\theta[i]|\label{eq:lss-l1}
+\end{equation}
+
+The $L_2$ regularized cost function is given in \ref{eq:lss-l2}. $L_2$
+regularization is also called Tikhonov regularization. In contrast to
+$L_1$ regularization, it directly prefers solutions with small norm. A
+linear regression model with Tikhonov regularization is called a ridge
+regression model.
+
+\begin{equation}
+\theta = \argmin_{\theta' \in \R^n} \sum_{x_t \in \mathcal{D}} | y_t - y(x_t\parcond \theta')|^2 + \lambda \|\theta\|^2 = \argmin_{\theta' \in \R^n} \sum_{x_t \in \mathcal{D}} | y_t - y(x_t\parcond \theta')|^2 + \lambda \sum_i |\theta[i]|^2\label{eq:lss-l2}
+\end{equation}
+
+The coefficient $\lambda \in \R^+$ is called the {\it
+  regularizer}. The regularizer determines the degree to which model
+fit and simplicity affect the cost. A higher $\lambda$ will increase
+the cost for complex models more than a lower one. When $\lambda$
+increases, the optimal parameter vector $\theta$ approaches the zero
+vector and when it decreases $\theta$ approaches the parameters that
+fit the training data as closely as possible. This is called
+under-fitting.
+
+The regularizer is a so called {\it hyper-parameter} of the
+regularized liner regression model. It is easy to see that increasing
+$\lambda$ will automatically increase the cost. Therefore, there is no
+direct way to estimate its correct magnitude simply using the training
+data. Instead {\it held-out data} can be used. Held-out data is
+labeled data that is not used directly for estimating model
+parameters. If the model over-fits the training data, that is
+generalizes poorly to unseen examples, the held-out data will have a
+high cost. However, it will also have a high cost if the model
+under-fits, that is, performs poorly on all data. Held-out data can
+therefore be used to find an optimal values for the regularizer
+$\lambda$. Often one tries several potential values and chooses the
+one that minimizes the cost of the held-out data. Usually, one uses
+the unregularized cost function for the held-out data.
+
+\paragraph{Iterative Estimation} Regularization is an additional reason for
+introducing iterative estimation methods instead of exact
+estimation. There are several choices of regularizers and some of them
+might not result in optimization problems that have closed form
+solutions\footnote{In the case of regression, non-linear {\it kernel
+    functions} also result in optimization problems that don't have a
+  closed form solution. I will elaborate this when discussing logistic
+  regression.}. When an exact solution cannot be computed, or it is
+undesirable, numerical methods can be used to estimate model
+parameters.
+
 \begin{itemize}
-\item Example of a linear classifier: Cancer tumor classification.
-\item Estimation from a sample.
-\item Methodology: Training, development and test sets. 
-\item Significance testing.
+\item Smoothness of cost function.
+\item Convexity.
+\item Compactness. Not getting stuck at local optima does not
+  guarantee that a global optimum can be found.
+\item Stochastic Gradient Descent.
+\item Quasi Newton Methods.
 \end{itemize}
 
 \section{Classifiers}
