@@ -1,0 +1,3 @@
+# Non-empty
+max_lemmatizer_passes=1
+max_train_passes=1
