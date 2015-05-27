@@ -1,2 +1,2 @@
-To perform experiments on a data set X run make X.sys. E.g. "make
+To perform experiments on a data set X run "make X.sys". E.g. "make
 klk-test.sys". To evaluate, run "./eval.py X.sys X"
