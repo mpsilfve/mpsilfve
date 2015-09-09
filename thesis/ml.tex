@@ -4,7 +4,7 @@ This section outlines the basic methodology followed in machine
 learning approaches to Natural Language Processing. I will briefly
 discuss machine learning from a general point of view and then present
 supervised machine learning in more detail using linear regression as
-example. I will then present on the different kinds of classifiers
+example. I will then elaborate on the different kinds of classifiers
 applied in NLP; both unstructured and structured.
 
 \subsection{Overview}
@@ -15,6 +15,7 @@ applied in NLP; both unstructured and structured.
 %  unsupervised learning.
 %\end{itemize}
 
+\paragraph{Statistical and Rule-Based NLP}
 Approaches to Natural Language Processing can be broadly divided into
 two groups: rule-based and machine learning approaches. Rule-based
 approaches utilize hand crafted rules for tasks such as text labeling
@@ -28,19 +29,25 @@ domain of morphologically complex languages, where they have been
 applied less frequent than for morphologically more straightforward
 languages like English. I want to emphasize that the thesis should not
 be seen as an attack against the rule-based paradigm for Natural
-Language Processing. It is simply an investigation into extension of
-machine learning techniques.
+Language Processing which has proven to be very successful in
+treatment of morphologically complex languages \cite{}. This thesis is
+simply an investigation into extension of machine learning
+techniques. Truly successful language processing systems should
+probably combine rule-based and statistical techniques.
 
 Machine learning and hand crafted rules have their respective merits
-and short-comings. Rule-based methods can often give much better
-results and so on.
+and short-comings and these are dependent on the task to some
+extent. For example, in the domain of machine translation, rule-based
+methods can give syntactically correct results \cite{}. However,
+statistical machine translation systems are in general better at
+lexical choice \cite{}.
 
-Machine Learning is can be divided into two fields supervised and
-unsupervised Machine Learning. Supervised machine translation uses a
-training material with hand crafted annotations. An example would be a
-set of images with associated key words, where the task is to build a
-system which can associate previously unseen images with appropriate
-key words.
+\paragraph{Supervised and Unsupervised ML}Machine learning is can be
+divided into two fields supervised and unsupervised. Supervised
+machine learning uses a training material of labeled training
+examples. An example would be a set of images with associated key
+words, where the task is to build a system which can associate
+previously unseen images with appropriate key words.
 
 Supervised machine learning is typically employed for tasks such as
 labeling (that is classification) and translation. Typical examples of
@@ -53,6 +60,11 @@ In contrast to supervised machine translation, unsupervised approaches
 exclusively utilize unannotated data. Unsupervised machine learning is
 most often used for various kinds of clustering tasks, that is
 grouping sets of examples into subsets of similar examples. 
+
+Finally, semi-supervised (and weakly supervised) systems use an
+annotated training set with in combination with a, typically, very
+large unannotated training set to improve the results beyond the
+maximum achievable by either approach in isolation.
 
 In Natural Language processing, supervised learning approaches are
 most often used (for example ...). Unsupervised approaches, however,
@@ -300,39 +312,312 @@ $\lambda$. Often one tries several potential values and chooses the
 one that minimizes the cost of the held-out data. Usually, one uses
 the unregularized cost function for the held-out data.
 
-\paragraph{Iterative Estimation} Regularization is an additional reason for
-introducing iterative estimation methods instead of exact
-estimation. There are several choices of regularizers and some of them
-might not result in optimization problems that have closed form
-solutions\footnote{In the case of regression, non-linear {\it kernel
-    functions} also result in optimization problems that don't have a
-  closed form solution. I will elaborate this when discussing logistic
-  regression.}. When an exact solution cannot be computed, or it is
-undesirable, numerical methods can be used to estimate model
-parameters.
+\paragraph{Iterative Estimation} Regularization is an additional
+reason for introducing iterative estimation methods instead of exact
+estimation. There are several choices of regularization methods and
+some of them might not result in optimization problems that have
+closed form solutions\footnote{In the case of regression, non-linear
+  {\it kernel functions} also result in optimization problems that
+  don't have a closed form solution. I will elaborate this when
+  discussing logistic regression.}. When an exact solution cannot be
+computed, or it is undesirable, numerical methods can be used to
+estimate model parameters.
 
-\begin{itemize}
-\item Smoothness of cost function.
-\item Convexity.
-\item Compactness. Not getting stuck at local optima does not
-  guarantee that a global optimum can be found.
-\item Stochastic Gradient Descent.
-\item Quasi Newton Methods.
-\end{itemize}
+Because the cost of the training data is a function of the model
+parameters, one can apply analytical methods to try to find optimal
+parameter values. These methods include for example Newton's method
+which is an iterative procedure that can be used to find the zeros of
+a differentiable function or local extrema of a twice differentiable
+function. Approximations of Newton's method, so called Quasi-Newton
+methods \cite{somone}, have also been developed because Newton's
+method requires evaluation and inversion of the Hessian matrix of a
+function. This is a very costly operation for functions where the
+domain has high dimension. Quasi-Newton methods use approximations of
+the inverse Hessian. 
+
+A simpler method called gradient descent can be applied to functions
+that are only once differentiable.\footnote{Essentially the same
+  procedure can also be applied to functions that are not
+  differentiable but are only guaranteed to have a sub-gradient
+  \cite{someone}.} In general, gradient descent converges toward the
+optimum more slowly than Newton's method, however, the computation of
+one step of the iterative process is much faster when using gradient
+descent. Therefore, it may be faster in practice.
+
+All gradient based methods rely on differentiability of the cost function. For the models used in this thesis, differentiability holds. Gradient based methods work in the following general manner. Let $L_{\mathcal{D}}:\R^n \rightarrow \R$ be the cost of the training data $\mathcal{D}$.
+
+\begin{enumerate}
+\item Start at a random point $\theta_0$ in the parameter space.
+\item Determine the direction of steepest descent of the cost function. This is the negative gradient $-\nabla L_{\mathcal{D}}(\theta_t)$ at point $\theta_t$.\label{alg:dir}
+\item Determine a suitable step size $\alpha_t \in \R_+$. 
+\item Take a step of length $\alpha_t$ in direction $v_t$ to get to the next point in the parameter space $\theta_{t+1}$, that is $\theta_{t+1} = \theta_t - \alpha_t \nabla L_{\mathcal{D}}(\theta_t)$.
+\item If the difference in cost $|L_{\mathcal{D}}(\theta_{t+1}) - L_{\mathcal{D}}(\theta_t)|$ is smaller than a threshold $\rho$, set $\theta = \theta_{t+1}$. Otherwise, set $\theta_t = \theta_{t+1}$ and return to line \ref{alg:dir}.
+\end{enumerate}
+
+The main difference between first and second order methods is the
+computation of the step size $\alpha_t$. Second order methods can take
+longer steps when the cost is plateauing. Thus they typically take
+fewer steps in total. In first order methods such as gradient descent,
+$\alpha_t$ can be constant, a decreasing function of $t$ or can also
+be determined by a line search in the direction of $-\nabla
+L_{\mathcal{D}}(\theta_t)$ \cite{someone}. For example $\alpha_t =
+t^{-1}$ may work\footnote{In general, stepsize $(\alpha_t)_{t \in \N}$
+  that resemble the harmonic sequence, that is $\sum \alpha_t^2 <
+  \infty$ and $\sum \alpha_t = \infty$, guarantee convergence of
+  gradient descent to an minimum of the cost function (if it exists)
+  for a wide variety of functions \cite{someone}}.
+
+
+As the meta-algorithm above suggests, gradient based optimization
+algorithms are local in the sense that they always move in the
+direction of steepest descent of the cost function that is toward a
+local optimum. Therefore, they will in general not find the global
+optimum of the cost function. By choosing a {\it convex} cost function
+it is possible to avoid getting stuck at local optima. All local
+optima of convex functions are in fact global optima. 
+
+Convexity is, however, not enough to guarantee convergence to a global
+optimum. First of all, a global optimum might not exist\footnote{This
+  can happen if the domain of the cost function is not
+  compact. Unfortunately, it usually is not.}. Convergence could also
+be too slow thus leading to premature termination of the training
+procedure. This is specifically a problem for first order methods.
+
+\paragraph{Online Estimation} The optimization methods
+discussed up to this point have been so called {\it batch
+  methods}. The derivatives of the cost function is computed over the
+entire training data and parameters are updated accordingly. Batch
+methods can be slow and subsequent training when new training examples
+become available is computationally intensive. {\it Online algorithms}
+are an alternative to batch methods, where the cost is instead
+computed for a randomly chosen training example and the parameters are
+the updated accordingly \cite{someone}. In practice, online methods
+can give fast convergence. Moreover, re-training is relatively
+efficient when new training examples become available.
+
+{\it Stochastic gradient descent} is a well known online estimation
+algorithm. It has vastly superior convergence properties when compared
+to regular gradient descent \cite{someone} but is identical in all
+other respects except that it is an online estimation algorithm
+instead of a batch algorithm. The algorithm processes one random
+training example at a time. It uses the gradient $\nabla
+L_{\mathcal{D}[i]}(\theta)$ of the cost over the single training
+example $\mathcal{D}[i]$ to approximate the gradient $\nabla
+L_{\mathcal{D}}(\theta)$ for the entire training data $\mathcal{D}$.
 
 \section{Classifiers}
-\begin{itemize}
-\item Naïve Bayes' classifier.
-\item Generative and Discriminative Classifiers.
-\item Linear classifiers: logistic classifier, perceptron classifier \citep{Freund1999},
-  SVM \citep{Cortes1995}.
-\end{itemize}
+%\begin{itemize}
+%\item Naïve Bayes' classifier.
+%\item Generative and Discriminative Classifiers.
+%\item Linear classifiers: logistic classifier, perceptron classifier \citep{Freund1999},
+%  SVM \citep{Cortes1995}.
+%\end{itemize}
+
+The main topic of this thesis is morphological tagging. It can be seen
+as a structured {\it classification task} where each word in a
+sentence is assigned one morphological label\footnote{which may have
+  internal structure as is seen in Section
+  \ref{sec:sub-labels}.}. Classification is a fundamental supervised
+machine learning task where the objective is to learn a mapping from
+objects like words, sentences, documents or images onto discrete
+classes such as morphological labels (Noun+Sg+Nom) or sentiments
+(Positive sentiment versus Negative Sentiment).
+
+Classification resembles regression. The output of a classifier is, however, not
+a single real value $y$ but a distribution over the set of nominal
+classes.
+
+Probabilistic classifiers can broadly be divided into two groups,
+namely generative and discriminative. Generative classifiers learn a
+joint distribution $p(x,y)$ over labels $y$ and input examples
+$x$. Given an example $x$, a distribution over classes $y$ can be
+computed using the marginal probability of example $x$, which is $p(x)
+= \sum_{y' \in Y} p(y',x)$. The probability distribution over classes
+is defined by $p(y|x) = p(y,x) / p(x)$.
 
 \section{Structured Classifiers}
-\begin{itemize}
-\item The idea of chained stochastic processes.
-\item Markov chain.
-\item HMM
-\item MEMM
-\item CRF
-\end{itemize}
+%\begin{itemize}
+%\item The idea of chained stochastic processes.
+%\item Markov chain.
+%\item HMM
+%\item MEMM
+%\item CRF
+%\end{itemize}
+
+There are tasks in natural language processing that cannot be
+adequately formulated as supervised classification tasks in the simple
+way that has been discussed earlier. Examples of tasks that require
+more sophisticated methods are syntactic parsing and translation
+between languages. One could think of parsing as a labeling task where
+the objective is to label a sentence with the appropriate syntactic
+tree. Likewise, the translation of a sentence could be seen as its
+label. 
+
+It is, however, easy to see that these approaches are deeply
+flawed. Firstly, there is an infinite number of syntactic trees and
+indeed an infinite number of sentences of finite length. Therefore,
+the label set would have to be infinite as well. Secondly, the data
+sparsity problem would be unmanageable. Just in order to see most
+relatively frequent syntax trees for moderately long English
+sentences, say twenty words long, we would need an unfathomable amount
+of training data.
+
+Instead of a simplistic classification approach, {\it structured}
+classifiers can be employed. Structured classifiers relate parts of
+the complex label such as a translation, syntax tree or sequential
+labeling with the input. They also learn how to piece together complex
+labels from simple constituents. A very simple (and probably very bad)
+translation software could learn how to translate isolated English
+words into French words and then learn how to combine French words
+into sentence as shown in Figure \ref{fr-tr}. Note that although both
+``Le'' and ``La'' are perfectly good translations for ``The'', only
+``Le'' is usually possible before ``chien'', which is a masculine
+French word.
+
+In general, structured classifiers rely on two models, the
+unstructured and structured model. The unstructured model learns to
+relate simple labels such as words in a translation or nodes in a
+syntax tree with the input. In contrast, the structured model learns
+how to combine simple labels into complex labels such as entire
+translations or syntax trees. In practice, some models make a stricter
+division then other models.
+
+Structured models are the main subject matter of this thesis and I
+will present two structured models, the Hidden Markov model and the
+Conditional random field in detail in Chapters \ref{hmm} and
+\ref{crf}.
+ 
+\begin{figure}
+\caption{A translation from English to French}\label{fr-tr}
+\begin{center}
+\includegraphics[scale=0.75]{chien}
+\end{center}
+\end{figure}
+
+\section{The Aim of Research -- Improving the State of the Art}
+
+Like most language technological research, the work documented in this
+thesis aims at improving existing solutions for language
+processing. Specifically, my work is targeted at improving
+morphological taggers for morphologically rich languages. It is not
+entirely easy to define what constitutes an improvement to the field
+of morphological tagging or indeed any sub-field of language
+technology. Nevertheless, most researchers would probably agree that
+the following kinds of changes are improvements compared to existing
+approaches:
+
+\begin{enumerate}
+\item Improving labeling accuracy.
+\item Speeding up estimation.
+\item Speeding up tagging.
+\item Reducing model size. \label{quant}
+\item Clarifying the underlying theoretical foundations.
+\item Simplifying implementation of taggers.
+\item Uncovering best practices for building taggers.
+\end{enumerate}
+
+Items 1 though \ref{quant} in the list above are {\it quantifiable}
+improvements. It is possible to perform experiments to measure the
+labeling accuracy, tagging speed, estimation speed and model size
+given by different morphological taggers and derive conclusions about
+the respective merits of the taggers. In contrast, the rest of the
+items in the list cannot be measured as easily. 
+
+Although, most probably would agree that clarifying theoretical
+foundations of a field is a substantial contribution, it may not be as
+easy to agree upon what constitutes a clarification. This could for
+example be dependent on the background of individual
+researchers. Similarly, one model might be more straight-forward to
+implement than another model using some programming language, however,
+this can very well depend on the specific programming language and
+available libraries to some degree.
+
+Because quantifiable improvements are easier to ascertain, this thesis
+focuses on demonstrating such improvements compared to other state of
+the art approaches. Nevertheless, I will also aim to show that the
+model demonstrated in the thesis is conceptually simpler than other
+state of the art approaches.
+
+Although quantifiable improvements are easier to demonstrate than
+other improvements, there are still caveats. First of all, it is
+impossible to compare machine learning models directly. One can only
+compare implementations of the models. Because of differences between
+platforms even different implementations of the exact same model can
+have radically different run time on the same data. Moreover, bugs in
+the implementation of different models can reduce the accuracy or have
+sporadic effects on run time.
+
+Besides practical concerns like dependence on implementation, there
+are also theoretical issues that interfere with measuring performance
+of different models. It is easy to say that the accuracy of one system
+is better than another system on {\it a specific data set}. This does,
+however, not imply that the accuracy is better on {\it all data
+  sets}. In formal terms, we can only conduct experiments on samples
+of the distribution of all texts in a given language. Therefore, our
+experiments will yield results only in a probabilistic sense: it is
+likely that the labeling accuracy of one system is better than the
+accuracy of another, if the accuracy was better on the sample used for
+testing.
+ 
+Using large test sets and test sets compared from a variety of
+different genres will probably give more reliable results. This is,
+however, also to some extent a debatable matter. Some methods are very
+accurate on the same genre that they were trained on but perform worse
+on other genres. Other methods instead perform well on average but, as
+a trade-off, cannot reach as high accuracy on a specific text
+domain. It is not easy to say which kind of system is preferable. This
+trade-off is called the bias variance trade-off \cite{?} and it has
+bearing on measuring the performance difference of systems. 
+
+When using a high variance system, accuracy on different texts varies
+a lot. When instead using a system with high bias, the accuracy tends
+to vary much less.
+
+When comparing two systems, it is not sufficient to simply look at the
+performance of the systems on a test set. If we measure the
+performance of the systems on a particular test, one of them will
+almost certainly perform better than the other regardless of whether
+there is an actual difference in the performances of the systems. The
+probability of exactly equal performance is simply very small. 
+
+The larger the test sets are, the more accurately the results of
+experiments will on average reflect the true performance of the
+systems. This is easy to see, because ultimately the test set will represent the entire domain. Unfortunately, the amount of test material is usually
+restricted and producing more test data might not be
+feasible\footnote{Especially when using standard data sets, one is
+  restricted to the given amount of test data}.
+
+An approach that is often used is splitting the test data into
+segments and performing several experiments -- one for each
+segment. If one system outperforms the other system on most segments
+with a large margin, then we are more confident in saying that there
+is in fact a difference in the performance of the systems. If on the
+hand each system outperforms the other on roughly half of the
+segments, we might be inclined to doubt whether there is any real
+difference in performance between the systems. The higher the variance
+between the results, the larger the margins between the systems need
+to be in order for us to be able to conclude that there is a
+difference in performance. This argument can be made rigorous using
+statistical tests which measure the significance of the difference in
+performance of two systems.
+
+The usual set up of statistical significance testing is to make a null
+hypothesis $H_0$ that the average performance of two systems is the
+same. After this a test statistic is computed. The test statistic is
+simply a real number whose value indicates the significance of the
+difference in performances between the systems. If the statistic is
+high enough, the null hypothesis can be discarded in favor of the
+alternative hypothesis that there is a genuine difference in
+performance between the systems. The test statistic incorporates
+information about the difference in performance of the systems on test
+data all segments as well as the variance of the performances.
+
+In the work conducted presented in this thesis, I have used the
+Wilcoxon signed-rank test \cite{?} to ascertain the significance of
+results. I use it instead of the T-test because it is not dependent on
+the fact that the distribution of differences in performance are
+normally distributed\footnote{In practice it might be a fairly
+  accurate assumption that the differences are normally
+  distributed. This often holds for measurements \cite{?}.}. In
+practice it is less sensitive than the T-test.
+

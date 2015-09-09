@@ -7,6 +7,7 @@
 \usepackage{graphicx}
 \usepackage{caption}
 \usepackage{xltxtra}
+\usepackage[bb=boondox]{mathalfa}
 %\usepackage{utf8}[inputenc]
 \usepackage{xunicode}
 \usepackage{subcaption}%,showframe}
@@ -17,6 +18,7 @@
 \usepackage{fancyhdr}
 \usepackage{fancyvrb}
 \usepackage{pdfpages}
+\usepackage{csquotes}
 %\setcounter{tocdepth}{1}
 %\setcounter{chapter}{1}
 \captionsetup{compatibility=false}
@@ -59,6 +61,7 @@
 
 \renewcommand{\P}{\mbox{${\rm P}$}}
 \newcommand{\R}{\mbox{$\mathbb R$}}
+\newcommand{\N}{\mbox{$\mathbb N$}}
 \newcommand{\cond}{\mbox{$ \, | \, $}}
 \newcommand{\parcond}{\mbox{$ ; \, $}}
 \newcommand{\fw}{\mbox{${\rm fw}$}}
@@ -68,6 +71,10 @@
 \DeclareMathOperator*{\argmax}{arg\,max}
 \DeclareMathOperator*{\argmin}{arg\,min}
 \renewcommand{\O}{\mbox{${\rm O}$}}
+\newcommand{\s}{\mbox{${\rm s}$}}
+\renewcommand{\i}{\mbox{${\rm i}$}}
+\renewcommand{\t}{\mbox{${\rm t}$}}
+\newcommand{\w}{\mbox{${\rm w}$}}
 \include{title_tktla}
 
 \begin{document}
@@ -107,9 +114,9 @@ Ancient Proverb
 \addcontentsline{toc}{chapter}{List of Algorithms}
 
 \chapter*{Notation}
-\addcontentsline{toc}{chapter}{Notation}
+\addcontentsline{toc}{chapter}{Acronyms}
 \begin{tabular*}{\columnwidth}{@{\extracolsep{\stretch{1}}}*{2}{l}@{}}
-\multicolumn{2}{c}{Acronyms}\\
+\multicolumn{2}{c}{{\bf Acronyms}}\\
 CRF  & Conditional Random Field                          \\
 HMM  & Hidden Markov Model                               \\
 MEMM & Maximum-Entropy Markov Model                      \\
@@ -118,9 +125,17 @@ PGM  & Probabilistic Graphical Model                     \\
 POS  & Part-of-Speech                                    \\
 MAP  & Maximum a posteriori                              \\
      & \\
-\multicolumn{2}{c}{Mathematical Notation}\\
-$x[1:t]$ & Prefix $(x_1,\ ...,\ x_t)$ of sequence $x = (x_1,\ ...,\ x_t,\ ...,\ x_T)$.\\
-$X^t$    & The cartesian product of $t$ copies of the set $X$.
+\multicolumn{2}{c}{{\bf Mathematical Notation}}\\
+$x[i]$ & The element at index $i$ (starting at 1) in vector or sequence $x$.\\
+$\R^m_n$ & The space of $m \times n$ real valued matrices.\\
+$x[1:t]$ & Prefix $(x_1,\ ...,\ x_t)$ of vector or sequence $x = (x_1,\ ...,\ x_T)$.\\
+$X^t$    & The cartesian product of $t$ copies of the set $X$.\\
+$M^\top$ & Transpose of matrix $M$.\\
+$M^+$    & The More-Pennrose pseudoinverse of matrix $M$.\\ 
+$f(x\parcond\theta)$ & Function $f$, paramerized by vector $\theta$, applied to $x$.\\
+$x \mapsto f(x),\ x \overset{f}{\ \mapsto\ } f(x)$ & A mapping of values $x$ to expressions $f(x)$.\\
+$\|v\|$ & Norm of vector $v$.\\
+$\hat{p}$ & Estimate of probability $p$.
 \end{tabular*}
 
 \include{acknowl}
@@ -134,6 +149,8 @@ $X^t$    & The cartesian product of $t$ copies of the set $X$.
 \include{pos}
 
 \include{hmm}
+
+\include{fsm}
 
 \include{crf}
 
@@ -150,13 +167,12 @@ $X^t$    & The cartesian product of $t$ copies of the set $X$.
 
 \addcontentsline{toc}{chapter}{Articles}
 \chapter*{Articles}
-
-\includepdfset{pagecommand={}}
-\includepdf[scale=0.9,pages=-]{Silfverberg_Linden_2011.pdf}
-\includepdf[scale=0.9,pages=-]{Pirinen_Silfverberg_Linden_2012.pdf}
-\includepdf[scale=0.9,pages=-]{ruokolainen_silfverberg_kurimo_linden_2014.pdf}
-\includepdf[scale=0.9,pages=-]{silfverberg_ruokolainen_linden_kurimo2014.pdf}
-
-\cite{Rabiner1989}
+\pagestyle{empty}
+%\includepdfset{pagecommand={}}
+%\includepdf[scale=1,pages=-]{Silfverberg_Linden_2011.pdf}
+%\includepdf[scale=1,pages=-]{Pirinen_Silfverberg_Linden_2012.pdf}
+%\includepdf[scale=1,pages=-]{ruokolainen_silfverberg_kurimo_linden_2014.pdf}
+%\includepdf[scale=1,pages=-]{silfverberg_ruokolainen_linden_kurimo2014.pdf}
+%\includepdf[scale=1,pages=-]{finnpos_second_submission.pdf}
 
 \end{document}
