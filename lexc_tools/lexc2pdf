@@ -1,0 +1,11 @@
+#! /bin/bash
+
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+# lexc2pdf lexc_file ( -f )?
+
+cat $1 |
+$DIR/lexc2skeleton.py $2 |
+hfst-lexc |
+hfst-fst2txt -f dot |
+dot -T pdf > $1.pdf 

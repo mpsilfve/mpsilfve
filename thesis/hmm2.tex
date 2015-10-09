@@ -1,0 +1,56 @@
+\chapter{Generative Taggers using Finite-State Transducers}
+
+This section presents a finite-state implementation of granarative taggers such as HMMs using finite-state algebra. This exapnds on \cite{Silfverberg2010} and \cite{Silfverberg2011}.
+
+\section{Enriching the emission and transition models}
+\begin{itemize}
+\item \cite{Halacsy2007} and \cite{Silfverberg2011}.
+\end{itemize}
+
+\section{Problems}
+In the standard first order HMM an observation depends only on the
+current hidden state. If the hidden state is given, the observation
+cannot be influenced by the hidden states at other positions in the
+input or the other observations. This facilitates estimation and makes
+the system resistant to over-fitting, but at the same time it severly
+limits the set phenomena tht the model can capture.
+
+An example from POS tagging the Penn Treebank illustrates this
+problem. The Penn Treebank has two labels for common nouns: {\tt NN}
+for singular nouns and {\tt NNS} for plural nouns.
+
+\begin{itemize}
+\item Local normalization.
+\item Inability to use word context.
+\item Label bias.
+\item The inability to use rich features, causes problems in domains
+  other than POS tagging and in POS tagging for MR languages.
+\item Smoothing is difficult.
+\item Differences in performance between generative HMMs and
+  discriminative approaches are even greater for morphologically
+  complex languages and small training sets.
+\item OOV words may require different mechanisms depending on
+  language again causing problems for MR lanuages.
+\end{itemize}
+
+
+\section{Finite-State Implementation of Hidden Markov Models}
+As seen in Chapter~\cite{chapter:hmm}, an HMM can be decomposed into a
+emission model, which models the conditional distribution $P(y|x)$ of
+all labels $y$ given a state $x$ and a transition model, which models
+the conditional distribution $P(y_{n+1} | y_1, ..., y_n)$ of states
+$y_{n+1}$ given a state history $y_1, ..., y_n$.
+
+Both the emission and transition models can be compiled into
+finite-state machines. The emission model is compiled into one
+finite-state transducer but the transition model is made up from a
+number of component models. All the models are combined using a
+run-time variant of composition and intersection.
+
+\subsection{Interpreting HMMs as Finite-State Machines}
+
+\subsection{The Emission Model}
+
+\subsection{The Transition Model}
+
+\subsection{Weighted Intersecting Composition}
