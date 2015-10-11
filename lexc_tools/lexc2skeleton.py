@@ -1,7 +1,6 @@
 #! /usr/bin/env python3
 
 from sys import stdin, stderr, argv
-from collections import namedtuple
 from re import sub, match, split, findall
 from getopt import getopt
 
@@ -34,7 +33,7 @@ def remove_re_whitespace(lexicon_entry):
     Remove all spaces inside regular expressions on a line but
     preserve all other spaces. 
 
-    Ugly but what can you do...
+    Ugly, but what can you do...
 
     Example
 
@@ -65,7 +64,7 @@ def get_fields(lexicon_entry):
     Split a lexicon entry into
     
     1. An input string.
-    2. And output string.
+    2. An output string.
     3. A continuation class.
     4. An info string.
     """
