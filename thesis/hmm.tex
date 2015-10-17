@@ -978,37 +978,3 @@ to compensate for missing statistics for OOV words. In the frequent
 setting, where most rare words have quite few analyses, this can have
 a substantial effect on tagging accuracy.
 
-\section{Enriching the emission and transition models}
-\begin{itemize}
-\item \cite{Halacsy2007} and \cite{Silfverberg2011}.
-\end{itemize}
-
-\section{Problems}
-In the standard first order HMM an observation depends only on the
-current hidden state. If the hidden state is given, the observation
-cannot be influenced by the hidden states at other positions in the
-input or the other observations. This facilitates estimation and makes
-the system resistant to over-fitting, but at the same time it severly
-limits the set phenomena tht the model can capture.
-
-An example from POS tagging the Penn Treebank illustrates this
-problem. The Penn Treebank has two labels for common nouns: {\tt NN}
-for singular nouns and {\tt NNS} for plural nouns.
-
-\begin{itemize}
-\item Local normalization.
-\item Inability to use word context.
-\item Label bias.
-\item The inability to use rich features, causes problems in domains
-  other than POS tagging and in POS tagging for MR languages.
-\item Smoothing is difficult.
-\item Differences in performance between generative HMMs and
-  discriminative approaches are even greater for morphologically
-  complex languages and small training sets.
-\item OOV words may require different mechanisms depending on
-  language again causing problems for MR lanuages.
-\end{itemize}
-
-\subsection{Summary}
-
-A SUMMARY

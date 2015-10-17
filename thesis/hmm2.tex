@@ -36,9 +36,9 @@ for singular nouns and {\tt NNS} for plural nouns.
 
 \section{Finite-State Implementation of Hidden Markov Models}
 As seen in Chapter~\cite{chapter:hmm}, an HMM can be decomposed into a
-emission model, which models the conditional distribution $P(y|x)$ of
+emission model, which models the conditional distribution $p(y|x)$ of
 all labels $y$ given a state $x$ and a transition model, which models
-the conditional distribution $P(y_{n+1} | y_1, ..., y_n)$ of states
+the conditional distribution $p(y_{n+1} | y_1, ..., y_n)$ of states
 $y_{n+1}$ given a state history $y_1, ..., y_n$.
 
 Both the emission and transition models can be compiled into
@@ -48,6 +48,23 @@ number of component models. All the models are combined using a
 run-time variant of composition and intersection.
 
 \subsection{Interpreting HMMs as Finite-State Machines}
+Given a sequence of observations $x = (x_1, ..., x_n)$ and states $y = (y_1, ..., y_n)$, the joined probability for $x$ and $y$ given by an HMM with parameters $\theta$ is 
+$$p(x,y\parcond\theta) = p(y\parcond\theta)\cdot p(x \cond y\parcond\theta)= \Bigg(\iota(y_1) \cdot \prod_{t = 1}^{T} \tau_{y_t}(y_{t + 1})\Bigg) \cdot \prod_{t = 1}^T \varepsilon_{y_t}(x_t)$$
+where $\iota$, $\tau$ and $\epsilon$ are initial, transition and emission distributions respectively.
+
+In an HMM the states $y_i$ correspond to actual states of the
+model. When interpreting an HMM as a finite-state transducer, they
+will instead correspond to output symbols. The transducer will then
+map the input sequence $x$ to the states sequence $y$ with weight
+$p(x,y\parcond\theta)$.
+
+\cite{Mohri2002} describe an implementation of HMMs for speech
+recognition where each individual phoneme can be recognized by a small
+HMM. Their construction, however, requires $O(|Y|)^n$ states where $Y$
+is the set of states of the HMM and $n$ its order. It is easy to see
+that this is infeasible. For example when using a second order model
+with a morphological label set of 1000 labels the resulting transducer
+has around one billion states.
 
 \subsection{The Emission Model}
 
