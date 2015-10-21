@@ -1,0 +1,222 @@
+\chapter{Experiments}
+
+This section resents experiments on morphological tagging using the
+FinnPos tagger toolkit developed by the authors of
+\cite{Silfverberg2015}.
+
+\section{Using a Cascaded Model}
+
+\begin{table}[htb!]
+\begin{center}
+\begin{tabular}{cccc}
+\multicolumn{4}{c}{Adaptive Guess Count}\\
+Guess Mass & Tagging Accuracy (\%) & Training time (min) & Tagging Speed (word/s)\\
+\hline
+0.9        & xx.xx            & xx            & xx            \\
+0.99       & xx.xx            & xx            & xx            \\
+0.999      & xx.xx            & xx            & xx            \\
+0.9999     & xx.xx            & xx            & xx            \\
+\hline
+           &                  &               &               \\
+\multicolumn{4}{c}{Fixed Guess Count}\\
+Guess Count & Tagging Accuracy (\%) & Training time (min) & Tagging Speed (word/s) \\
+\hline
+1        & xx.xx            & xx            & xx            \\
+5        & xx.xx            & xx            & xx            \\
+10       & xx.xx            & xx            & xx            \\
+15       & xx.xx            & xx            & xx            \\
+20       & xx.xx            & xx            & xx            \\
+\end{tabular}
+\caption{Different label guesser settings for FinnTreeBank}
+\end{center}
+\end{table}
+
+
+\begin{table}[htb!]
+\begin{center}
+\begin{tabular}{cccc}
+\multicolumn{4}{c}{Adaptive Guess Count}\\
+Guess Mass & Tagging Accuracy (\%) & Training time (min) & Tagging Speed (word/s)\\
+\hline
+0.9        & xx.xx            & xx            & xx            \\
+0.99       & xx.xx            & xx            & xx            \\
+0.999      & xx.xx            & xx            & xx            \\
+0.9999     & xx.xx            & xx            & xx            \\
+\hline
+           &                  &               &               \\
+\multicolumn{4}{c}{Fixed Guess Count}\\
+Guess Count & Tagging Accuracy (\%) & Training time (min) & Tagging Speed (word/s) \\
+\hline
+1        & xx.xx            & xx            & xx            \\
+5        & xx.xx            & xx            & xx            \\
+10       & xx.xx            & xx            & xx            \\
+15       & xx.xx            & xx            & xx            \\
+20       & xx.xx            & xx            & xx            \\
+\end{tabular}
+\caption{Different label guesser settings for Turku Dependency Treebank}
+\end{center}
+\end{table}
+
+\section{Beam Search}
+
+\begin{table}[htb!]
+\begin{center}
+\begin{tabular}{cccc}
+\multicolumn{4}{c}{Adaptive Beam}\\
+Beam Width & Tagging Accuracy (\%) & Training time (min) & Tagging Speed (word/s)\\
+\hline
+0.9        & xx.xx            & xx            & xx            \\
+0.99       & xx.xx            & xx            & xx            \\
+0.999      & xx.xx            & xx            & xx            \\
+0.9999     & xx.xx            & xx            & xx            \\
+\hline
+           &                  &               &               \\
+\multicolumn{4}{c}{Fixed Beam}\\
+Beam Width & Tagging Accuracy (\%) & Training time (min) & Tagging Speed (word/s) \\
+\hline
+1        & xx.xx            & xx            & xx            \\
+5        & xx.xx            & xx            & xx            \\
+10       & xx.xx            & xx            & xx            \\
+15       & xx.xx            & xx            & xx            \\
+20       & xx.xx            & xx            & xx            \\
+\end{tabular}
+\caption{Different beam settings for FinnTreeBank}
+\end{center}
+\end{table}
+
+\begin{table}[htb!]
+\begin{center}
+\begin{tabular}{cccc}
+\multicolumn{4}{c}{Adaptive Beam}\\
+Beam Width & Tagging Accuracy (\%) & Training time (min) & Tagging Speed (word/s)\\
+\hline
+0.9        & xx.xx            & xx            & xx            \\
+0.99       & xx.xx            & xx            & xx            \\
+0.999      & xx.xx            & xx            & xx            \\
+0.9999     & xx.xx            & xx            & xx            \\
+\hline
+           &                  &               &               \\
+\multicolumn{4}{c}{Fixed Beam}\\
+Beam Width & Tagging Accuracy (\%) & Training time (min) & Tagging Speed (word/s) \\
+\hline
+1        & xx.xx            & xx            & xx            \\
+5        & xx.xx            & xx            & xx            \\
+10       & xx.xx            & xx            & xx            \\
+15       & xx.xx            & xx            & xx            \\
+20       & xx.xx            & xx            & xx            \\
+\end{tabular}
+\caption{Different beam settings for Turku Dependency Treebank}
+\end{center}
+\end{table}
+
+\section{Model Order}
+
+\begin{table}[htb!]
+\begin{center}
+\begin{tabular}{cccc}
+Model Order & Tagging Accuracy (\%) & Training time (min) & Tagging Speed (word/s)\\
+\hline
+0        & xx.xx            & xx            & xx            \\
+1        & xx.xx            & xx            & xx            \\
+2        & xx.xx            & xx            & xx            \\
+\hline
+\end{tabular}
+\caption{Different Model Orders for FinnTreeBank}
+\end{center}
+\end{table}
+
+\begin{table}[htb!]
+\begin{center}
+\begin{tabular}{cccc}
+Model Order & Tagging Accuracy (\%) & Training time (min) & Tagging Speed (word/s)\\
+\hline
+0        & xx.xx            & xx            & xx            \\
+1        & xx.xx            & xx            & xx            \\
+2        & xx.xx            & xx            & xx            \\
+\hline
+\end{tabular}
+\caption{Different Model Orders for Turku Dependency Treebank}
+\end{center}
+\end{table}
+
+\section{Using A Morphological Analyzer}
+
+\begin{table}[htb!]
+\begin{center}
+\begin{tabular}{cccc}
+\multicolumn{4}{c}{Without a Morphological Analyzer}\\
+Sub-Label Order & Tagging Accuracy (\%) & Training time    & Tagging Speed (KTokens/s)\\
+\hline
+None            & 92.61 (OOV: 75.25)    & 3 min, 5 epochs  & 6                       \\
+0               & 93.05 (OOV: 77.35)    & 1 min, 2 epochs  & 5                       \\
+1               & 93.32 (OOV: 78.58)    & 1 min, 2 epochs  & 4                       \\
+\hline
+                &                       &                  &                          \\
+\multicolumn{4}{c}{Using a Morphological Analyzer}\\
+Sub-Label Order & Tagging Accuracy (\%) & Training time    & Tagging Speed (KTokens/s)\\
+\hline
+None     & 95.98 (OOV: 91.41)           & 3 min, 8 epochs  & 25                       \\
+0        & 96.08 (OOV: 91.98)           & 1 min, 3 epochs  & 22                       \\
+1        & 96.24 (OOV: 92.28)           & 1 min, 2 epochs  & 21                       \\
+\end{tabular}
+\caption{Different Sub-Label Orders for FinnTreeBank}
+\end{center}
+\end{table}
+
+\begin{table}[htb!]
+\begin{center}
+\begin{tabular}{cccc}
+\multicolumn{4}{c}{Without a Morphological Analyzer}\\
+Sub-Label Order & Tagging Accuracy (\%) & Training time    & Tagging Speed (KTokens/s)\\
+\hline
+None            & 91.89 (OOV: 70.63)    & 2 min, 3 epochs  & 5                       \\
+0               &  92.59 (OOV: 73.98)   & 2 min, 4 epochs  & 5                       \\
+1               &  92.69 (OOV: 74.35)   & 5 min, 7 epochs  & 3                       \\
+\hline
+                &                       &                  &                          \\
+\multicolumn{4}{c}{Using a Morphological Analyzer}\\
+Sub-Label Order & Tagging Accuracy (\%) & Training time    & Tagging Speed (KTokens/s)\\
+\hline
+None            &  96.12 (OOV: 91.12)   & 3 min, 5 epochs  & 19                       \\
+0               &  96.17 (OOV: 91.39)   & 2 min, 5 epochs  & 18                       \\
+1               &  96.39 (OOV: 91.84)   & 3 min, 5 epochs  & 16                       \\
+\end{tabular}
+\caption{Different Sub-Label Orders for Turku Dependency Treebank}
+\end{center}
+\end{table}
+
+\section{Utilizing Sub-Label Dependencies}
+
+\section{Pruning the Model}
+
+\begin{table}[htb!]
+\begin{center}
+\begin{tabular}{ccccc}
+                & \multicolumn{4}{c}{Pruning Strategy}\\
+                & None           & Zero Param    & $< 5$ updates  & $< 7$ updates  \\
+Sub-Label Order &                &               &                &                \\
+\hline
+None            & xx.x\%, yy MB  & xx.x\%, yy MB  & xx.x\%, yy MB & xx.x\%, yy MB \\
+0               & xx.x\%, yy MB  & xx.x\%, yy MB  & xx.x\%, yy MB & xx.x\%, yy MB \\
+1               & xx.x\%, yy MB  & xx.x\%, yy MB  & xx.x\%, yy MB & xx.x\%, yy MB \\
+\hline
+\end{tabular}
+\caption{Result of applying different pruning strategies on FinnTreeBank models.}
+\end{center}
+\end{table}
+
+\begin{table}[htb!]
+\begin{center}
+\begin{tabular}{ccccc}
+                & \multicolumn{4}{c}{Pruning Strategy}\\
+                & None           & Zero Param     & $< 5$ updates  & $< 7$ updates  \\
+Sub-Label Order &                &                &                &                \\
+\hline
+None            & xx.x\%, yy MB  & xx.x\%, yy MB  & xx.x\%, yy MB & xx.x\%, yy MB \\
+0               & xx.x\%, yy MB  & xx.x\%, yy MB  & xx.x\%, yy MB & xx.x\%, yy MB \\
+1               & xx.x\%, yy MB  & xx.x\%, yy MB  & xx.x\%, yy MB & xx.x\%, yy MB \\
+\hline
+\end{tabular}
+\caption{Result of applying different pruning strategies on Turku Dependency Treebank models.}
+\end{center}
+\end{table}

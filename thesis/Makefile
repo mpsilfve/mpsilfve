@@ -1,5 +1,6 @@
 FIG=hmm-ex-graph.pdf hmm-ex-graph-2.pdf trellis_path.pdf trellis_forward.pdf trellis_marginal.pdf forward_prefix.pdf umbrella.pdf no_umbrella.pdf
-TEX=abstract.tex  acknowl.tex  conclusions.tex  ml.tex  intro.tex  crf.tex  thesis.tex  hmm.tex pos.tex lem.tex contrib.tex title.tex title_tktla.tex morphology.tex fsm.tex
+TEX=abstract.tex  acknowl.tex  conclusions.tex  ml.tex  intro.tex  crf.tex  thesis.tex  hmm.tex pos.tex lem.tex contrib.tex title.tex title_tktla.tex morphology.tex fsm.tex hmm2.tex finnpos.tex
+
 BIB=mythesis.bib
 
 thesis.pdf:$(TEX) $(BIB) $(FIG) unihelcompling.cls
