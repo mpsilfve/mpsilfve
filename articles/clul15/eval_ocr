@@ -1,0 +1,44 @@
+#! /bin/bash
+
+if [ "$#" -ne 2 ]
+then
+echo "USAGE: $0 gold_standard_text ocr_output_text"
+exit 1
+fi
+ 
+reference=$1
+ocred=$2
+
+cat $reference      |
+tr -s ' \n\t\r' ' ' |
+sed 's/\(.\)/&\n/g' |
+tr '<>|' '"#¤'  > $reference.eval
+
+cat $ocred         |
+tr -s ' \n\t\r' ' ' |
+sed 's/\(.\)/&\n/g'|
+tr '<>|' '"#¤' > $ocred.eval
+
+diff -y $reference.eval $ocred.eval |
+egrep "[<>|]" > $ocred.edits
+
+edits=$(wc -l $ocred.edits | sed 's/ .*//')
+
+total_ref=$(wc -l $reference.eval | sed 's/ .*//')
+total_ocr=$(wc -l $ocred.eval | sed 's/ .*//')
+
+total=0
+
+if [ $total_ref -lt $total_ocr ]
+then
+    total=$total_ocr
+else 
+    total=$total_ref
+fi
+
+echo "scale=4; 100 * ($edits / $total)" | 
+bc |
+sed 's/^/Letter error rate (edits\/max_edits): /' |
+sed 's/$/%/' 
+
+rm -f $reference.eval $ocred.eval $ocred.edits
