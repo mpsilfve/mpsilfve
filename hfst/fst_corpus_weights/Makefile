@@ -1,0 +1,20 @@
+SHELL=bash
+CXX=g++-4.7
+CXXFLAGS=-Wall -Wextra -std=c++11 -Wfatal-errors -g -O3
+LDLIBS=-lhfst
+SRCS=path_utils.cc StreamReader.cc string_utils.cc
+OBJS=$(SRCS:%.cc=%.o)
+TESTS=$(SRCS:%.cc=TEST_%_cc)
+
+all:weight_fst
+
+clean:
+	rm -f $(TESTS) $(OBJS) weight_fst
+
+weight_fst:weight_fst.cc $(OBJS)
+
+test:$(TESTS)
+
+TEST_%_cc:%.cc %.o
+	$(CXX) $(CXXFLAGS) -DTEST_$*_cc -o $@ $^ -lhfst
+
