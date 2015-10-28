@@ -72,6 +72,10 @@ int main(int argc, char * argv[])
     {
       const std::string &line = stdin_reader.getline();
 
+      // Skip empty lines.
+      if (line == "")
+	{ continue; }
+
       StringVector fields;
       split(line, "\t", fields);
       

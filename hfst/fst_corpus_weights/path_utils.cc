@@ -89,10 +89,10 @@ bool align_paths(StringVector::const_iterator it,
 		 const HfstBasicTransducer &b,
 		 HfstTwoLevelPath &aligned)
 {
-  if (it == iend and ot == oend and b.is_final_state(s))
-    { 
-      return 1; 
-    }
+  if (ot == oend and b.is_final_state(s))
+    { return 1; }
+  else if (ot == oend)
+    { return 0; }
 
   for (const HfstBasicTransition &t : b.transitions(s))
     {

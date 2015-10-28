@@ -15,7 +15,7 @@ using hfst::TROPICAL_OPENFST_TYPE;
 
 int main(int argc, char * argv[])
 {
-  if (argc != 2)
+  if (argc != 3)
     {
       std::cerr << "USAGE: " << argv[0] << " in_fst_file out_fst_file"
 		<< std::endl;
