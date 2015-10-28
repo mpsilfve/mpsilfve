@@ -14,8 +14,11 @@ should be sufficient. In any case, you need a c++ 11 capable compiler. E.g. if y
 
     CXX=g++-4.7
 into
+
     CXX=clang++
+
 in the `Makefile` and then run
+
     $ make
 
 `weight_fst`
