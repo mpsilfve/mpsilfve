@@ -6,10 +6,10 @@ SRCS=path_utils.cc StreamReader.cc string_utils.cc weight_utils.cc
 OBJS=$(SRCS:%.cc=%.o)
 TESTS=$(SRCS:%.cc=TEST_%_cc)
 
-all:weight_fst
+all:weight_fst normalize_weights
 
 clean:
-	rm -f $(TESTS) $(OBJS) weight_fst
+	rm -f $(TESTS) $(OBJS) weight_fst normalize_weights
 
 weight_fst:weight_fst.cc $(OBJS)
 normalize_weights:normalize_weights.cc $(OBJS)
