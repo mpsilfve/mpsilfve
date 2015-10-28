@@ -30,7 +30,7 @@ bool align_paths(StringVector::const_iterator it,
 		 const HfstBasicTransducer &b,
 		 HfstTwoLevelPath &aligned);
 
-void incr_path_weight(HfstTwoLevelPath &aligned_path, 
+bool incr_path_weight(HfstTwoLevelPath &aligned_path, 
 		      HfstBasicTransducer &bfst);
 
 bool is_matching_pair(const std::string &in1, const std::string &in2,

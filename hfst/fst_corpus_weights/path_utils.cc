@@ -58,13 +58,13 @@ bool align_transition(StringVector::const_iterator it,
 		      StringVector::const_iterator iend,
 		      StringVector::const_iterator ot, 
 		      StringVector::const_iterator oend,
+		      HfstState s,
 		      HfstBasicTransition t,
 		      const HfstBasicTransducer &b,
 		      HfstTwoLevelPath &aligned)
 {
   std::string isymbol = (it == iend ? epsilon : *it);
   std::string osymbol = (ot == oend or *ot == "" ? epsilon : *ot);
-
   const std::string t_input  = t.get_input_symbol();
   const std::string t_output = t.get_output_symbol();
   
@@ -73,10 +73,9 @@ bool align_transition(StringVector::const_iterator it,
       aligned.second.push_back(StringPair(t_input, t_output));
 
       if (align_paths(it + (it != iend and t_input  == isymbol ? 1 : 0), iend, 
-		      ot + (ot != oend and t_output == osymbol ? 1 : 0), oend,
+		      ot + 1, oend,
 		      t.get_target_state(), b, aligned))
 	{ return 1; }	      
-      
       aligned.second.pop_back();
     }
   return 0;
@@ -91,17 +90,19 @@ bool align_paths(StringVector::const_iterator it,
 		 HfstTwoLevelPath &aligned)
 {
   if (it == iend and ot == oend and b.is_final_state(s))
-    { return 1; }
+    { 
+      return 1; 
+    }
 
   for (const HfstBasicTransition &t : b.transitions(s))
     {
-      if (align_transition(it, iend, ot, oend, t, b, aligned))
+      if (align_transition(it, iend, ot, oend, s, t, b, aligned))
 	{
 	  std::reverse(aligned.second.begin(), aligned.second.end());
 	  return 1;
 	}
     }
-
+  
   return 0;
 }
 
@@ -113,31 +114,42 @@ bool align_paths(const HfstOneLevelPath &in,
   const StringVector &itoks = in.second;
   const StringVector &otoks = out.second;
   
-  return align_paths(itoks.begin(), itoks.end(), 
-		     otoks.begin(), otoks.end(),
-		     0, b, aligned);
+  bool succ = align_paths(itoks.begin(), itoks.end(), 
+			  otoks.begin(), otoks.end(),
+			  0, b, aligned);
+  return succ;
 }
 
-void incr_path_weight(StringPairVector::const_iterator it,
+bool incr_path_weight(StringPairVector::const_iterator it,
 		      StringPairVector::const_iterator end,
 		      HfstState s, HfstBasicTransducer &bfst)
 { 
   if (it == end)
     { 
-      bfst.set_final_weight(s, bfst.get_final_weight(s) + 1);
-      return; 
+      if (bfst.is_final_state(s))
+	{
+	  bfst.set_final_weight(s, bfst.get_final_weight(s) + 1);
+	  return 1; 
+	}
+      else
+	{ return 0; }
     }
 
-  const HfstBasicTransition * trans;
+  const HfstBasicTransition * trans = 0;
   for (const HfstBasicTransition &t : bfst.transitions(s))
     {
       if (t.get_input_symbol() == it->first and 
 	  t.get_output_symbol() == it->second)
 	{ 
-	  trans = &t;
-	  break;
+	  if (incr_path_weight(it + 1, end, t.get_target_state(), bfst))
+	    {
+	      trans = &t;
+	      break;
+	    }
 	}
     }
+  if (!trans)
+    { return 0; }
 
   HfstState target = trans->get_target_state();
   float weight = trans->get_weight() + 1;
@@ -147,15 +159,15 @@ void incr_path_weight(StringPairVector::const_iterator it,
 					     it->second,
 					     weight));
 
-  incr_path_weight(it + 1, end, target, bfst);
+  return 1;
 }
 
-void incr_path_weight(HfstTwoLevelPath &aligned_path, 
+bool incr_path_weight(HfstTwoLevelPath &aligned_path, 
 		      HfstBasicTransducer &bfst)
 { 
-  incr_path_weight(aligned_path.second.begin(),
-		   aligned_path.second.end(),
-		   0, bfst); 
+  return incr_path_weight(aligned_path.second.begin(),
+			  aligned_path.second.end(),
+			  0, bfst); 
 }
 
 #else // TEST_path_utils_cc
