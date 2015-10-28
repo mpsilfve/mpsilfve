@@ -42,7 +42,7 @@ void weight_string_pair(const StringVector &fields,
   HfstTwoLevelPath aligned_path;
   align_paths(HfstOneLevelPath(0, inputtok), match, bfst, aligned_path);
 
-  // Incement the weight of all transitions on the path as well as the
+  // Increment the weight of all transitions on the path as well as the
   // final state.
   incr_path_weight(aligned_path, bfst);
 }
