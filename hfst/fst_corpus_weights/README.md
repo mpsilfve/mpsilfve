@@ -3,6 +3,24 @@ Utilities for fst weighting
 
 This is a set of tools for weighting finite-state transducers using data.
 
+Building
+--------
+
+If you have `g++-4.7` installed, simply
+
+    $ make
+    
+should be sufficient. In any case, you need a c++ 11 capable compiler. E.g. if you're using clang++, just change the line
+
+    CXX=g++-4.7
+into
+
+    CXX=clang++
+
+in the `Makefile` and then run
+
+    $ make
+
 `weight_fst`
 ------------
 
