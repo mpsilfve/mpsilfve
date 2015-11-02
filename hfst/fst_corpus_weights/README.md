@@ -24,13 +24,13 @@ in the `Makefile` and then run
 `weight_fst`
 ------------
 
-The utility `weight_fst` reads input:output string pairs from `STDIN`. It traverses the argument transducer using each of the string pairs and if the string pair is recognized, it adds +1 weight to each transition on the corresponding path and +1 weight to the final state corresponding to the end of the string pair.
+The utility `weight_fst` reads `word_form<TAB>analysis` string pairs from `STDIN`. It traverses the argument transducer using each of the string pairs and if the string pair is recognized, it adds +1 weight to each transition on the corresponding path and +1 weight to the final state corresponding to the end of the string pair.
 
 Usage of `weight_fst`:
 
 `USAGE: cat string_pairs | ./weight_fst input_fst_file output_fst_file`
 
-In case the argument transducer is non-deterministic, `weight_fst` will weight the first that it finds corresponding the a string pair. 
+In case the argument transducer is non-deterministic, `weight_fst` will weight the *first path that it finds* corresponding the a string pair. 
 
 `normalize_weights`
 -------------------
