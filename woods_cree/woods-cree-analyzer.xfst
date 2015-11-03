@@ -1,0 +1,25 @@
+read regex @"analyser-gt-desc.hfst";
+define PlainsCreeAnalyzer ;
+
+define LongISpellingRule ī (->) e ;
+define ThToYahRule t h -> y ;
+define LongIBehoreH i (->) ī || _ h .o. ī (->) i || _ h ;
+define LongABehoreH a (->) ā || _ h .o. ā (->) a || _ h ;
+define LongOBehoreH o (->) ō || _ h .o. ō (->) o || _ h ;
+define LongOBehoreW o (->) ō || _ w ;
+define IBehoreY     i (->) e || _ y ;
+define LongIBehoreY ī (->) i || _ y ;
+
+define Transformation [ ThToYahRule       .o.
+			LongOBehoreW      .o.
+			IBehoreY          .o.
+			LongIBehoreY      .o.	
+			LongABehoreH      .o.
+			LongIBehoreH      .o.	
+			LongOBehoreH      .o.
+			LongISpellingRule ] ;
+
+
+read regex Transformation .o. PlainsCreeAnalyzer ;
+
+save stack woods-cree-analyzer.hfst
