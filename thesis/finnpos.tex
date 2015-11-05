@@ -10,22 +10,22 @@ FinnPos tagger toolkit developed by the authors of
 \begin{center}
 \begin{tabular}{cccc}
 \multicolumn{4}{c}{Adaptive Guess Count}\\
-Guess Mass & Tagging Accuracy (\%) & Training time (min) & Tagging Speed (word/s)\\
+Guess Mass & Tagging Accuracy (\%) & Training time & Tagging Speed (KToken/s)\\
 \hline
-0.9        & xx.xx            & xx            & xx            \\
-0.99       & xx.xx            & xx            & xx            \\
-0.999      & xx.xx            & xx            & xx            \\
-0.9999     & xx.xx            & xx            & xx            \\
+0.9        & 93.21 (OOV: 77.68)& 3 min, 3 epochs &   7          \\
+0.99       & 93.11 (OOV: 77.14)& 3 min, 3 epochs & 7            \\
+0.999      & 93.23            & 4 min, 4 epochs            & 8            \\
 \hline
            &                  &               &               \\
 \multicolumn{4}{c}{Fixed Guess Count}\\
-Guess Count & Tagging Accuracy (\%) & Training time (min) & Tagging Speed (word/s) \\
+Guess Count & Tagging Accuracy (\%) & Training time (min) & Tagging Speed (KTokens/s) \\
 \hline
-1        & xx.xx            & xx            & xx            \\
-5        & xx.xx            & xx            & xx            \\
-10       & xx.xx            & xx            & xx            \\
-15       & xx.xx            & xx            & xx            \\
-20       & xx.xx            & xx            & xx            \\
+1        & 91.48 (OOV: 69.81)           & 1 min, 3 epochs            & 8            \\
+10       & 93.23 (OOV: 77.56)           & 2 min, 2 epochs            & 7            \\
+20       & 93.18 (OOV: 77.89)           & 3 min, 3 epochs            & 7            \\
+30       & 93.22 (OOV: 77.62)           & 4 min, 3 epochs            & 6            \\
+40       & 93.43 (OOV: 78.49)           & 4 min, 2 epochs            & 5            \\
+\hline
 \end{tabular}
 \caption{Different label guesser settings for FinnTreeBank}
 \end{center}
@@ -52,6 +52,7 @@ Guess Count & Tagging Accuracy (\%) & Training time (min) & Tagging Speed (word/
 10       & xx.xx            & xx            & xx            \\
 15       & xx.xx            & xx            & xx            \\
 20       & xx.xx            & xx            & xx            \\
+\hline
 \end{tabular}
 \caption{Different label guesser settings for Turku Dependency Treebank}
 \end{center}
@@ -63,12 +64,11 @@ Guess Count & Tagging Accuracy (\%) & Training time (min) & Tagging Speed (word/
 \begin{center}
 \begin{tabular}{cccc}
 \multicolumn{4}{c}{Adaptive Beam}\\
-Beam Width & Tagging Accuracy (\%) & Training time (min) & Tagging Speed (word/s)\\
+Beam Width & Tagging Accuracy (\%) & Training time (min) & Tagging Speed (KToken/s)\\
 \hline
-0.9        & xx.xx            & xx            & xx            \\
-0.99       & xx.xx            & xx            & xx            \\
-0.999      & xx.xx            & xx            & xx            \\
-0.9999     & xx.xx            & xx            & xx            \\
+0.9        & 93.08 (OOV: 76.99)           & 3 min, 3 epochs & 6           \\
+0.99       & 93.14 (OOV: 77.44)           & 3 min, 3 epochs & 8            \\
+0.999      & 93.28 (OOV: 80.49)           & 2 min, 2 epochs & 8            \\
 \hline
            &                  &               &               \\
 \multicolumn{4}{c}{Fixed Beam}\\
@@ -79,8 +79,10 @@ Beam Width & Tagging Accuracy (\%) & Training time (min) & Tagging Speed (word/s
 10       & xx.xx            & xx            & xx            \\
 15       & xx.xx            & xx            & xx            \\
 20       & xx.xx            & xx            & xx            \\
+$\infty$       & xx.xx            & xx            & xx            \\
+\hline
 \end{tabular}
-\caption{Different beam settings for FinnTreeBank}
+\caption{Different beam settings for FinnTreeBank without a morphological analyzer.}
 \end{center}
 \end{table}
 
@@ -90,10 +92,11 @@ Beam Width & Tagging Accuracy (\%) & Training time (min) & Tagging Speed (word/s
 \multicolumn{4}{c}{Adaptive Beam}\\
 Beam Width & Tagging Accuracy (\%) & Training time (min) & Tagging Speed (word/s)\\
 \hline
-0.9        & xx.xx            & xx            & xx            \\
-0.99       & xx.xx            & xx            & xx            \\
-0.999      & xx.xx            & xx            & xx            \\
-0.9999     & xx.xx            & xx            & xx            \\
+0.75       & xx.xx            & xx            & xx            \\
+0.88       & xx.xx            & xx            & xx            \\
+0.94       & xx.xx            & xx            & xx            \\
+0.97       & xx.xx            & xx            & xx            \\
+0.98       & xx.xx            & xx            & xx            \\
 \hline
            &                  &               &               \\
 \multicolumn{4}{c}{Fixed Beam}\\
@@ -104,8 +107,10 @@ Beam Width & Tagging Accuracy (\%) & Training time (min) & Tagging Speed (word/s
 10       & xx.xx            & xx            & xx            \\
 15       & xx.xx            & xx            & xx            \\
 20       & xx.xx            & xx            & xx            \\
+$\infty$       & xx.xx            & xx            & xx            \\
+\hline
 \end{tabular}
-\caption{Different beam settings for Turku Dependency Treebank}
+\caption{Different beam settings for FinnTreeBank using a morphological analyzer.}
 \end{center}
 \end{table}
 
@@ -158,6 +163,7 @@ Sub-Label Order & Tagging Accuracy (\%) & Training time    & Tagging Speed (KTok
 None     & 95.98 (OOV: 91.41)           & 3 min, 8 epochs  & 25                       \\
 0        & 96.08 (OOV: 91.98)           & 1 min, 3 epochs  & 22                       \\
 1        & 96.24 (OOV: 92.28)           & 1 min, 2 epochs  & 21                       \\
+\hline
 \end{tabular}
 \caption{Different Sub-Label Orders for FinnTreeBank}
 \end{center}
@@ -180,6 +186,7 @@ Sub-Label Order & Tagging Accuracy (\%) & Training time    & Tagging Speed (KTok
 None            &  96.12 (OOV: 91.12)   & 3 min, 5 epochs  & 19                       \\
 0               &  96.17 (OOV: 91.39)   & 2 min, 5 epochs  & 18                       \\
 1               &  96.39 (OOV: 91.84)   & 3 min, 5 epochs  & 16                       \\
+\hline
 \end{tabular}
 \caption{Different Sub-Label Orders for Turku Dependency Treebank}
 \end{center}
@@ -220,3 +227,9 @@ None            & xx.x\%, yy MB  & xx.x\%, yy MB  & xx.x\%, yy MB & xx.x\%, yy M
 \caption{Result of applying different pruning strategies on Turku Dependency Treebank models.}
 \end{center}
 \end{table}
+
+\section{Lemmatizer}
+
+Remember to check how often the correct edit script exists.
+
+Test leaving out the word form as a feature.
