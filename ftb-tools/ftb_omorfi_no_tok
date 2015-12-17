@@ -1,0 +1,13 @@
+#! /bin/bash
+
+DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
+
+sed 's/^$/<<s>>/'                                  | 
+$DIR/hfst-optimized-lookup $DIR/morphology.ftb1.ol | 
+$DIR/merge_analyses.py                             |
+sed 's/"<<<s>>>"/"<<s>>"/'                         |
+grep -v "<s> Sent noabc"                           |
+$DIR/select_lemma.py $DIR/lemma_list               |
+$DIR/replace_analyses.py                           |
+$DIR/sort_cohorts.py
+
