@@ -1,8 +1,100 @@
 \chapter{Experiments}
 
-This section resents experiments on morphological tagging using the
-FinnPos tagger toolkit developed by the authors of
+FinnPos \citep{Silfverberg2015}.  is a discriminative morphological
+tagger based on the CRF model and averaged perceptron estimation. It
+is especially geared toward morphologically rich languages and
+incorporates features which make it especially suited for use
+with these languages
+
+\begin{itemize}
+\item Structured and unstructured sub label dependencies (see Section \ref{}) are used to improve accuracy with large structured label sets.
+\item Adaptive beam search is used to speed up estimation (see Section \ref{}).
+\item A generative label guesser is used to speed up estimation (see Section \ref{}).
+\item A morphological analyzer is used during tagging and training (see Section \ref{}).
+\end{itemize}
+
+This section is intended to augment the treatment
+\cite{Silfverberg2015}. It presents several experiments on
+morphological tagging using the FinnPos tagger toolkit which were
+omitted from the paper in favor of clarity.
+
+Because FinnPos incorporates a variety of optimizations, governed by
+different hyper-parameters, both to accuracy and speed, it is
+impossible to conduct exhaustive experiments (a grid search would
+simply include too many experiments). Instead I have chosen the
+settings presented in \cite{Silfverberg2015} as vantage point and
+examined the impact of changing one hyper-parameter at a time. These
+settings were chosen because they give state-of-the-art accuracy as
+presented in the paper. 
+
+The basic setting for all experiments is 
+\begin{itemize}
+\item A second order model.
+\item First order sub-label dependencies.
+\item 99.9\% mass for the generative label guesser.
+\item 99.9\% mass for the adaptive beam search.
+\end{itemize}
+A morphological analyzer is only used when separately indicated. A
+label dictionary is used in all experiments both to speed up decoding
+and improve accuracy. The label dictionary is also used when the
+morphological analyzer is used. The reason for this is that a liberal
+compounding or derivation mechanism (such as the one implemented in
+the OMorFi morphological analyzer) can result in improbable
+analyses. The analyses that have been attested in the training corpus
+should be preferred when possible.
+
+The features for the tagger and lemmatizer follow
 \cite{Silfverberg2015}.
+
+Let $x = (x_1 ... x_T)$ be a sentence, $y = (y_1 ... y_T)$ a label
+sequence and $t$ and index. Then the unstructured features templates
+for the morphological tagger are the familiar Ratnaparkhi features
+\citep{Ratnaparkhi1998} augmented with a few additional features. For
+all words, FinnPos uses the following feature templates
+\begin{itemize}
+\item The word form $x_t$ and the lower cased version of $x_t$.
+\item The length $|x_t|$ of word form $x_t$.
+\item Word form $x_{t-2}$, when $t > 2$.
+\item Word form $x_{t-1}$, when $t > 1$.
+\item Word form $x_{t+2}$, when $t + 1 < T$.
+\item Word form $x_{t+1}$, when $t > T$.
+\end{itemize}
+For rare words\footnote{The list of common words is user defined but
+  in these experiments I have defined common words to be words having
+  frequency 10 or higher in the training corpus}, it additionally
+extracts the following features
+\begin{itemize}
+\item {\tt DIGIT} when $x_t$ contains a digit.
+\item {\tt UC} when $x_t$ contains an upper case letter.
+\item Prefixes and suffixes of $x_t$ up to length 10.
+\end{itemize}
+When a morphological analyzer is used, each morphological label given
+to word $x_t$ is also used as a feature template.
+
+Let $x = x_1 ... x_n$ be a word form of length $n$ and $y$ its
+label. Then the features for the lemmatizer are
+\begin{itemize}
+\item The lower cased variant of $x$.
+\item Prefixes of $x$ up to length 5 and suffixes up to length 7.
+\item The infixes $x_{n - 2}x_{n - 1}$, $x_{n - 3}x_{n - 2}$ and $x_{n - 4}x_{n - 3}$.
+\item The label $y$ and its main part-of-speech.
+\item {\tt DIGIT} when $x$ contains a digit.
+\item {\tt UC} when $x$ contains an upper case letter.
+\end{itemize}
+Additionally a combination of each feature template and the
+morphological label $y$ is used as a feature template. Naturally, the
+combination of $y$ with itself is omitted.
+
+Some baseline runs are impossible to run: FinnPos uses a second order
+model. With a label set size of 1,000, trellises used during inference
+become very large and inference is prohibitively slow. Therefore, it
+was not feasible to run experiments without label pruning during
+training.
+
+The results of the experiments presented here differ minutely from the
+results presented in \cite{Silfverberg2015} due to added features
+(lower cased word form and word length) and some bug fixes related to
+the lemmatizer.
 
 \section{Using a Cascaded Model}
 
@@ -10,22 +102,21 @@ FinnPos tagger toolkit developed by the authors of
 \begin{center}
 \begin{tabular}{cccc}
 \multicolumn{4}{c}{Adaptive Guess Count}\\
-Guess Mass & Tagging Accuracy (\%) & Training time & Tagging Speed (KToken/s)\\
+Guess Mass & Tagging Accuracy (\%) & Training time & Dec. Speed (KTok/s)\\
 \hline
-0.9        & 93.21 (OOV: 77.68)& 3 min, 3 epochs &   7          \\
-0.99       & 93.11 (OOV: 77.14)& 3 min, 3 epochs & 7            \\
-0.999      & 93.23            & 4 min, 4 epochs            & 8            \\
-\hline
+0.9        & 93.21 (OOV: 77.68) & 3 min, 3 epochs &   7          \\
+0.99       & 93.11 (OOV: 77.14) & 3 min, 3 epochs & 7            \\
+0.999      & 93.23 (OOV: 78.49) & 4 min, 4 epochs            & 8            \\
+0.9999      & 93.41 (OOV: 78.55) & 2 min, 2 epochs            & 7            \\
            &                  &               &               \\
 \multicolumn{4}{c}{Fixed Guess Count}\\
-Guess Count & Tagging Accuracy (\%) & Training time (min) & Tagging Speed (KTokens/s) \\
+Guess Count & Tagging Accuracy (\%) & Training time (min) & Dec. Speed (KTok/s) \\
 \hline
 1        & 91.48 (OOV: 69.81)           & 1 min, 3 epochs            & 8            \\
 10       & 93.23 (OOV: 77.56)           & 2 min, 2 epochs            & 7            \\
 20       & 93.18 (OOV: 77.89)           & 3 min, 3 epochs            & 7            \\
 30       & 93.22 (OOV: 77.62)           & 4 min, 3 epochs            & 6            \\
 40       & 93.43 (OOV: 78.49)           & 4 min, 2 epochs            & 5            \\
-\hline
 \end{tabular}
 \caption{Different label guesser settings for FinnTreeBank}
 \end{center}
@@ -36,27 +127,56 @@ Guess Count & Tagging Accuracy (\%) & Training time (min) & Tagging Speed (KToke
 \begin{center}
 \begin{tabular}{cccc}
 \multicolumn{4}{c}{Adaptive Guess Count}\\
-Guess Mass & Tagging Accuracy (\%) & Training time (min) & Tagging Speed (word/s)\\
+Guess Mass & Tagging Accuracy (\%) & Training time (min) & Dec. Speed (KTok/s)\\
 \hline
-0.9        & xx.xx            & xx            & xx            \\
-0.99       & xx.xx            & xx            & xx            \\
-0.999      & xx.xx            & xx            & xx            \\
-0.9999     & xx.xx            & xx            & xx            \\
-\hline
+0.9        & 92.69 (OOV: 74.10)           & 8 min, 8 epochs           & 5            \\
+0.99       & 92.66 (OOV: 74.13)           & 9 min, 8 epochs           & 5            \\
+0.999      & 92.76 (OOV: 74.65)           & 8 min, 7 epochs            & 5            \\
+0.9999      & 92.75 (OOV: 74.30)           & 6 min, 5 epochs            & 5            \\
            &                  &               &               \\
 \multicolumn{4}{c}{Fixed Guess Count}\\
-Guess Count & Tagging Accuracy (\%) & Training time (min) & Tagging Speed (word/s) \\
+Guess Count & Tagging Accuracy (\%) & Training time (min) & Dec. Speed (KTok/s) \\
 \hline
-1        & xx.xx            & xx            & xx            \\
-5        & xx.xx            & xx            & xx            \\
-10       & xx.xx            & xx            & xx            \\
-15       & xx.xx            & xx            & xx            \\
-20       & xx.xx            & xx            & xx            \\
-\hline
+1        & 89.85  (OOV: 61.33)          & 2 min, 5 epochs            & 6            \\
+10       & 92.35  (OOV: 72.55)          & 5 min, 7 epochs            & 6            \\
+20       & 92.61  (OOV: 73.88)          & 5 min, 4 epochs            & 6            \\
+30       & 92.81  (OOV: 74.87)          & 12 min, 9 epochs          & 5            \\
+40       & 92.91  (OOV: 75.35)          & 14 min, 9 epochs            & 5            \\
 \end{tabular}
 \caption{Different label guesser settings for Turku Dependency Treebank}
 \end{center}
 \end{table}
+
+This subsection presents experiments on using different settings for
+the generative label guesser included as a pre-pruning step during
+training as explained in Section \ref{}.
+
+For both Turku Treebank and FinnTreeBank, I compare a fixed amount of
+label guesses to choosing a varying amount of guesses per word using a
+generative label guesser. It was not possible to run experiments
+without any form of label pruning during training because of
+prohibitive runtime and memory requirements. The most important point
+of these experiments is that using some kind of label guesser during
+training is almost necessary if one wants to train a second order
+model for label sets of several hundreds or thousands of labels.
+
+In general, using a larger amount of label guesses improves
+accuracy. For both FTB and TDT, the accuracy levels off already at 40
+guesses per word. 
+
+For FTB, the mass 0.9999 yields approximately the same accuracy than
+as 40 guesses. For TDT, however, 40 label guesses results in
+$0.2\%$-points better accuracy than using the mass $0.9999$.
+
+The training time per epoch is clearly related to the amount of label
+guesses, however, the number of epochs seems to fluctuate somewhat
+from two to four for FTB and from five to eleven for TDT. Therefore,
+it is difficult to see a clear trend.
+
+The amount of label guesses influences decoding speed to some degree
+because the same setting is used for the label guesser during
+decoding. Because the label guesser is only used for OOV words, the
+exact setting of the guesser does however only have a moderate impact.
 
 \section{Beam Search}
 
@@ -64,25 +184,21 @@ Guess Count & Tagging Accuracy (\%) & Training time (min) & Tagging Speed (word/
 \begin{center}
 \begin{tabular}{cccc}
 \multicolumn{4}{c}{Adaptive Beam}\\
-Beam Width & Tagging Accuracy (\%) & Training time (min) & Tagging Speed (KToken/s)\\
+Beam Width & Tagging Accuracy (\%) & Training time (min) & Dec. Speed (KTok/s)\\
 \hline
 0.9        & 93.08 (OOV: 76.99)           & 3 min, 3 epochs & 6           \\
 0.99       & 93.14 (OOV: 77.44)           & 3 min, 3 epochs & 8            \\
 0.999      & 93.28 (OOV: 80.49)           & 2 min, 2 epochs & 8            \\
-\hline
            &                  &               &               \\
 \multicolumn{4}{c}{Fixed Beam}\\
-Beam Width & Tagging Accuracy (\%) & Training time (min) & Tagging Speed (word/s) \\
+Beam Width & Tagging Accuracy (\%) & Training time & Dec. Speed (KTok/s) \\
 \hline
-1        & xx.xx            & xx            & xx            \\
-5        & xx.xx            & xx            & xx            \\
-10       & xx.xx            & xx            & xx            \\
-15       & xx.xx            & xx            & xx            \\
-20       & xx.xx            & xx            & xx            \\
-$\infty$       & xx.xx            & xx            & xx            \\
-\hline
+1        & 92.32 (OOV: 75.07)            & 2 min, 2 epochs & 7          \\
+10       & 93.33 (OOV: 78.28)           & 2 min, 2 epochs &  7            \\
+20       & 93.11 (OOV: 77.29)           & 4 min, 3 epochs &  7             \\
+$\infty$ & 93.31 (OOV: 78.19)           & 20 min, 2 epochs            & 6            \\
 \end{tabular}
-\caption{Different beam settings for FinnTreeBank without a morphological analyzer.}
+\caption{Different beam settings for FinnTreeBank.}
 \end{center}
 \end{table}
 
@@ -90,41 +206,70 @@ $\infty$       & xx.xx            & xx            & xx            \\
 \begin{center}
 \begin{tabular}{cccc}
 \multicolumn{4}{c}{Adaptive Beam}\\
-Beam Width & Tagging Accuracy (\%) & Training time (min) & Tagging Speed (word/s)\\
+Beam Width & Tagging Accuracy (\%) & Training time (min) & Dec. Speed (KTok/s)\\
 \hline
-0.75       & xx.xx            & xx            & xx            \\
-0.88       & xx.xx            & xx            & xx            \\
-0.94       & xx.xx            & xx            & xx            \\
-0.97       & xx.xx            & xx            & xx            \\
-0.98       & xx.xx            & xx            & xx            \\
-\hline
+0.9       & 92.55 (OOV: 73.73)           & 5 min, 5 epochs           & 6            \\
+0.99       & 92.87 (OOV: 74.88)           & 7 min, 7 epochs            & 6            \\
+0.999       & 92.76 (OOV: 74.65)            & 8 min, 7 epochs            & 6            \\
            &                  &               &               \\
 \multicolumn{4}{c}{Fixed Beam}\\
-Beam Width & Tagging Accuracy (\%) & Training time (min) & Tagging Speed (word/s) \\
+Beam Width & Tagging Accuracy (\%) & Training time (min) & Dec. Speed (KTok/s) \\
 \hline
-1        & xx.xx            & xx            & xx            \\
-5        & xx.xx            & xx            & xx            \\
-10       & xx.xx            & xx            & xx            \\
-15       & xx.xx            & xx            & xx            \\
-20       & xx.xx            & xx            & xx            \\
-$\infty$       & xx.xx            & xx            & xx            \\
-\hline
+1        & 91.80 (OOV: 71.26)           & 6 min, 9 epochs            & 6            \\
+10       & 92.83 (OOV: 74.85)           &  7 min, 6 epochs           & 6            \\
+20       & 92.60 (OOV: 73.98)           & 10 min, 7 epochs            & 6            \\
+$\infty$       & 91.58??  (OOV: 69.46)          & 199 min, 8 epochs            & 6            \\
 \end{tabular}
-\caption{Different beam settings for FinnTreeBank using a morphological analyzer.}
+\caption{Different beam settings for Turku Dependency Treebank.}
 \end{center}
 \end{table}
+
+This subsection presents experiments using different beam settings
+during training and decoding. 
+
+I compare fixed beam width to an adaptive beam presented in Section
+\ref{}. Additionally, I include training and decoding results when no
+beam is used.
+
+It is difficult to see a clear relation between the beam width and
+tagging accuracy. The fixed beam of width one is clearly the worst for
+both TDT and FTB. However, all higher beams seem to give results in
+the same range. Moreover, increasing the beam from 10 to 20 results in
+a $0.1\%$-point drop in accuracy for FTB. Additionally, the system
+without any beam search performs worse than systems with adaptive or
+fixed beam width for TDT.
+
+A small beam width results in a faster training time than a larger
+beam. When using an infinite beam, the training time for TDT is
+surprisingly large. The reason for this is that there are sequences of
+words in the training and development data which receive a large
+number of label guesses. When no beam is used, this results in very
+long tagging times for the sequences because a second order model is
+used.
+
+Contrary to what the literature indicates
+\citep{Huang2012,Collins2004}, violation fixing gave no significant
+improvements in accuracy in preliminary experiments. As it only slows
+down training, it was not included in FinnPos.
 
 \section{Model Order}
 
 \begin{table}[htb!]
 \begin{center}
 \begin{tabular}{cccc}
-Model Order & Tagging Accuracy (\%) & Training time (min) & Tagging Speed (word/s)\\
+\multicolumn{4}{c}{Without a Morphological Analyzer}\\
+Model Order & Tagging Accuracy (\%) & Training time & Dec. Speed (KTok/s)\\
 \hline
-0        & xx.xx            & xx            & xx            \\
-1        & xx.xx            & xx            & xx            \\
-2        & xx.xx            & xx            & xx            \\
+0        & 91.91            & 3 min, 3 epochs            & 8            \\
+1        & 92.49            & 3 min, 4 epochs            & 8            \\
+2        & 92.49            & 4 min, 5 epochs            & 7            \\
+                &                       &                  &            \\
+\multicolumn{4}{c}{Using a Morphological Analyzer}\\
+Model Order & Tagging Accuracy (\%) & Training time & Dec. Speed (KTok/s)\\
 \hline
+0        & 95.35            & 5 min, 9 epochs            & 25            \\
+1        & 95.98            & 5 min, 10 epochs           & 23            \\
+2        & 95.96            & 5 min, 8 epochs            & 24            \\
 \end{tabular}
 \caption{Different Model Orders for FinnTreeBank}
 \end{center}
@@ -133,80 +278,164 @@ Model Order & Tagging Accuracy (\%) & Training time (min) & Tagging Speed (word/
 \begin{table}[htb!]
 \begin{center}
 \begin{tabular}{cccc}
-Model Order & Tagging Accuracy (\%) & Training time (min) & Tagging Speed (word/s)\\
+Model Order & Tagging Accuracy (\%) & Training time (min) & Dec. Speed (KTok/s)\\
 \hline
-0        & xx.xx            & xx            & xx            \\
-1        & xx.xx            & xx            & xx            \\
-2        & xx.xx            & xx            & xx            \\
+0        & 91.15            & 6 min, 4 epochs            & 6            \\
+1        & 91.17            & 8 min, 8 epochs            & 5            \\
+2        & 91.83            & 5 min, 3 epochs            & 5            \\
+                &                       &                  &            \\
+\multicolumn{4}{c}{Using a Morphological Analyzer}\\
 \hline
+0        & 95.53            & 5 min, 4 epochs            & 21            \\
+1        & 96.05            & 5 min, 7 epochs            & 22            \\
+2        & 96.13            & 5 min, 5 epochs            & 20            \\
+
 \end{tabular}
 \caption{Different Model Orders for Turku Dependency Treebank}
 \end{center}
 \end{table}
 
-\section{Using A Morphological Analyzer}
+In this section I examine the impact of model order on tagging
+accuracy, training time and decoding time. The experiments in this
+section do not use sublabel features in order to clearly reveal the
+impact of model the order in isolation of other factors.
+
+The accuracy on both FTB and TDT increases when going from order zero
+to a first order model. Further increasing the model order only gives
+an improvement for TDT.
+
+The increase in accuracy when going from a unstructured (order zero)
+model to a second order model is approximately 0.5\%-points for both
+FTB and TDT. This applies both when using a morphologial analyzer and
+when not using it. It is noteworthy that the increas in accuracy
+resulting from the morphological analyzer is substantially larger for
+both data sets.
+
+\section{Utilizing Sub-Label Dependencies}
+
+In this section I examine the impact of sub-label order order on
+tagging accuracy, training time and decoding time both using a
+morphological analyzer and without a morphological analyzer. The
+results in this section differ slightly from \cite{Silfverberg2015}
+because of minor bug fixes and improvements to the feature set of the
+tagger.
+
+The total improvement in accuracy stemming from sub-label features is
+approximately 0.8\%-points for both FTB and TDT when not using a
+morphological analyzer and around 0.3\%-points when using a
+morphological analyzer. Contrasting these results with the previous
+section examining model order, we can see that the added improvement
+from sub-label features is larger than improvement given by incresing
+model from order 0 to 2 when not using the morphological
+analyzer. Moreover, the imporovement is approximately approximately
+the same as going from model order 0 to 1 when using a morphological
+analyzer.
+
+Only for FTB do second order sub-label features give added accuracy
+compared to first order features and only when using the morphological
+analyzer. In other cases, second order sub-labels perform worse than
+first order sub-labels.
+
+Training time increases and decoding speed decreases with incresing
+sub-label order. However, sub-labels seems to decrease the amount of
+training epochs needed to converge to the final model parameters.
+
+For both FTB and TDT, unstructured sub-label features are more
+influential for accuracy than structured sub-label features when the
+morphological analyzer is not used. Then it is used, structured
+sub-labels, converesly, give a larger improvement.
 
 \begin{table}[htb!]
 \begin{center}
 \begin{tabular}{cccc}
 \multicolumn{4}{c}{Without a Morphological Analyzer}\\
-Sub-Label Order & Tagging Accuracy (\%) & Training time    & Tagging Speed (KTokens/s)\\
+Sub-Label Order & Tagging Accuracy (\%) & Training time    & Dec. Speed (KTok/s)\\
 \hline
-None            & 92.61 (OOV: 75.25)    & 3 min, 5 epochs  & 6                       \\
-0               & 93.05 (OOV: 77.35)    & 1 min, 2 epochs  & 5                       \\
-1               & 93.32 (OOV: 78.58)    & 1 min, 2 epochs  & 4                       \\
-\hline
+None            & 92.49 (OOV: 74.68)    & 3 min, 5 epochs  & 6                       \\
+0               & 93.05 (OOV: 77.74)    & 1 min, 2 epochs  & 5                       \\
+1               & 93.29 (OOV: 78.40)    & 1 min, 2 epochs  & 4                       \\
+2               & 92.68 (OOV: 75.22)    & 5 min, 4 epochs  & 6                       \\
                 &                       &                  &                          \\
 \multicolumn{4}{c}{Using a Morphological Analyzer}\\
-Sub-Label Order & Tagging Accuracy (\%) & Training time    & Tagging Speed (KTokens/s)\\
+Sub-Label Order & Tagging Accuracy (\%) & Training time    & Dec. Speed (KTok/s)\\
 \hline
 None     & 95.98 (OOV: 91.41)           & 3 min, 8 epochs  & 25                       \\
 0        & 96.08 (OOV: 91.98)           & 1 min, 3 epochs  & 22                       \\
 1        & 96.24 (OOV: 92.28)           & 1 min, 2 epochs  & 21                       \\
-\hline
+2        & 96.31 (OOV: 92.58)           & 4 min, 3 epochs  & 19                       \\
 \end{tabular}
 \caption{Different Sub-Label Orders for FinnTreeBank}
 \end{center}
 \end{table}
 
+
 \begin{table}[htb!]
 \begin{center}
 \begin{tabular}{cccc}
 \multicolumn{4}{c}{Without a Morphological Analyzer}\\
-Sub-Label Order & Tagging Accuracy (\%) & Training time    & Tagging Speed (KTokens/s)\\
+Sub-Label Order & Tagging Accuracy (\%) & Training time    & Dec. Speed (KTok/s)\\
 \hline
 None            & 91.89 (OOV: 70.63)    & 2 min, 3 epochs  & 5                       \\
 0               &  92.59 (OOV: 73.98)   & 2 min, 4 epochs  & 5                       \\
 1               &  92.69 (OOV: 74.35)   & 5 min, 7 epochs  & 3                       \\
-\hline
+2               &  92.31 (OOV: 72.31)   & 13 min, 8 epochs  & 5                       \\
                 &                       &                  &                          \\
 \multicolumn{4}{c}{Using a Morphological Analyzer}\\
-Sub-Label Order & Tagging Accuracy (\%) & Training time    & Tagging Speed (KTokens/s)\\
+Sub-Label Order & Tagging Accuracy (\%) & Training time    & Dec. Speed (KTok/s)\\
 \hline
 None            &  96.12 (OOV: 91.12)   & 3 min, 5 epochs  & 19                       \\
 0               &  96.17 (OOV: 91.39)   & 2 min, 5 epochs  & 18                       \\
 1               &  96.39 (OOV: 91.84)   & 3 min, 5 epochs  & 16                       \\
-\hline
+2               &  96.29 (OOV: 91.69)   & 12 min, 8 epochs  & 16                       \\
 \end{tabular}
 \caption{Different Sub-Label Orders for Turku Dependency Treebank}
 \end{center}
 \end{table}
 
-\section{Utilizing Sub-Label Dependencies}
 
 \section{Pruning the Model}
 
+In this section, I examine two model pruning strategies: pruning by
+update count and pruning by parameter mass. The strategies are
+presented in \ref{sec:pruning}.
+
+The value for the pruning parameter was set using development
+data. The range of parameter values was chosen so as to show the
+difference in pruning efficiency. The specific parameter values are
+not very important. The important thing is to show the relation of
+model size and accuracy. In these experiments, pruning has not been
+applied to the lemmatizer although that would be possible.
+
+Clearly, mass based pruning is more effective than update count based
+pruning. For FTB, without a morphological analyzer, the full accuracy
+of $93.2\%$ can be maintained even when pruning out 81\% of model
+parameters. When using update count as pruning criterion, full
+accuracy cannot be maintained when pruning out more than 38\% of model
+parameters. For TDT, the corresponding figures are 55\% for mass based
+pruning and 23\% for update based pruning.
+
+When using a morphological analyzer, even further feature pruning is
+possible. For FTB, 84\% of model parameters can be pruned while
+maintining full accuracy when using mass based pruning. When using
+update count based pruning, however, no parameters can be pruned
+without losing accuracy. For TDT, update count based pruning can prune
+out 72\% of the features when using a morphological analyzer but mass
+based pruning can prune out even more -- 81\%.
+
 \begin{table}[htb!]
 \begin{center}
-\begin{tabular}{ccccc}
-                & \multicolumn{4}{c}{Pruning Strategy}\\
-                & None           & Zero Param    & $< 5$ updates  & $< 7$ updates  \\
-Sub-Label Order &                &               &                &                \\
+\begin{tabular}{c|ccccc}
+\multicolumn{1}{c}{}        & \multicolumn{5}{c}{Update Count Threshold}\\
+MA                     & None           & $< 2$        & $< 3$        & $< 4$        & $< 5$       \\
 \hline
-None            & xx.x\%, yy MB  & xx.x\%, yy MB  & xx.x\%, yy MB & xx.x\%, yy MB \\
-0               & xx.x\%, yy MB  & xx.x\%, yy MB  & xx.x\%, yy MB & xx.x\%, yy MB \\
-1               & xx.x\%, yy MB  & xx.x\%, yy MB  & xx.x\%, yy MB & xx.x\%, yy MB \\
+no                     & 93.2\%, 4.8M   & 93.2\%, 3.9M & 93.2\%, 3.6M & 93.2\%, 3.0M & 93.1\%, 1.0M \\
+yes                    & 96.3\%, 4.3M   & 96.2\%, 3.9M & 96.2\%, 3.7M & 96.2\%, 3.3M & 96.1\%, 1.0M \\
+                       &                &              &              &              &              \\
+\multicolumn{1}{c}{}                        & \multicolumn{5}{c}{Parameter Mass Threshold}\\
+MA                     & None         & $< 2.0$      & $< 2.5$      & $< 3$      & $< 3.5$        \\
 \hline
+no                     & 93.2\%, 4.8M & 93.3\%, 1.8M & 93.2\%, 1.4M & 93.2\%, 1.2M & 93.2\%, 0.9M \\
+yes                    & 96.3\%, 4.3M & 96.3\%, 0.9M & 96.3\%, 0.7M & 96.2\%, 0.3M & 96.1\%, 0.1M \\
 \end{tabular}
 \caption{Result of applying different pruning strategies on FinnTreeBank models.}
 \end{center}
@@ -214,17 +443,35 @@ None            & xx.x\%, yy MB  & xx.x\%, yy MB  & xx.x\%, yy MB & xx.x\%, yy M
 
 \begin{table}[htb!]
 \begin{center}
-\begin{tabular}{ccccc}
-                & \multicolumn{4}{c}{Pruning Strategy}\\
-                & None           & Zero Param     & $< 5$ updates  & $< 7$ updates  \\
-Sub-Label Order &                &                &                &                \\
-\hline
-None            & xx.x\%, yy MB  & xx.x\%, yy MB  & xx.x\%, yy MB & xx.x\%, yy MB \\
-0               & xx.x\%, yy MB  & xx.x\%, yy MB  & xx.x\%, yy MB & xx.x\%, yy MB \\
-1               & xx.x\%, yy MB  & xx.x\%, yy MB  & xx.x\%, yy MB & xx.x\%, yy MB \\
-\hline
+\begin{tabular}{c|ccccc}
+
 \end{tabular}
 \caption{Result of applying different pruning strategies on Turku Dependency Treebank models.}
+\end{center}
+\end{table}
+
+\begin{table}[htb!]
+\begin{center}
+\begin{tabular}{c|ccccc}
+\multicolumn{1}{c}{}                       & \multicolumn{5}{c}{Update Count Threshold}\\
+MA                     & None            & $< 2$        & $< 3$        & $< 4$        & $< 5$       \\
+\hline
+no                     & 92.8\%, 6.4M    & 92.7\%, 5.2M & 92.7\%, 5.0M & 92.8\%, 4.9M & 92.6\%, 4.9M \\
+yes                    & 96.3\%, 5.5M    & 96.4\%, 5.0M & 96.3\%, 4.9M & 96.4\%, 4.9M & 96.3\%, 4.9M \\
+                       &                 &              &              &              &              \\
+\multicolumn{1}{c}{}     & \multicolumn{5}{c}{Parameter Mass Threshold}\\
+MA                     & None           & $< 4.0$        & $< 5.0$      & $< 6.0$      & $< 7.0$     \\
+\hline
+no                     & 92.8\%, 6.4M   & 92.8\%, 2.9M   & 92.7\%, 2.8M & 92.7\%, 2.6M & 92.6\%, 2.1M \\
+yes                    & 96.3\%, 5.5M   & 96.3\%, 1.2M   & 96.3\%, 0.8M & 96.2\%, 0.2M & 96.2\%, 0.2M \\
+\end{tabular}
+\caption{Result of applying different pruning strategies on Turku Dependency Treebank models.}
+\end{center}
+\end{table}
+
+\begin{table}[htb!]
+\begin{center}
+\includegraphics[width=\textwidth]{pruning}
 \end{center}
 \end{table}
 
