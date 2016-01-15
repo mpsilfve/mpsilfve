@@ -592,22 +592,44 @@ The quantities $\sum_{y \in \mathcal{Y}^T}F_y(x_l, k, y_{k - 2},
 y_{k-1}, y_k)[i]$ and $\Z(x\parcond\theta)$ have to be computed using
 the forward backward algorithm because the number of computations is
 too large otherwise. The need of the forward backward algorithm is the
-most important difference between LR and CRF estimation.
+most important difference between LR and CRF estimation.  Commonly,
+the SGD algorithm and L-BFGS are used for the optimization of $\theta$
+\citep{Vishwanathan2006}. As in the case of LR model, the CRF model
+can also be regularizaed using for example L1 or L2 regularization
+\cite{Sutton2006}.
 
-Commonly, the SGD algorithm and L-BFGS are used for the optimization
-of $\theta$ \citep{Vishwanathan2006}.
+Held out development data is commonly used to set the number of
+training epochs, model order and regularization hyper-parameters.
+
+\paragraph{Approximative estimation} In addition to the ML estimator,
+a variety of estimators are available for CRF models. These
+alternative estimators are mainly used due to the fact that ML
+estimation can be resouce intesive. The most commonly substitute for
+the ML estimator is the averaged perceptron estimator described in
+Section \ref{sec:prec-tagger} and taggers trained using the averaged
+perceptron tagger are often called perceptron taggers (see for example
+\cite{Collins2002}). Other examples mentioned by \cite{Sutton2012} are
+the pseudlikelihood \cite{Besag1975} and piecewise pseudolikelihood estimators
+\cite{Sutton2007}. \cite{Ruokolainen2014} investigate a
+pseudolikelihood inspired variant of the perceptron estimator.
+
+Given a training example $(x,y) \in \mathcal{D}$ where $x = x_1, ..., x_T$ and $y = y_1, ..., y_T$, the pseudolikelihood of $y$ given $x$ is given by equation \ref{eq:pl}
+\begin{equation}\label{pl}\prod_{t = 1}^T p(y_t | x, i, y_{\neg t} \parcond \theta)\end{equation}
+where $y_{\neg t}$ refers to all the labels in $y$ except label
+$y_t$. This is substantially more efficient than ML estimation because
+the labels can be maximized separately in each position. However, it
+may result in poor accuracy \citep{someone}.
+
+Piecewise-pseudo.
+
+Pseudoperceptron.
 
 \begin{itemize}
-\item The term perceptron tagger is commonly found in the litterature, e.g. \cite{Collins2002}.
-\item The model is called a CRF.
-\item The estimator can be a ML, Perceptron, pseudo likelihood, pseudo
-  perceptron...
-\item Dev data for adjusting hyper parameters: number of iterations and
-  regularization hyper-parameters, model order.
 \item Hierarchical CRF \cite{Muller2013}, \cite{Weiss2010} and \cite{Charniak2005}.
 \end{itemize}
 
 \section{The Perceptron Tagger}
+\label{sec:prec-tagger}
 
 Whereas the perceptron classifier is a discriminative classifier
 similar to the LR model except that it uses perceptron estimation, a
