@@ -695,9 +695,70 @@ label sets and for second order models as shown in Section
 \ref{sec:finnpos}.
 
 \section{Enriching the Structured Model}\label{sec:sub-labels}
-\begin{itemize}
-\item Utilizing sub-label structure.
-\end{itemize}
+As seen above, the feature set of a discriminative classifier with
+$|\mathcal{Y}|$ classes and $|F|$ feature templates has on the order
+of $|\mathcal{Y}\times F| + |\mathcal{Y}|^n$ features and parameters,
+where $n$ is the model order. When $\mathcal{Y}$ is large, this gives
+rise to data sparsity because each feature template is seen with quite
+few labels $y \in \mathcal{Y}$. Large morphological label sets,
+however, are typically internally structured. For example, the noun
+label ``noun+sg+nom'' and adjective label ``adj+sg+nom'' share the
+same number ``sg''and case ``nom'' .
+
+One way to combat data sparsity, is to add a number of new feature
+extraction functions in addition to the feature extraction functions
+$F_y$ for each label $y\in \mathcal{Y}$. For example, there can be a
+function $F_{{\rm +sg}}$ which extracts features for each label that
+has singular number. We call the features speicifed by these astracted
+feature extraction functions, {\it sub label features}.
+
+For the label ``noun+sg+nom'', the activation which is extracted is by a standard CRF is
+$$F_{\rm noun+sg+nom}(x, i, y_{i-2}, y_{i-1})$$
+When using sub label features, we instead extract the activation
+$$\sum_{y \in \{{\rm noun+sg+nom,\ noun,\ sg,\ nom\}}} F_{y}(x, i, y_{i-2}, y_{i-1})$$
+The features extraction function will also utilize the internal
+structure of the argument labels $y_{i-1}$ and $y_{i-2}$. Examples of
+sub label features include ``A word dog is singular'' and ``a singular
+word follows another singular word''.
+
+Sublabel features can help combat data sparsity. Additionally, they
+are useful for modeling linguistic phenomena such as congruence. For
+example congruence in case and number can be modeled separately and
+independently from other inflectional and derivational information.
+
+Restricted form of sub-label features have been utilized by for
+example \cite{Muller2013} and \cite{Smith2005}.
+ 
+\cite{Muller2013} uses sub labels exclusively for unstructured
+features. While sub labels seem to be most beneficial in combination
+with unstructured features in a morphological tagging setting where a
+morphological analyzer is not utilized, this is not the case in a
+morphological disambiguation setting as the experiemtns in Chapter
+\ref{chapter:finnpos} indicate. When using a morphological analyzer,
+sub labels result in the greates improvement when combined with
+structured features.
+
+\cite{Smith2015} utilize structured sub labels, however, only in a
+restricted way. They build separate structured chains modeling the
+sequence of main POS classes, cases, numbers, genders and lemmas of
+neighoring words. Their system cannot model cross category
+dependencies such as dependence between a verb and the case of its
+object.
+
+However, \cite{Silfvererg2014} extends this approach to fully take
+into account structured features. As the experiments in Chapter
+\ref{chapter:finnpos}, structured sublabels have a substantial impact
+on tagging accuracy both in morphological tagging setting without a
+morphological analyzer and in morphological disambiguation
+setting. For Finnish, the impact of sub label features on tagging
+accuracy seems to be on par with the impact of higher model order.
+
+Another approach which utilizes sublabels is the tiered tagging
+approach \citep{Tufis1999,Ceausu2006}. In tiered tagging, the label
+set is first projected onto a smaller set of coarse labels. A tagger
+is first used for labeling text with coarse labels. Subsequently
+another tagger is used to convert coarse labels into full
+morphological labels.
 
 \section{Model Pruning}\label{sec:pruning}
 
