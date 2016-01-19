@@ -1,6 +1,6 @@
-\chapter{Morphology}
+\chapter{Morphological Tagging}
 
-\section{The Structure of Words}
+\section{Morphology}
 %\begin{itemize}
 %\item The morphological system.
 %\item Word, morpheme, lemma, stem.
@@ -8,59 +8,105 @@
 %\item Inflectional categories.
 %\end{itemize}
 
-Many linguistc units are rather controversial. What is the definition
-of a sentence? Do sentences even exist in spoken language? Is there
-such a thing as a phoneme?
+Words are the most readily accepted linguistic units at least in
+written language, especially Western written language. They are
+segments of letters and possible numbers which are surrounded by
+white-space or punctuation. Although matters are more complex in
+spoken language, written languages that do not use white space (such
+as Chinese) and sign language, language users, even small children,
+often have an intuitive idea about what constitutes a word in their
+native language \cite{someone}.
 
-The concept of a word is, however, among the among the more
-universally accepted. The reason for this may be that there is in fact
-a fairly easy and readily applicable test for what is a word: X is a
-word if X can be used as an answer to a question. For example
-\begin{displayquote}
-- You said you saw a what yesterday? \\
-- Dog. I saw a dog.  
-\end{displayquote}
-Although, singular nouns in English usually take a compulsory article,
-exceptional contexts where they are uttered without an article are
-acceptable for many language users. Therefore, it is plausible to
-stipulate that singular nouns are words in English. For most
-languages, this criterion can be used to find most words that language
-users intuitively group under the concept word. Even this criterion,
-however, fails for polysemous languages. Nevertheless, it very useful
-for many languages.
+\paragraph{Morphemes} Morphology is a sub-field of linguistics which
+studies words. According to \cite{Bybee85}, morphology has
+traditionally been concerned with charting the {\it morpheme
+  inventory} of language. That is, finding the minimal semantic units
+of language and grouping them into classes according to behaviour and
+meaning. For example, the English word form ``dogs'' consists of two
+morphemes ``dog'' and ``s''. The first one being a {\it word stem}
+and the second one being an {\it inflectional affix} marking plural
+number.
 
-Of course, orthographic words are much easier to identify than spoken
-language words in many writing systems. Simply look for entities
-separated by punctuation and white-space. This, however, does not work
-for some languages such as Chinese where word spaces are not indicated
-in written text. Because this thesis exclusively deals with written
-language and because I have performed experiments on European
-languages whose orthographies mark word boundaries, I will gloss over
-the difficulties of locating word boundaries although this is an
-interesting problem from the points of view of both linguistics and
-engineering.
+\paragraph{Non-Concatenative Morphology} In many languages, such as
+English, words are mainly constructed from pieces such as ``dog'',
+``cat'' and ``-s''. This is, however, not always true. For example,
+English plural number can be signaled by other less transparent means
+as demonstrated by the word pairs ``mouse/mice'' and
+``man/men''. Morphological phenomena such as inflection and derivation
+which fall beyond the scope of simple concatenation of morphemes into
+words are called {\it non-concatenative}. 
 
-Morphology is the sub-fields of linguistics that investigates the
-structure of words. For example the knowledge that appending a suffix
-``s'' to a singular English nouns makes it plural is morphological
-knowledge. Of course this rule is not entirely correct because some
-nouns form plurals in some other way (e.g. ``foot/feet'') and yet
-other nouns have no plural form (e.g. ``music'').
+The most common form of non-concatenative morphology is {\it
+  suppletion}. Suppletion is the irregular relationship between word
+forms such as the English singular ``ox'' and plural ``oxen''. Such
+irregularity occurs in all languages. The example of ``mouse'' and
+``mice'' can be analyzed as an instance of {\it ablaut} which is
+another form of non-concatenative morphology where a morphological
+process is signaled by a vowel change in the stem (/ou/ $\rightarrow$
+/i/ in this case).
 
-\begin{figure}
-\begin{center}
-\caption{The syntagmatic and paradigmatic axes of language.}\label{fig:lingdim}
-\includegraphics[scale=0.8]{ling_dim}
-\end{center}
-\end{figure}
+Languages differ with regard to the amount of non-concatenative
+morphology. Some, like Turkish employ almost exclusively concatenation
+to form words from morphemes. Others, such as English employ a mix of
+concatenation and non-concatenative phenomena. Still, concatenation is
+probably found to some degree in all languages
+\cite{someone}. Especially in languages with rich morphology, such as
+Finnish or Turkish, concatenation is the most important way to form
+words. From the point of view of language technology, it is therefore
+of great importance to be able to handle concatenative morphology.
 
-Because words consist of phonemes or orthographic symbols, the
-structure of words cannot be investigated without considering the
-phonological system of a language. If we had to form the singular
-inessive of the the non-existent Finnish noun ``looka'', we would say
-``lookassa'', not ``lookassä'' because vowel harmony, a phonological
-co-occurrence restriction, prohibits the latter form.
+\paragraph{Morphotax} Stems in English can often occur on their own as
+words and are therefore called {\it free morphemes}. Inflectional
+affixes cannot. Therefore, they are called {\it bound morphemes}. More
+generally, morphology is concerned with rules governing acceptable
+combinations of morphemes. For example, ``dog'' and ``dogs'' are valid
+English word whereas ``dogdog'' and ``s'' in the meaning of plural
+number are not. The rules governing the combination of morphemes into
+words is called morphotax.
 
+\paragraph{Word Class} The word forms ``dogs'' and ``cats'' share a
+common number marker ``s''. However, their stems differ. Still, there
+is a relation between the stems ``dog'' and ``cat'' because they can
+occur with similar inflectional affixes. Therefore, they can be
+grouped into a common {\it word class}: nouns. One can also say that
+the {\it part-of-speech} of ``dog'' and ``cat'' is noun.  The
+inventory of word classes in a language cannot be determined solely
+based on word internal examination. Instead one has to combine
+knowledge about the structure of words with knowledge about
+interaction of the words in sentences. The concept of word class,
+therefore, resides somewhere between the linguistic disciplines
+morphology and {\it syntax} which is the study of combination of words
+into larger units, phrases and sentences.
+
+\paragraph{Lexeme and Lemma} Word forms such as ``dog'' ``dogs'' and
+``dog's'' share a common stem ``dog''. Each of the word forms refers
+to the concept {\sc dog}, however different forms of the word are
+required depending on context. Different word forms, that denote the
+same concept, belong to the same {\it lexeme}. Each lexeme has a {\it
+  lemma} which is a designated word form representing the entire
+lexeme. In the case of English nouns, the lemma is simply the singular
+form, for example ``dog''. In the case of English verbs, the
+infinitive, for example ``to run'', is usually used. The particular
+choice depends on linguistic tradition. 
+
+Lemmas are important for language technology because dictionaries
+usually contain lemmas. Therefore, it is useful to be able to {\it
+  lemmatize} a word form, that is produce the lemma given a word form.
+
+\paragraph{Categories of Bound Morphemes} Whereas free morphemes are
+grouped into word classes, bound morphemes are grouped into their own
+categories according to meaning and co-occurrence restrictions. For
+example, Finnish nouns can take a singular number
+marker. Additionally, they can take one case marker from an inventory
+of $15$ possible case markers, one possessive suffix from an inventory
+of $6$ possible markers and a number of clitic affixes
+\citep{Hakulinen2004}. The categories of bound morphemes usually
+belong to particular word classes, however, several word classes may
+share a particular class of bound morphemes. For example, both
+adjectives and nouns take a number in English.
+
+\paragraph{Morphological analysis} Segmentation/morphological
+analysis.
 
 \section{Languages with Rich Morphology}
 \begin{itemize}
@@ -72,3 +118,76 @@ co-occurrence restriction, prohibits the latter form.
 \begin{itemize}
 \item Finite-state morphology \citep{Koskenniemi1984}, \citep{Kaplan1994}.
 \end{itemize}
+
+\section{Morphological Tagging and Disambiguation}
+Morphological disambiguation and part-of-speech tagging are
+interesting tasks from the perspective of machine learning because
+they represent labeling tasks where both the set of inputs and outputs
+are unfathomably large. Since each word in a sentence $x = (x_1,\
+...,\ x_T)$ of length $T$ receives one label, the complete sentence
+has $n^T$ possible labels $y = (y_1,\ ...,\ y_T)$ when the POS label
+set has size $n$. For a sentence of $40$ words and a label set of $50$
+labels, the number of possible label sequence is $40^{50} \approx
+10^{80}$ which according to Wolfram Alpha\footnote{{\tt{\url
+    http://www.wolframalpha.com/input/?i=number+of+atoms+in+the+universe}}}
+is the estimated number of atoms in the observable universe.
+
+The exact number of potential English sentences of any given length,
+say ten, is difficult to estimate because all strings of words are not
+valid sentences\footnote{Moreover, it is not easy to say how many word
+  types the English language includes.}. However, it is safe to say
+that it is very large -- indeed much larger than the combined number
+of sentences in POS annotated English language corpora humankind is
+likely to ever produce. Direct ML-estimation of the conditional
+distributions $p(y\cond x)$, for POS label sequences $y$ and sentences
+$x$, by counting is therefore impossible.
+
+Because the POS labels of words in a sentence depend on each other,
+predicting the label $y_t$ for each position $t$ separately is not an
+optimal solution. Consider the sentence ``The police dog me constantly
+although I haven't done anything wrong!''. 
+
+The labels of the adjacent words ``police'', ``dog'', ``me'' and
+``constantly'' help to disambiguate each other. A priori, we think
+that ``dog'' is a noun since the verb ``dog'' is quite rare. This
+hypothesis is supported by the preceding word ``police'' because
+``police dog'' is an established noun--noun collocation. However, the
+next word ``me'' can only be a pronoun, which brings this
+interpretation into question. The fourth word ``constantly'' is an
+adverb, which provides additional evidence against a noun
+interpretation of ``dog''. In total, the evidence points toward a verb
+interpretation for ``dog''.
+
+The disambiguation of the POS label for ``dog'' utilizes both so
+called {\it unstructured} and {\it structured} information. The
+information that ``police dog'' is a frequent nominal compound is
+unstructured information, because it refers only to the POS label (the
+prediction) of the word ``dog''. The information that verbs are much
+more likely to be followed by pronouns than nouns is a piece of
+structured information because it refers to the combination of several
+POS labels. Structured information refers to the combination of
+predictions. Both kinds of information are very useful, but a model
+which predicts the label $y_t$ for each position in isolation cannot
+utilize structured information.
+
+Even though structured information is useful, structure is probably
+mostly useful in a limited way. For example the labels of ``dog'' and
+``anything'' in the example are not especially helpful for
+disambiguating each other. It is probably a sensible assumption that
+the further apart two words are situated in the sentence, the less
+likely it is that they can significantly aid in disambiguating each
+other. However, this does not mean that the interpretations of words
+that are far apart cannot depend on each other -- in fact they
+frequently do. For example embedded clauses introduce long range
+dependencies inside sentences.
+
+It is said that machine learning is sophisticated counting of
+co-occurrences. This statement applies extremely well to POS
+tagging. Counting is an adequate approach to capturing correlations
+between the labels of words inside a small window (in the league of
+five words), because most adjacent words indeed do depend on each
+other is some way. However, sophisticated counting fails for larger
+windows, because the number of meaningful dependencies in large
+windows is negligible in comparison to the space of possibilities.
+
+

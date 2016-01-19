@@ -14,6 +14,7 @@
 \usepackage{subcaption}%,showframe}
 \usepackage{setspace}
 \usepackage{breqn}
+\usepackage{bold-extra}
 \usepackage{epigraph}
 \usepackage{bibentry}
 \usepackage{fancyhdr}
@@ -112,10 +113,10 @@ Ancient Proverb
 \mainmatter
 
 \tableofcontents
-\listoffigures
-\listoftables
-\listof{algorithm}{List of Algorithms}
-\addcontentsline{toc}{chapter}{List of Algorithms}
+%\listoffigures
+%\listoftables
+%\listof{algorithm}{List of Algorithms}
+%\addcontentsline{toc}{chapter}{List of Algorithms}
 
 \chapter*{Notation}
 \addcontentsline{toc}{chapter}{Acronyms}
@@ -150,8 +151,6 @@ $\hat{p}$ & Estimate of probability $p$.
 
 \include{ml}
 
-\include{pos}
-
 \include{hmm}
 
 \include{fsm}
@@ -176,7 +175,7 @@ $\hat{p}$ & Estimate of probability $p$.
 \addcontentsline{toc}{chapter}{Articles}
 \chapter*{Articles}
 \pagestyle{empty}
-%\includepdfset{pagecommand={}}
+\includepdfset{pagecommand={}}
 %\includepdf[scale=1,pages=-]{Silfverberg_Linden_2010.pdf}
 %\includepdf[scale=1,pages=-]{Silfverberg_Linden_2011.pdf}
 %\includepdf[scale=1,pages=-]{Pirinen_Silfverberg_Linden_2012.pdf}
