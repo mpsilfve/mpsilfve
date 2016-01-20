@@ -1,4 +1,4 @@
-\chapter{Morphological Tagging}
+\chapter{Morphology and Morphological Tagging}
 
 \section{Morphology}
 %\begin{itemize}
@@ -43,13 +43,23 @@ irregularity occurs in all languages. The example of ``mouse'' and
 ``mice'' can be analyzed as an instance of {\it ablaut} which is
 another form of non-concatenative morphology where a morphological
 process is signaled by a vowel change in the stem (/ou/ $\rightarrow$
-/i/ in this case).
+/i/ in this case). 
+
+Probably all languages which use concatenative morphology also have
+{\it morphophonological alternations}. These are sound changes that
+occur when morphemes are joined together. A cross-linguistically
+common example is nasal assimilation \citep[p. 29]{Carr1993}, where
+the place of articulation of a nasal depends on the following
+stop. For example, the ``n'' in the prefix ``in'' in ``input'' and
+``inset'' is pronounced as ``m'' and ``n'',
+respectively. Morphophonological alternations can be seen as an
+instance of non-concatenative morphology.
 
 Languages differ with regard to the amount of non-concatenative
 morphology. Some, like Turkish employ almost exclusively concatenation
-to form words from morphemes. Others, such as English employ a mix of
-concatenation and non-concatenative phenomena. Still, concatenation is
-probably found to some degree in all languages
+to form complete word forms from morphemes. Others, such as English
+employ a mix of concatenation and non-concatenative phenomena. Still,
+concatenation is probably found to some degree in all languages
 \cite{someone}. Especially in languages with rich morphology, such as
 Finnish or Turkish, concatenation is the most important way to form
 words. From the point of view of language technology, it is therefore
@@ -105,20 +115,128 @@ belong to particular word classes, however, several word classes may
 share a particular class of bound morphemes. For example, both
 adjectives and nouns take a number in English.
 
-\paragraph{Morphological analysis} Segmentation/morphological
-analysis.
+\paragraph{Morphological analysis} In many applications such as
+information retrievel systems and syntactic parsers, it is useful to
+be able to provide an exhaustive decription of the morphological
+information associated with a word form. Such an descrption is called
+a {\it morphological analysis} or {\it morphological tag} of the word
+form. For example, the English word form ``dogs'' could have a
+morphological analysis ``dog+Noun+Plural''. The granularity and
+appearance of the morphological analysis depends on linguistic
+tradition and the linguistic theory which is being applied, however
+the key elements are the lemma of the word form as well as a list of
+the bound morphemes associated to the word form.
 
-\section{Languages with Rich Morphology}
+\section{Morphologically Complex Languages}
 \begin{itemize}
 \item Typological classification of languages.
 \item ``Large label sets''.
 \end{itemize}
 
 \section{Morphological Analyzers}
-\begin{itemize}
-\item Finite-state morphology \citep{Koskenniemi1984}, \citep{Kaplan1994}.
-\end{itemize}
+Word forms in natural languages can be ambiguous. For example, the
+English ``dogs'' is both the plural form of noun and the present third
+person form of a verb. The degree of ambiguity varies between
+languages. It is also, to some degree, a function of the morphological
+descption. Namely, coarse morphological desciptions can give less
+ambiguity than finer ones. A morphological analyzer is a system which
+processes word forms and returns the complete set of possible
+morphological analyses for each word form.
 
+\paragraph{Applications} Morphological analyzers are useful both when
+the lemma of the word is important and when the information about
+bound morphemes is required. The lemma is useful in tasks where the
+semantics of the word form is of great importance. These task include
+information extraction \cite{someone} and topic modeling
+\cite{someone}. Information about bound morphemes is more important
+for syntactic parsing and chunking which aim at uncovering the
+structure of linguistic utterances.
+
+\paragraph{Motivation} The need for full scale morphological analyzers
+can be contested. For example \cite{somone} has argued that practical
+applications can mostly ignore morphology and focus on processing raw
+word forms instead of morphologically analyzed words. This may be a
+valid approach for English and other languages which mainly utilize
+syntactic means like word order to express grammatical information. In
+these languages the number of word forms in relation to lexemes tends
+to be low. For example, in the Penn Treebank of English
+\cite{Marcus1993} spanning approximately 1 million words, three
+distinct word forms occur which have the lemma ``dog'', namely
+``dog'', ``dogs'' and ``dogged''. It can be argued that no specific
+processing is required to proces English word forms.
+
+In contrast to English, many languages do utilize morphology
+extensively. For example, although the Finnish FinnTreeBank corpus
+\cite{someone} only spans approximately 160,000 words (this is less
+than 20\% of the Penn Treebank), there are 14 distinct word forms
+which have the lemma ``koira'' (the Finnish translation of ``a
+dog'').\footnote{If different compound words of ``koira'', such as
+  ``saksanpaimenkoira'' (German Shepard) are considered, there are 23
+  forms of koira in the FinnTreeBank corpus.}  In total, the Penn
+Treebank contains some 49,000 distinct word forms whereas the
+FinnTreeBank contains about 46,000 word forms even though it is only
+20\% of the size of the English corpus. These considerations
+illustrate the need for morphological processing for languages like
+Finnish which make extensive use of inflective morphology. Methods
+which only process word forms simply will suffer too badly from data
+parsity.
+
+\paragraph{Types} There are different kinds of morphological analysis
+systems. The first systems used for English information retreival were
+stemmers, the most famous system being \cite{Porter1997} (originally
+proposed in 1979). The {\it Porter stemmer} uses a collection of rules
+which strip suffixes from word forms. For example, ``connect'',
+``connection'' and ``connected'' would all receive the stem
+``connect''. The system does not include a vocabulary and can thus be
+applied to arbitrary English word forms. The Porter stemmer, and
+stemmers in general, are sufficient for information retrieval in
+English but the fall short when more elaborate morphological
+information is required, for example, in parsing. Moreover, they are
+too simplistic for morphologically complex languages like Finnish and
+Turkish (although \cite{Kettunen2005} show that a more elaborate
+stemmer which can give several stem candidates for a word form can
+perform comparable to a full morphological analyzer).
+
+Morphological segmentation software, such as Morfessor
+\cite{Creutz2002}, are another type of morphological analyzers often
+utilized in speech recognition for languages with rich morphology. The
+Morfessor system splits word forms into a sequence of morpheme like
+substrings. For example, the word form ``dogs'' could be split into
+``dog'' and ``s''.  This type of morphological segmentation is useful
+in a wide variety of language technological applications, however it
+is more ambiguous than a traditional morphological analysis where the
+bound morphemes are represented by linguistic analysis symbols such as
++plural. Moreover, Morfessor output does not contain information about
+morphological categories that are not overtly marked. For example, in
+Finnish the singular number of nouns is not overtly marked (only
+plural number is marked by an affix ``i''). This information can
+however be very useful for example in syntactic parsing.
+
+The current state-of-the-art for morphological analysis of
+morphologically complex languages are finite-state morphological
+analyzers \citep{Kaplan1994,Koskenniemi1984}. Full scale finite-state
+analyzers can return the full set of analyses for word forms. They can
+model morphotax and morphophonological using finite-state rules and
+lexicon \citep{Beesley2003}. In contrast to stemmers, which are quite
+simple, and segmentation systems like Morfessor which can be trained
+in an unsupervised manner, full-scale morphological analyzers
+typically require a lot of manual work. The most labor intensive part
+of the process is the accumulation of the lexicon. 
+
+Although, full-scale morphological analyzers require a lot of manual
+work, the information they produce is very reliable. Coverage is a
+slight problem because lemmas typically need to be manually added to
+the system before word forms of that lemma can be analyzed. However,
+morphological guessers can constructed from morphological analyzers
+\cite{Linden2009}. These extend the analyzer to previously unseen
+words based on similar words that are known to the analyzer.
+
+The morphological analyzer primarily employed in this thesis is for
+Finnish Open-Source Morphology OMorFi \citep{Pirinen2011}. It is a
+morphological analyzer of Finnish implemented using the open-source
+finite-state toolkit HFST \cite{Linden2009hfst} and is utilized for
+the experiments presented in Chapter \ref{chapter:finnpos}.
+ 
 \section{Morphological Tagging and Disambiguation}
 Morphological disambiguation and part-of-speech tagging are
 interesting tasks from the perspective of machine learning because
