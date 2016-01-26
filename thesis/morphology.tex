@@ -238,8 +238,13 @@ finite-state toolkit HFST \cite{Linden2009hfst} and is utilized for
 the experiments presented in Chapter \ref{chapter:finnpos}.
  
 \section{Morphological Tagging and Disambiguation}
+I define morphological tagging as the task of assigning each word in a
+sentence a unique full morphological analysis consisting of a lemma
+and a morphological label which specifies the part-of-speech of the
+word form as well as the bound morphemes that occur in the word form.
+
 Morphological disambiguation and part-of-speech tagging are
-interesting tasks from the perspective of machine learning because
+interesting tasks because
 they represent labeling tasks where both the set of inputs and outputs
 are unfathomably large. Since each word in a sentence $x = (x_1,\
 ...,\ x_T)$ of length $T$ receives one label, the complete sentence
@@ -256,7 +261,7 @@ valid sentences\footnote{Moreover, it is not easy to say how many word
   types the English language includes.}. However, it is safe to say
 that it is very large -- indeed much larger than the combined number
 of sentences in POS annotated English language corpora humankind is
-likely to ever produce. Direct ML-estimation of the conditional
+likely to ever produce. Direct estimation of the conditional
 distributions $p(y\cond x)$, for POS label sequences $y$ and sentences
 $x$, by counting is therefore impossible.
 
@@ -308,4 +313,42 @@ other is some way. However, sophisticated counting fails for larger
 windows, because the number of meaningful dependencies in large
 windows is negligible in comparison to the space of possibilities.
 
-
+\section{Research into Morphological Tagging}
+\begin{itemize}
+\item POS tagging vs. Morphological tagging.
+\item Statistical vs. rule-based.
+\item Is it a reasonable division?
+\item Influential rule based approaches: \cite{Brill1992}
+  \cite{Karlsson1995}.
+\item First successful HMM statistical approaches: \cite{Church1988}
+  \cite{DeRose1988}.
+\item Problem: A generative tagger has to model the input
+  sentences. This forces the use of simple local features.
+\item Solutions: Either try to model the input using a more elaborate
+  model which does not work \cite{Ruokolainen2013}.
+\item Better local features using a discriminative
+  approach\cite{Ratnaparkhi1997}.
+\item Still a well devised HMM model can surpas \cite{Brants2000},
+  \cite{Halacsy2007}.
+\item \cite{Silfverberg2010} and \cite{Silfverberg2010} implement HMM
+  taggers as finite-state systems.
+\item Label bias \cite{Lafferty2001} and observation bias \cite{Klein2002}.
+\item Solution: Conditional random fields \cite{Lafferty2001}.
+\item Another Solution: Support Vector Machines \cite{Cortes1995},
+  \cite{Gimenez2004}.
+\item A simple solution: Averaged perceptron taggers \cite{Collins2002}.
+\item These can be seen as alternative estimators for a discriminative
+  HMM tagger.
+\item \cite{Ruokolainen2014} examines several different approaches to
+  parameter estimation.
+\item Applications to morphological tagging: Marmot using a cascaded
+  model \cite{Muller2013} and Morfette \cite{Chrupala2008}.
+\item Joint Lemmatization and tagging \cite{Muller2015}.
+\item Tagging can also be combined with morphological segmentation
+  \cite{MullerX}.
+\item \cite{Silfverberg2014} use sub-label features and
+  \cite{Silfverberg2015} combine them with a cascaded approach.
+\item \cite{Chrupala2008} and \cite{Silfverberg2015} adopt the same
+  approach to lemmatization although the particular features of the
+  lemmatizer differ.
+\end{itemize}
