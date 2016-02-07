@@ -241,14 +241,17 @@ the experiments presented in Chapter \ref{chapter:finnpos}.
 I define morphological tagging as the task of assigning each word in a
 sentence a unique full morphological analysis consisting of a lemma
 and a morphological label which specifies the part-of-speech of the
-word form as well as the bound morphemes that occur in the word form.
+word form as well as the bound morphemes that occur in the word
+form. This contrasts with part-of-speech tagging, where the task is to
+discover limited information such as them main word class of the words
+in a sentence.
 
 Morphological disambiguation and part-of-speech tagging are
 interesting tasks because
 they represent labeling tasks where both the set of inputs and outputs
-are unfathomably large. Since each word in a sentence $x = (x_1,\
-...,\ x_T)$ of length $T$ receives one label, the complete sentence
-has $n^T$ possible labels $y = (y_1,\ ...,\ y_T)$ when the POS label
+are unfathomably large. Since each word in a sentence $x = x_1,\
+...,\ x_T$ of length $T$ receives one label, the complete sentence
+has $n^T$ possible labels $y = y_1,\ ...,\ y_T$ when the POS label
 set has size $n$. For a sentence of $40$ words and a label set of $50$
 labels, the number of possible label sequence is $40^{50} \approx
 10^{80}$ which according to Wolfram Alpha\footnote{{\tt{\url
@@ -267,19 +270,19 @@ $x$, by counting is therefore impossible.
 
 Because the POS labels of words in a sentence depend on each other,
 predicting the label $y_t$ for each position $t$ separately is not an
-optimal solution. Consider the sentence ``The police dog me constantly
-although I haven't done anything wrong!''. 
+optimal solution. 
 
-The labels of the adjacent words ``police'', ``dog'', ``me'' and
-``constantly'' help to disambiguate each other. A priori, we think
-that ``dog'' is a noun since the verb ``dog'' is quite rare. This
-hypothesis is supported by the preceding word ``police'' because
-``police dog'' is an established noun--noun collocation. However, the
-next word ``me'' can only be a pronoun, which brings this
-interpretation into question. The fourth word ``constantly'' is an
-adverb, which provides additional evidence against a noun
-interpretation of ``dog''. In total, the evidence points toward a verb
-interpretation for ``dog''.
+Consider the sentence ``The police dog me constantly although I
+haven't done anything wrong!''. The labels of the adjacent words
+``police'', ``dog'', ``me'' and ``constantly'' help to disambiguate
+each other. A priori, we think that ``dog'' is a noun since the verb
+``dog'' is quite rare. This hypothesis is supported by the preceding
+word ``police'' because ``police dog'' is an established noun--noun
+collocation. However, the next word ``me'' can only be a pronoun,
+which brings this interpretation into question. The fourth word
+``constantly'' is an adverb, which provides additional evidence
+against a noun interpretation of ``dog''. In total, the evidence
+points toward a verb interpretation for ``dog''.
 
 The disambiguation of the POS label for ``dog'' utilizes both so
 called {\it unstructured} and {\it structured} information. The
@@ -304,51 +307,298 @@ that are far apart cannot depend on each other -- in fact they
 frequently do. For example embedded clauses introduce long range
 dependencies inside sentences.
 
-It is said that machine learning is sophisticated counting of
-co-occurrences. This statement applies extremely well to POS
-tagging. Counting is an adequate approach to capturing correlations
-between the labels of words inside a small window (in the league of
-five words), because most adjacent words indeed do depend on each
-other is some way. However, sophisticated counting fails for larger
-windows, because the number of meaningful dependencies in large
-windows is negligible in comparison to the space of possibilities.
+Traditionally, morphological taggers have been classified into two
+categories: data driven and rule-based. Data driven taggers primarily
+utilize morphologically labeled training data \footnote{Some also use
+  unlabeled data.} for learning a {\it model} that represents the
+relationship between text and morphological labels. The model is
+typically based on very simple facts that can be extracted from
+labeled text. For example {\it the second word in the sentence is
+  ``dog'' and its label is ``noun+sg+nom''} and {\it the second word
+  has label ``noun+sg+nom'' and the third word has label
+  ``verb+pres+3sg''}. The model is based on counts of such features in
+training data and it is optimized to describe the relationship between
+text and labels as closely as possible. For an unlabeled sentence, it
+is then possible to find the label sequence which the model deems most
+likely and thus the model can be used for tagging.
 
-\section{Research into Morphological Tagging}
-\begin{itemize}
-\item POS tagging vs. Morphological tagging.
-\item Statistical vs. rule-based.
-\item Is it a reasonable division?
-\item Influential rule based approaches: \cite{Brill1992}
-  \cite{Karlsson1995}.
-\item First successful HMM statistical approaches: \cite{Church1988}
-  \cite{DeRose1988}.
-\item Problem: A generative tagger has to model the input
-  sentences. This forces the use of simple local features.
-\item Solutions: Either try to model the input using a more elaborate
-  model which does not work \cite{Ruokolainen2013}.
-\item Better local features using a discriminative
-  approach\cite{Ratnaparkhi1997}.
-\item Still a well devised HMM model can surpas \cite{Brants2000},
-  \cite{Halacsy2007}.
-\item \cite{Silfverberg2010} and \cite{Silfverberg2010} implement HMM
-  taggers as finite-state systems.
-\item Label bias \cite{Lafferty2001} and observation bias \cite{Klein2002}.
-\item Solution: Conditional random fields \cite{Lafferty2001}.
-\item Another Solution: Support Vector Machines \cite{Cortes1995},
-  \cite{Gimenez2004}.
-\item A simple solution: Averaged perceptron taggers \cite{Collins2002}.
-\item These can be seen as alternative estimators for a discriminative
-  HMM tagger.
-\item \cite{Ruokolainen2014} examines several different approaches to
-  parameter estimation.
-\item Applications to morphological tagging: Marmot using a cascaded
-  model \cite{Muller2013} and Morfette \cite{Chrupala2008}.
-\item Joint Lemmatization and tagging \cite{Muller2015}.
-\item Tagging can also be combined with morphological segmentation
-  \cite{MullerX}.
-\item \cite{Silfverberg2014} use sub-label features and
-  \cite{Silfverberg2015} combine them with a cascaded approach.
-\item \cite{Chrupala2008} and \cite{Silfverberg2015} adopt the same
-  approach to lemmatization although the particular features of the
-  lemmatizer differ.
-\end{itemize}
+In contrast to data driven systems, rule-based, or expert driven,
+taggers do not primarily rely on feature counts in training
+data. Instead they utilize information provided by domain experts
+(linguists in this case). This can be provided using some rule
+formalism. The grammar specified by linguists is compiled into
+instructions that are interpreted by a computer. 
+
+The division into data driven and expert driven systems is not clear
+cut. For example, data driven statistical tagger often employ a
+morphological analyzer which is typically a rule-based
+system. Rule-based systems can also utilize statistics to solve
+ambiguities which cannot be resolved solely grammatical
+information. As seen below, it is also possible to integrate a
+rule-based and expert based approach more deeply into a hybrid
+tagger. There are many ways to do this.
+
+The Brill tagger \citep{Brill1992} is one of the early successes in
+POS tagging. It is in fact a hybrid tagger. The tagger first labels
+data using a simple statistical model (a unigram model of the
+distribution of tags for each word form). It then applies rules either
+learned from data or specified by linguists to fix the errors of the
+initial tagging. Several layers of rules can be used. Each layer
+corrects errors of the previous layer. Although the Brill tagger is a
+fairly old system, it might still be quite competitive as shown by
+\cite{Horsmann2015} who compared a number of POS taggers for English
+and German on texts in various domains. According to their
+experiments, the Brill tagger was both the fastest and most accurate.
+
+One of the major successes of the rule-based paradigm is the
+Constraint Grammar formalism \citep{Karlsson1995}. The approach may
+still be produce the most accurate taggers for English
+(\cite{Voutilainen1995} cite an accuracy of 99.3\% on English). Direct
+comparison of tagging systems based on accuracies reported in
+publications is, however, difficult because they are trained on
+different data sets and use different morphological label
+inventories. The constraint grammar formalism uses finite-state
+disambiguation rules to disambiguate the set of morphological labels
+given by a morphological analyzer.
+
+Although, there are many successful and interesting rule-based and
+hybrid systems, my main focus is data driven morphological
+tagging. The first influential systems by \cite{Church1988} and
+\cite{DeRose1988} were based on Hidden Markov Models (HMM) which are
+presented in detail in Chapter \ref{chapter:hmm}. These early data
+driven systems achieved accuracy in excess of 95\% when tested on the
+Brown corpus \citep{Francis1964}. Later work by \cite{Brants2000} and
+\cite{Halacsy2007} refined the approach and achieved accuracies in the
+vicinity of $96.5\%$. \cite{Silfverberg2010} and
+\cite{Silfverberg2011} continue this work. They set up the tagger as a
+finite-state system and experiment with different structured models
+for the HMM tagger.
+
+HMM taggers are so called generative statistical models. They specify
+a probabilistic distribution $p(x,y)$ over sentences $x$ and label
+sequences $y$. In other words, the systems have to model sentences
+label sequences at the same time. This is very difficult to accomplish
+satisfactorily because language incorporates many kinds of
+dependencies between words in a sentences and the morphological labels
+depend on each the and the words in the sentence. Because these
+dependencies are very difficult to model, generative taggers usually
+make unfeasible assumptions of the input data. For example, that the
+probability of a word is determined solely based on its morphological
+label. These independence assumptions rule out a lot of useful
+information sources for part of speech tagging such as word
+collocations.
+
+In order to be able to use more sophisticated features to describe the
+relation between the input sentence and its morphological labels,
+\cite{Ratnaparkhi1997} used a discriminative classification model
+instead of a generative one. Whereas, a generative model gives a joint
+probability $p(x,y)$ for a sentence and label sequence, a
+discriminative model only gives the conditional probability $p(y|x)$
+of label sequence $y$ given sentence $x$. This means that the sentence
+$x$ no longer needs to be modeled. Therefore, more elaborate features
+can be used to describe the relation between sentences and
+morphological labels. The model still has the account for the internal
+structure of $y$ but because $y$ can be anchored much more closely to
+the input sentence, the accurate modeling of relations between the
+individual labels in $y$ are not as important information sources in a
+discriminative model\footnote{This is illustrated by the fact that an
+  unstructured discriminative model which does not model relations
+  between labels at all fares almost as well on tagging the Penn
+  Treebank as a structured model when the taggers use the same
+  unstructured features. According to experiments performed by the
+  author on the Penn Treebank the difference in accuracy can be as
+  small as 0.4\%-points. Dropping the structured features from a
+  typical HMM tagger reduces performance substantially more.}.
+
+The model used by \cite{Ratnaparkhi1997} was a structured model
+(Maximum Entropy Markov Model) but it was trained in an unstructured
+fashion (it is a so called locally normalized model). This causes some
+problems, most famously the so called {\it label bias problem} as
+explained by \cite{Lafferty2001}. Essentially, label bias happens
+because the model relies too much on label context. Another form of
+bias, namely observation bias investigated by \cite{Klein2002} may in
+fact be more influential for POS tagging and morphological tagging. In
+fact, \cite{Brants2000} showed that it is possible for a well
+constructed generative tagger to outperform a MEMM tagger, although
+direct comparison is difficult because the test and training sets in
+these works differ. Moreover, experiments conducted by
+\cite{Lafferty2001} on simulated data indicate that the performance of
+the MEMM is inferior to the HMM when using the same set of features.
+
+\cite{Lafferty2001} proposed Conditional Random Fields as a solution
+to the label bias problem. The CRF is trained in a structured manner
+(it is a so called globally normalized model) and does not suffer from
+label or observation bias. According to their experiments, the CRF
+model outperforms both the HMM and MEMM in classification on randomly
+generated data and POS tagging of English. Moreover, the CRF can
+employ a rich set of features like the MEMM which further improves its
+accuracy with regard to the HMM model.
+
+Another discriminative tagger was proposed by \cite{Collins2002}. The
+averaged perceptron tagger is a structured extension of the classical
+perceptron \cite{Rosenblatt1958}. The main advantage of the perceptron
+tagger compared to the CRF model is that it is computationally more
+efficient and also produces sparser models\footnote{Although,
+  different regularization methods can give sparse models also for the
+  CRF.}. Its training procedure is also amenable to a number of
+optimizations like beam search. These are explored in Chapter
+\ref{chapter:crf}. The main drawback is that, while the classification
+performance of the CRF and averaged perceptron tagger is approximately
+the same\footnote{For example experiments performed by
+  \cite{Nguyen2007} indicate that the classification performance of
+  the averaged perceptron algorithm can in fact be better than the
+  performance of the Conditional Random field.}, the averaged
+perceptron tagger is optimized only with regard to classification. It
+does not give a reliable distribution of alternative morphological
+tags which can sometimes be useful in downstream applications like
+syntactic parsers. Nevertheless, the averaged perceptron tagger and
+its extensions, like the margin infused relaxed algorithm (MIRA)
+\cite{Taskar2003} and the closely related structured Support Vector
+Machine (SVM) \citep{Tsochantaridis2005}, are extensively applied in
+sequence labeling tasks such as POS tagging.
+
+The CRF, averaged perceptron, SVM and other related classifiers can be
+seen as alternative estimators for hidden Markov models (a terminology
+used by for example \cite{Collins2002}) or linear classifiers. For
+example \cite{Ruokolainen2014} and \cite{Nguyen2007} explore different
+estimators for linear classifiers and compare them.
+
+While these models have been extensively investigate for POS tagging,
+the focus of this thesis is morphological tagging. Generative taggers
+such as the HMM have been applied to morphological tagging by for
+example \cite{Halacsy2007} and \cite{Silfverberg2011} but as in the
+case of English, generative models cannot compete with discriminative
+models with regard to accuracy.
+
+Morphological tagging using discriminative taggers has been
+investigated by \cite{Chrupala2009} who used a MEMM and
+\cite{Spoustova2009} who utilized an averaged perceptron
+tagger. However, these works do not adequately solve the problem of
+slow training times for morphological taggers in the presence of large
+label sets. \cite{Spoustova2009} use a morphological analyzer to limit
+label candidates during training. This is a plausible approach when a
+morphological analyzer is available and when its coverage is quite
+high. This, however, is not always the case. Moreover, as the
+experiments presented in Chapter \ref{chapter:finnpos} indicate, using
+only the candidates emitted by an analyzer during training degrades
+the classification performance.
+
+The structure present in large morphological label sets can be
+leveraged to improve tagging accuracy. For example, it is possible to
+estimate statistics for sub-labels, such as ``noun'', of complex
+labels ``noun+sg+nom''. This approach is explored by for example
+\cite{Spoustova2009} who extract linguistically motivated sub-label
+features. \cite{Silfverberg2015} further investigate this approach and
+show that general unstructured and structured sub-label features lead
+to substantial improvement in accuracy. Additional experiments are
+reported in Chapter \ref{capter:finnpos}.
+
+Recently, \cite{Muller2013} applied a cascaded variant of the CRF
+model to morphological tagging of several languages in order to both
+speed up training and combat data sparsity. \cite{Silfverberg2014} and
+\cite{Silfverberg2015} continue this line of research by setting up a
+cascade of a perceptron classifier and a generative classifier used
+for pruning label candidates. This combination delivers competitive
+results with the cascaded CRF approach as demonstrated by
+\cite{Silfverberg2015} while at the same time being faster to train.
+
+Morphological tagging includes the task of
+lemmatization. \cite{Chrupala2008} sets up this task as a
+classification task as explained in Chapter
+\ref{chapter:lemmatization} and \cite{Silfverberg2015} mostly follows
+this approach. \cite{Muller2015} explores joint tagging and
+lemmatization and shows that this improves both tagging and
+lemmatization results. Although, it would be very interesting to
+experiment with joint tagging and lemmatization, it remains future
+work for the author. 
+
+Data-driven classifiers can also be used for morphological
+disambiguation and, as the espeirments in Chapter
+\ref{chapter:finnpos} demonstrate, using a morphological analyzer can
+have a substantial impact on the accuracy of the tagger. There are two
+principal apporaches to data-driven morphological
+disambiguation. Firstly, the analyzer can simply be used to limit
+label candidates. For example, for English, the word ``dog'' could
+receive a verb label and a noun label but not a determiner label. The
+second approach is to use the morphological analyzer in feature
+extraction. In discriminative taggers, the labels and label sets given
+by the morphological analyzer can be directly used as features.
+
+This thesis will mainly be concerned with a data-driven supervised
+learning setting but semi-supervised systems and hybird systems that
+combine data-driven and linguist dirven methods have also been
+investigated. \cite{Spoustova2009} and \cite{Sogaard2011} apply
+self-training where a large amount of unlabeled text is first tagged
+and then used to train a tagger model in combination with hand
+annotated training data. This leads to significant improvements for
+English and Chzech. \cite{Spoustova2009} additionally uses a voting
+scheme where different taggers are combined for improved accuracy.
+
+\cite{Hulden2012} investigate various combinations of HMM models and
+constraint grammars for tagging. They show that a hybrid approach can
+lead to improved tagging accuracy and also reduced rule development
+time. A nearly identical setup was also explored by
+\cite{Orosz2013}. A very similar setup was also used by
+\cite{Spoustova2007} who examined combinations of hand-written rules
+(very similar to constraint grammar rules) and an HMM, perceptron
+tagger and a MEMM.
+
+While semi-supervised training and hybrid methods are very
+interesting, they remain future work for the author at the present
+time. It can be argued that semi-supervised training does not differ
+much between morphologically complex languages and for example
+English.
+
+%\begin{itemize}
+%\item POS tagging vs. Morphological tagging.
+%\item Statistical vs. rule-based.
+%\item Is it a reasonable division?
+%\item Influential rule based approaches: \cite{Brill1992}
+%  \cite{Karlsson1995}.
+%\item First successful HMM statistical approaches: \cite{Church1988}
+%  \cite{DeRose1988}.
+%\item Problem: A generative tagger has to model the input
+%  sentences. This forces the use of simple local features.
+%\item Solutions: Either try to model the input using a more elaborate
+%  model which does not work \cite{Ruokolainen2013}.
+%\item Better local features using a discriminative
+%  approach\cite{Ratnaparkhi1997}.
+%\item Still a well devised HMM model can surpass \cite{Brants2000},
+%  \cite{Halacsy2007}.
+%\item \cite{Silfverberg2010} and \cite{Silfverberg2010} implement HMM
+%  taggers as finite-state systems.
+%\item Label bias \cite{Lafferty2001} and observation bias \cite{Klein2002}.
+%\item Solution: Conditional random fields \cite{Lafferty2001}.
+%\item Another Solution: Support Vector Machines \cite{Cortes1995},
+%  \cite{Gimenez2004}.
+%\item A simple solution: Averaged perceptron taggers \cite{Collins2002}.
+%\item These can be seen as alternative estimators for a discriminative
+%  HMM tagger.
+%\item \cite{Ruokolainen2014} examines several different approaches to
+%  parameter estimation.
+%\item Applications to morphological tagging: Marmot using a cascaded
+%  model \cite{Muller2013} and Morfette \cite{Chrupala2008}.
+%\item Joint Lemmatization and tagging \cite{Muller2015}.
+%\item Tagging can also be combined with morphological segmentation
+%  \cite{MullerX}.
+%\item Using a morphological analyzer in different ways. 
+%\item Morphological analyzer can be used as a tag dictionary during
+%  decoding.
+%\item \cite{Spoustova2009} use the morphological analyzer to restrict
+ % label candidates during training but as experiments in Chapter
+%  \ref{chapter:finnpos} show, this leads to reduced performance
+%  because of too heavy pruning.
+%\item \cite{Silfverberg2014} use sub-label features and
+%  \cite{Silfverberg2015} combine them with a cascaded approach.
+%\item \cite{Chrupala2008} and \cite{Silfverberg2015} adopt the same
+%  approach to lemmatization although the particular features of the
+%  lemmatizer differ.
+%\item A hybrid approach of rules and statistics can also be used
+%  \citep{Spoustova2007,Hulden2012,Orosz2013}
+%\item Further improvement could gained by semi-supervised techniques
+%  such as self-training \cite{Sogaard2011,Spoustova2009} and using
+%  voting \cite{Spoustova2009}.
+%\item This thesis will only examine the supervised learning setting
+%  because voting and self-training do not really differ much between
+%  English and a morphologically complex languages such as Finnish.
+%\end{itemize}

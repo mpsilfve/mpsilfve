@@ -1,5 +1,5 @@
 \chapter{Conditional Random Fields}
-
+\label{chapter:crf}
 \section{Discriminative modeling}
 
 As seen in Chapter \ref{chapter:hmm}, the HMM POS tagger can be viewed
@@ -754,7 +754,12 @@ example congruence in case and number can be modeled separately and
 independently from other inflectional and derivational information.
 
 Restricted form of sub-label features have been utilized by for
-example \cite{Muller2013} and \cite{Smith2005}.
+example \cite{Muller2013}, \cite{Smith2005}. \cite{Spoustova2009} also
+use a linguistically motivated selection of unstructured and
+structured sub-labels (at least for main part-of-speech and case of
+nominals) for tagging Czech, however, it is difficult to establish
+exactly what kind of features they use because this is not documented
+in a detailed way in \cite{Spoustatova2009}.
  
 \cite{Muller2013} uses sub-labels exclusively for unstructured
 features. While sub-labels seem to be most beneficial in combination
@@ -762,7 +767,7 @@ with unstructured features in a morphological tagging setting where a
 morphological analyzer is not utilized, this is not the case in a
 morphological disambiguation setting as the experiemtns in Chapter
 \ref{chapter:finnpos} indicate. When using a morphological analyzer,
-sub-labels result in the greates improvement when combined with
+sub-labels result in the greatest improvement when combined with
 structured features.
 
 \cite{Smith2015} utilize structured sub-labels, however, only in a
@@ -772,7 +777,7 @@ neighoring words. Their system cannot model cross category
 dependencies such as dependence between a verb and the case of its
 object.
 
-However, \cite{Silfvererg2014} extends this approach to fully take
+\cite{Silfvererg2014} extends this approach to fully take
 into account structured features. As the experiments in Chapter
 \ref{chapter:finnpos}, structured sub-labels have a substantial impact
 on tagging accuracy both in morphological tagging setting without a
