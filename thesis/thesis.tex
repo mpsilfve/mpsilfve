@@ -21,6 +21,7 @@
 \usepackage{fancyvrb}
 \usepackage{pdfpages}
 \usepackage{csquotes}
+\usepackage{enumitem}
 %\setcounter{tocdepth}{1}
 %\setcounter{chapter}{1}
 \captionsetup{compatibility=false}
@@ -113,13 +114,17 @@ Ancient Proverb
 \mainmatter
 
 \tableofcontents
+
+\include{contrib}
+
 %\listoffigures
 %\listoftables
 %\listof{algorithm}{List of Algorithms}
 %\addcontentsline{toc}{chapter}{List of Algorithms}
 
 \chapter*{Notation}
-\addcontentsline{toc}{chapter}{Acronyms}
+\addcontentsline{toc}{chapter}{Notation}
+\markboth{}{}
 \begin{tabular*}{\columnwidth}{@{\extracolsep{\stretch{1}}}*{2}{l}@{}}
 \multicolumn{2}{c}{{\bf Acronyms}}\\
 CRF  & Conditional Random Field                          \\
@@ -136,7 +141,6 @@ $\R^m_n$ & The space of $m \times n$ real valued matrices.\\
 $x[1:t]$ & Prefix $(x_1,\ ...,\ x_t)$ of vector or sequence $x = (x_1,\ ...,\ x_T)$.\\
 $X^t$    & The cartesian product of $t$ copies of the set $X$.\\
 $M^\top$ & Transpose of matrix $M$.\\
-$M^+$    & The More-Pennrose pseudoinverse of matrix $M$.\\ 
 $f(x\parcond\theta)$ & Function $f$, paramerized by vector $\theta$, applied to $x$.\\
 $x \mapsto f(x),\ x \overset{f}{\ \mapsto\ } f(x)$ & A mapping of values $x$ to expressions $f(x)$.\\
 $\|v\|$ & Norm of vector $v$.\\
@@ -155,7 +159,7 @@ $\hat{p}$ & Estimate of probability $p$.
 
 \include{fsm}
 
-\include{hmm2}
+%\include{hmm2}
 
 \include{crf}
 
@@ -168,13 +172,7 @@ $\hat{p}$ & Estimate of probability $p$.
 \bibliographystyle{apalike}
 %\addcontentsline{toc}{chapter}{References}
 \bibliography{mythesis}
-
-\addcontentsline{toc}{chapter}{Contributions}
-\include{contrib}
-
-\addcontentsline{toc}{chapter}{Articles}
-\chapter*{Articles}
-\pagestyle{empty}
+\addcontentsline{toc}{chapter}{Publications}
 \includepdfset{pagecommand={}}
 %\includepdf[scale=1,pages=-]{Silfverberg_Linden_2010.pdf}
 %\includepdf[scale=1,pages=-]{Silfverberg_Linden_2011.pdf}

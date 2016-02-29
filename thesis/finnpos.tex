@@ -1,10 +1,28 @@
 \chapter{Experiments}
 \label{chapter:finnpos}
-FinnPos \citep{Silfverberg2015}.  is a discriminative morphological
+
+FinnPos presented in Publication \ref{pub:5}.  is a discriminative morphological
 tagger based on the CRF model and averaged perceptron estimation. It
 is especially geared toward morphologically rich languages and
 incorporates features which make it especially suited for use
 with these languages
+
+\section{Data Sets}
+FTB
+
+TDT
+
+Often in particular sub-fields of natural language processing, there
+exist established data sets with established splits into training,
+development and test data. For example, most work on English POS
+tagging reports results on the Penn Treebank corpus \citep{Marcus1993}
+using the data splits introduced by \cite{Collins2002}. This is sound
+because it guarantees that results reported in different papers are
+comparable. For the data sets used in this thesis, Finn TreeBank
+\citep{Voutilainen2011} and Turku Dependency Treebank
+\citep{Haverinen2013}, there are no established splits. 
+
+80-10-10 splits.
 
 \begin{itemize}
 \item Structured and unstructured sub label dependencies (see Section \ref{}) are used to improve accuracy with large structured label sets.
@@ -14,7 +32,7 @@ with these languages
 \end{itemize}
 
 This section is intended to augment the treatment
-\cite{Silfverberg2015}. It presents several experiments on
+in Publication \ref{pub:5}. It presents several experiments on
 morphological tagging using the FinnPos tagger toolkit which were
 omitted from the paper in favor of clarity.
 
@@ -22,7 +40,7 @@ Because FinnPos incorporates a variety of optimizations, governed by
 different hyper-parameters, both to accuracy and speed, it is
 impossible to conduct exhaustive experiments (a grid search would
 simply include too many experiments). Instead I have chosen the
-settings presented in \cite{Silfverberg2015} as vantage point and
+settings presented in Publication \ref{pub:6} as vantage point and
 examined the impact of changing one hyper-parameter at a time. These
 settings were chosen because they give state-of-the-art accuracy as
 presented in the paper. 
@@ -44,7 +62,7 @@ analyses. The analyses that have been attested in the training corpus
 should be preferred when possible.
 
 The features for the tagger and lemmatizer follow
-\cite{Silfverberg2015}.
+Publication \ref{pub:6}.
 
 Let $x = (x_1 ... x_T)$ be a sentence, $y = (y_1 ... y_T)$ a label
 sequence and $t$ and index. Then the unstructured features templates
@@ -92,7 +110,7 @@ was not feasible to run experiments without label pruning during
 training.
 
 The results of the experiments presented here differ minutely from the
-results presented in \cite{Silfverberg2015} due to added features
+results presented in Publication \ref{pub:6} due to added features
 (lower cased word form and word length) and some bug fixes related to
 the lemmatizer.
 
@@ -316,7 +334,7 @@ both data sets.
 In this section I examine the impact of sub-label order order on
 tagging accuracy, training time and decoding time both using a
 morphological analyzer and without a morphological analyzer. The
-results in this section differ slightly from \cite{Silfverberg2015}
+results in this section differ slightly from Publication \ref{pub:6}
 because of minor bug fixes and improvements to the feature set of the
 tagger.
 

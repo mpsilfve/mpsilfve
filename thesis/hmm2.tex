@@ -1,10 +1,10 @@
 \chapter{Generative Taggers using Finite-State Transducers}
 
-This section presents a finite-state implementation of granarative taggers such as HMMs using finite-state algebra. This exapnds on \cite{Silfverberg2010} and \cite{Silfverberg2011}.
+This section presents a finite-state implementation of granarative taggers such as HMMs using finite-state algebra. This exapnds on Publications \ref{pub:1} and \ref{pub:2}.
 
 \section{Enriching the emission and transition models}
 \begin{itemize}
-\item \cite{Halacsy2007} and \cite{Silfverberg2011}.
+\item \cite{Halacsy2007} and Publication \ref{pub:2}.
 \end{itemize}
 
 \section{Problems}
@@ -47,7 +47,7 @@ finite-state transducer but the transition model is made up from a
 number of component models. All the models are combined using a
 run-time variant of composition and intersection.
 
-\subsection{Interpreting HMMs as Finite-State Machines}
+\paragraph{Interpreting HMMs as Finite-State Machines}
 Given a sequence of observations $x = (x_1, ..., x_n)$ and states $y = (y_1, ..., y_n)$, the joined probability for $x$ and $y$ given by an HMM with parameters $\theta$ is 
 $$p(x,y\parcond\theta) = p(y\parcond\theta)\cdot p(x \cond y\parcond\theta)= \Bigg(\iota(y_1) \cdot \prod_{t = 1}^{T} \tau_{y_t}(y_{t + 1})\Bigg) \cdot \prod_{t = 1}^T \varepsilon_{y_t}(x_t)$$
 where $\iota$, $\tau$ and $\epsilon$ are initial, transition and emission distributions respectively.
@@ -66,8 +66,11 @@ that this is infeasible. For example when using a second order model
 with a morphological label set of 1000 labels the resulting transducer
 has around one billion states.
 
-\subsection{The Emission Model}
+\paragraph{The Emission Model}
+foo
 
-\subsection{The Transition Model}
+\paragraph{The Transition Model}
+bar
 
-\subsection{Weighted Intersecting Composition}
+\paragraph{Weighted Intersecting Composition}
+baz

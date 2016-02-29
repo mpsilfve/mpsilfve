@@ -16,8 +16,8 @@ AN INTRO
 I will illustrate Hidden Markov Models using an example. Imagine a
 person called Jill who is hospitalized and occupies a windowless
 room. The only way for her to know what is happening in the outside
-world is to observe a nurse who passes her room daily\footnote{To make things simple, imagine the nurse never gets a day
-  off.}.
+world is to observe a nurse who passes her room daily.\footnote{To make things simple, imagine the nurse never gets a day
+  off.}
 
 Suppose, Jill is interested in weather phenomena and she decides to
 pass time by guessing if it is raining outside. She bases her guesses
@@ -178,9 +178,9 @@ probability of transitioning to the final state $f$ in example
 \ref{hmm-ex-2} is 0 regardless of the current state. Hence, the
 probability of any single sequence of states and emissions is
 0. Still, the probability of an initial segment of a state sequence
-may still be non-zero\footnote{The probability of an initial segment
+may still be non-zero.\footnote{The probability of an initial segment
   up to position $t$ can be computed using the forward algorithm,
-  which is presented in Section \ref{sec:forward}.}.% For example, the
+  which is presented in Section \ref{sec:forward}.}% For example, the
 %probability that the first three states are (RAIN, RAIN, CLEAR) is X.
 
 \begin{figure}[!htb]
@@ -358,7 +358,7 @@ algorithm are closely related.
 \end{center}
 \end{figure}
 
-\subsection{The Forward Algorithm}
+\paragraph{The Forward Algorithm}
 \label{sec:forward}
 Equations \eqref{hmm-map} and \eqref{hmm-mm} reveal, that both MAP
 and MM inference require knowledge of the entire observation $x$. In
@@ -547,9 +547,8 @@ def forward(x, i_prob, e_prob, tr_prob):
 \end{center}
 \end{algorithm}
 
-\subsection{The Viterbi Algorithm}
+\paragraph{The Viterbi Algorithm}
 \label{hmm-viterbi}
-
 Whereas the forward algorithm incrementally computes the marginal
 probability of an observation $x$, the Viterbi algorithm incrementally
 computes the MAP assignment for observation $x$.
@@ -583,7 +582,7 @@ p(x,\ y_{t+1,z'}\parcond \theta) & = & p(x,\ y_{t+1,z'}[1:t]\parcond \theta) \cd
                                  & < & p(x,\ y_{t,z}\parcond \theta) \cdot \tau_z(z')\cdot\varepsilon_{z'}(x_{t+1})\\
                                  & = & p(x, y'\parcond\theta)
 \end{eqnarray*}
-This contradicts the definition in Equation \eqref{map_prefix}\footnote{As long as we suppose that there is exactly one MAP prefix.}.
+This contradicts the definition in Equation \eqref{map_prefix}.\footnote{As long as we suppose that there is exactly one MAP prefix.}
 
 We now get Equation \eqref{map-rec}, which gives us a recursion.
 \begin{equation}
@@ -597,8 +596,7 @@ y_{t+1, z} = \argmax_{z \in Y}\left\{
 \label{map-rec}
 \end{equation}
 
-\subsection{Beam Search}
-
+\paragraph{Beam Search}
 As seen in the previous section, the complexity of the Viterbi
 algorithm depends on the square of the size of the hidden state
 set. This can be problematic when the set of hidden states is large,
@@ -634,7 +632,7 @@ also be filtered. The simplest method in to use a so called tag
 dictionary. These techniques are described in Section
 \ref{sec:hmm-label-dict}.
 
-\subsection{The Forward-Backward Algorithm}
+\paragraph{The Forward-Backward Algorithm}
 \label{hmm-fw-bw}
 The Viterbi algorithm computes the MAP assignment for the hidden
 states efficiently. For efficiently computing the marginal probability
@@ -675,8 +673,7 @@ b_{t, z} = \left\{
 \label{bw-rec}
 \end{equation}
 
-\subsection{Sparse Forward-Backward Algorithms}
-
+\paragraph{Sparse Forward-Backward Algorithms}
 FIXME \citep{Pal2006}.
 
 \section{Estimation}
@@ -692,8 +689,8 @@ available data, but also on the task at hand. The classical setting
 presented by \cite{Rabiner1989} is nearly completely unsupervised: the
 HMM is trained exclusively from observations. Some supervision is
 nevertheless usually required to determine the number of hidden
-states\footnote{Although methods for determining the number of states
-  from the data exist \citep{foo}.}. Additionally priors on the
+states.\footnote{Although methods for determining the number of states
+  from the data exist \citep{foo}.} Additionally priors on the
 emission and transitions distributions may be required to avoid
 undesirably even distributions
 \citep{Cutting1992,Johnson2007}.
@@ -725,15 +722,14 @@ some other class. Similarly, one can count how many often a verb label
 emits ``dog'' and how often the noun label emits ``dog''. 
 
 Even in large training corpora, ``dog'' might very well never receive
-a verb label\footnote{There are ten occurrences of ``dog'' in the Penn
-  Treebank and all of them are analyzed as nouns.}. Nevertheless,
+a verb label.\footnote{There are ten occurrences of ``dog'' in the Penn
+  Treebank and all of them are analyzed as nouns.} Nevertheless,
 ``dog'' can be a verb, for example in the sentence ``Fans may dog
 Muschamp, but one thing's for certain: he did things the right way off
 the field.''. To avoid this kind of problems caused by data sparsity,
 both emission and transition counts need to be smoothed.
 
-\subsection{Counting for Supervised ML Estimation}
-
+\paragraph{Counting for Supervised ML Estimation}
 When HMMs are used in linguistic labeling tasks, such as
 part-of-speech tagging, they are usually estimated in a supervised
 manner. Each label is thought to represent a hidden variable, and the
@@ -850,15 +846,14 @@ longer suffixes more.
 
 For morphologically complex languages, the smoothing scheme employed
 by \cite{Brants2000} may be inferior to a longest suffix approach
-utilized by \cite{Silfverberg2011} and \cite{Linden2009}. This may
+utilized in Publication \ref{pub:2} and \cite{Linden2009}. This may
 happen because productive compounding. For languages with writing
 systems that radically differ from English, such as Mandarin Chinese,
 suffix based methods work poorly. Other methods, such as basing the
 guess on all symbols in the word, may work better. \cite{Huang2007}
 smooth symbol emission probabilities using geometric mean.
  
-\subsection{The EM algorithm for Unsupervised ML Estimation}
-
+\paragraph{The EM algorithm for Unsupervised ML Estimation}
 The Baum-Welch, or Expectation Maximization, algorithm for HMMs is an
 iterative hill-climbing algorithm, that can be used to find locally
 optimal parameters for an HMM given a number of unlabeled independent
@@ -932,7 +927,7 @@ HMM formulation over-come the data sparseness problem and achieve
 gains over the more commonly used trigram tagger. However, they fail
 to describe the smoothing scheme used, which is crucial. This defect
 is partly remedied by the fact that the system is open-source.  One of
-the chief contributions of \cite{Silfverberg2011} was to investigate
+the chief contributions of Publication \ref{pub:2} was to investigate
 the effect of different ways of estimating the emission parameters in
 a generative trigram tagger paying attention to smoothing.
  

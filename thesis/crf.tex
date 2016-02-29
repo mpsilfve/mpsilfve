@@ -76,7 +76,7 @@ trade-off \citep{Geman1992}.
 \section{Maximum Entropy Modeling}
 \label{sec:me}
 
-\subsection{Example}
+\paragraph{Example}
 \label{sec:maxent-ex}
 
 \section{Basics}
@@ -299,7 +299,7 @@ sufficient to maximize the numerator of $p(y \cond x\parcond\theta)$.
 
 To avoid underflow when using finite precision real numbers (such as
 floating-point numbers), the maximization is usually rephrased as the
-minimization of a cost-function in Equation
+minimization of a loss function in Equation
 \ref{eq:logistic,inference,log}
 
 \begin{equation}y_{max} = \argmin_{y\in Y} \theta^\top \phi(x,y)\label{eq:logistic,inference,log}\end{equation}
@@ -314,10 +314,10 @@ worst-case complexity of classification is dependent on the size of
 the label set $Y$ and the number of feature templates $f \in F$, that
 is the complexity is $\O(|Y||F|)$.
 
-\subsection{Estimation}
+\paragraph{Estimation}
 The Logistic Regression Model is log-linear as demonstrated by
 Equation \ref{eq:logistic,log}, which represents the model using a
-cost function $\mathcal{L}$.
+loss function $\mathcal{L}$.
 
 \begin{equation}
 \mathcal{L}(\theta\parcond\mathcal{D}) = -\log p(y\cond x\parcond \theta) = log(\Z(x;\theta)) - \theta^\top F_y(x)\label{eq:logistic,log}
@@ -327,7 +327,7 @@ Here $Z(x;\theta) = \sum_{z \in Y}\exp(\theta^\top F_{z}(x))$ is the partition f
 Given labeled training data $\data = \{(x_1,\ y_1),\ ...,\
 (x_n,\ y_n)\}$, there exist several options for estimating the
 parameters $\theta$. The most commonly used is the maximum likelihood,
-or equivalently minimum cost, estimation. The minimum cost estimate
+or equivalently minimum loss, estimation. The minimum loss estimate
 for the parameters $\theta$ using $\data$ is given by equation
 \eqref{eq:logistic,ml}.
 
@@ -359,10 +359,10 @@ be used for approximating the maximum.
 
 Gradient based methods such as SGD (leading to online estimation) and
 L-BFGS (leading to batch estimatiom) require information about the
-partial derivatives of the cost function. Therefore the partial
+partial derivatives of the loss function. Therefore the partial
 derivatives $\partial\mathcal{L}(\theta\parcond
 \mathcal{D})/\partial\i$ need to be computed. Examining Equation
-\ref{eq:logistic,ml}, we can see that the cost consists of two terms
+\ref{eq:logistic,ml}, we can see that the loss consists of two terms
 $f(\theta\parcond \mathcal{D}) = \log(\Z(\mathcal{D}\parcond \theta))$
 and $g(\theta\parcond\mathcal{D}) = \sum_{(x,y) \in
   \mathcal{D}}\theta^\top F_y(x)$. The partial derivative of $g$
@@ -374,9 +374,9 @@ This is the {\it expected count} of feature $i$ which is the
 activation of feature $i$ in the data set $x_1, ...,x_n$ predicted by
 the model given all possible label assignments.
 
-Using the partial derivatives of the functions $f$ and $g$, we see that the gradient of the cost function $\mathcal{L}$ is defined by
-\begin{equation}\nabla L[i] = \sum_{(x,y) \in \mathcal{D}} \Big( \sum_{y' \in \mathcal{Y}}F_y(x)[i] p(y'|x\parcond\theta) \Big) - F_y(x)[i] \label{eq:reg-cost}\end{equation}
-Equation \ref{eq:reg-cost} shows that the cost is zero when the
+Using the partial derivatives of the functions $f$ and $g$, we see that the gradient of the loss function $\mathcal{L}$ is defined by
+\begin{equation}\nabla L[i] = \sum_{(x,y) \in \mathcal{D}} \Big( \sum_{y' \in \mathcal{Y}}F_y(x)[i] p(y'|x\parcond\theta) \Big) - F_y(x)[i] \label{eq:reg-loss}\end{equation}
+Equation \ref{eq:reg-loss} shows that the loss is zero when the
 expected and observed counts for each feature agree. The properties
 for the logistic regression model discussed above guarantee that this
 there is at most one $\theta_{ML}$ like this and, when it exists,
@@ -472,7 +472,7 @@ def perceptron(data, fextractor, theta, label_set):
 
 The perceptron adjustment does not guarantee that example $x$ is
 correctly classified. However, it does guarantee that the score
-difference between the gold class and erroneous class decreases\footnote{There are refiniements of the perceptron algorithm, such as the passive-aggressive learning algorithm, which aim to make fewer updates by updating more aggressively when the difference in scores between the erroneous class and gold class is large \citep{Crammer2006}}. Given
+difference between the gold class and erroneous class decreases.\footnote{There are refiniements of the perceptron algorithm, such as the passive-aggressive learning algorithm, which aim to make fewer updates by updating more aggressively when the difference in scores between the erroneous class and gold class is large \citep{Crammer2006}} Given
 training data consisting of just one example, it is easy to see that
 the perceptron algorithm will eventually classify the example
 correctly. If there are more examples, it may however happen that a
@@ -520,9 +520,9 @@ achieve almost the same effect.
 \section{CRF -- A Structured Logistic Classifier}
 
 This Section presents Linear Chain Conditional Random Fields
-(CRF)\footnote{More general CRF models can be formulated but these
+(CRF).\footnote{More general CRF models can be formulated but these
   mostly fall beyond the scope of this thesis. See \citep{Sutton2012}
-  for further details.}. Just as the HMM is a structured equivalent of
+  for further details.} Just as the HMM is a structured equivalent of
 the NB classifier, the CRF is the structured equivalent of the
 LRM. Consequently, many of the algorithms required to build a CRF
 tagger are similar to the algorithms required to build an HMM
@@ -534,7 +534,7 @@ classifier is that the CRF classifier typically employs a much larger
 set of features. This increases the size of the model. It also makes
 the discriminative tagger slow in comparison to the generative
 tagger. The slowdown is demonstrated by the experiments in
-\cite{Silfverberg2015}. However, the accuracy of the discriminative
+Publication \ref{pub:6}. However, the accuracy of the discriminative
 model is significantly superior to the generative HMM tagger.
 
 Intuitively, the CRF model resembles a sequence of LR classifiers
@@ -563,10 +563,10 @@ normalized for {\it the entire sentence}, not in each position. A
 similar model, where normalization happens in each position is called
 the Maximum Entropy Markov Model (MEMM). It has been shown to give
 inferior performance in POS tagging of English
-\citep{Lafferty2001}\footnote{The inferior performance of the MEMM has
+\citep{Lafferty2001}.\footnote{The inferior performance of the MEMM has
   been thought to be a result of the so called label bias problem
   \citep{Lafferty2001} although {\it observation} bias may be more
-  influential in POS tagging \citep{Klein2002}.}.
+  influential in POS tagging \citep{Klein2002}.}
 
 \paragraph{Inference} Tagging of a sentence using the CRF model is
 very similar to HMM tagging. The major difference is that there are
@@ -610,7 +610,7 @@ Section \ref{sec:prec-tagger} and taggers trained using the averaged
 perceptron tagger are often called perceptron taggers (see for example
 \cite{Collins2002}). Other examples mentioned by \cite{Sutton2012} are
 the pseudlikelihood \cite{Besag1975} and piecewise pseudolikelihood estimators
-\cite{Sutton2007}. \cite{Ruokolainen2014} investigate a
+\cite{Sutton2007}. Publication \ref{pub:4} investigates a
 pseudolikelihood inspired variant of the perceptron estimator.
 
 Given a training example $(x,y) \in \mathcal{D}$ where $x = x_1, ..., x_T$ and $y = y_1, ..., y_T$, the pseudolikelihood of $y$ given $x$ is given by equation \ref{eq:pl}
@@ -648,7 +648,7 @@ vector valued feature extraction function for label $y$.
 
 \paragraph{Inference} The Perceptron tagger uses the Viterbi algorithm
 for exact inference. Beam search can be used for faster approximate
-inference together with a label dictionary \citep{Silfverberg2015}.
+inference together with a label dictionary as shown in Publication \ref{pub:6}
 
 \paragraph{Estimation}Whereas, CRF estimation requires the
 forward-backward algorithm, perceptron estimation only requires the
@@ -686,15 +686,14 @@ performed for $y_{sys}^i$ and $y_{gold}^i$. The choice of $i$ depends
 on the violation fixing method. For example, the last $i$ which
 exhibits a violation can be used.
 
-In the experiments presented in \cite{Silfverberg2015}, violation
+In the experiments presented in Publication \ref{pub:6}, violation
 fixing did not result in consistent statistically significant
 improvements. It may be that it is more influential in parsing than
 POS tagging or morphological tagging.
 
 \paragraph{Label guessing} As in the case of the CRF tagger, a
-cascaded model can be used to shorten training time
-\citep{Silfverberg2015}. Instead of a cascade of discriminative
-classifiers, used in \citep{Muller2013}, \cite{Silfverberg2015} use a
+cascaded model can be used to shorten training time as shown in Publication \ref{pub:6}. Instead of a cascade of discriminative
+classifiers, used in \citep{Muller2013}, the system presented in Publication \ref{pub:6} uses a
 combination of a generative label guesser of the type presented in
 Section \ref{sec:hmm-counting}. The number of guesses can be
 determined either beased on a probability mass threshold ot using a
@@ -777,7 +776,7 @@ neighoring words. Their system cannot model cross category
 dependencies such as dependence between a verb and the case of its
 object.
 
-\cite{Silfvererg2014} extends this approach to fully take
+Publication \ref{pub:5} extends this approach to fully take
 into account structured features. As the experiments in Chapter
 \ref{chapter:finnpos}, structured sub-labels have a substantial impact
 on tagging accuracy both in morphological tagging setting without a
