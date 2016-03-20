@@ -2,43 +2,48 @@
 \label{chapter:crf}
 \section{Discriminative modeling}
 
-As seen in Chapter \ref{chapter:hmm}, the HMM POS tagger can be viewed
-as a state machine which alternates between sampling words from state
-specific observation distributions and sampling morphological labels
-from state specific transition distributions. Each emission word and each
-morphological label is conditioned {\it solely} on the current
-morphological label. These independence assumptions are harsh. For example
-collocations cannot be adequately modeled, because the model does not
-include direct information about neighboring words in a sentence.
+As seen in Chapter \ref{chapter:hmm}, a first order HMM POS tagger can
+be viewed as a process which alternates between sampling a word from a
+label specific observation distribution and sampling the next
+morphological label from a label specific transition distribution. The
+emitted word and the next morphological label are conditioned {\it
+  solely} on the current morphological label. These independence
+assumptions are harsh. For example, collocations cannot be adequately
+modeled because the model does not include direct information about
+word sequences.
 
-Although information about word sequences and orthography is quite
-useful in morphological labeling, it is often difficult to incorporate
+Although information about collocations and orthography is quite
+useful in morphological tagging, it is often difficult to incorporate
 such information in a generative model. As \cite{Sutton2012} note, two
-principal approaches could, however, be attempted:
+principal approaches could be attempted:
 \begin{enumerate}
 \item Extending the emission model presented in Chapter
-  \ref{chapter:hmm} to incorporate dependencies between words and
-  orthographic features.\label{ap:1}
+  \ref{chapter:hmm} to incorporate additional sources of
+  information.\label{ap:1}
 \item Replacing the usual emission model with a Naive
   Bayes' model which in theory can handle arbitrary
-  features (although overlapping features cause ).\label{ap:2}
+  features.\label{ap:2}
 \end{enumerate}
 
 Approach \ref{ap:1} is difficult in a fully generative setting because the
 emission model needs to account for the complex dependencies that
-exist between sentence contexts and orthography. There simply does not
-seem to exist a straightforward way of modeling the dependencies.
+exist between sentence level context and orthography. There simply does not
+seem to exist a straightforward way of modeling the dependencies.\footnote{Although recent development in deep learning might make this approach viable.}
 
-In a domain closely related to morphological labeling, namely
-biomedical entity extraction,\cite{Ruokolainen2013} show that approach
-\ref{ap:2} also fails. In fact their experiments indicate that adding richer
-context modeling such as adjacent words may worsen the performance of
-a tagger with a Naive Bayes emission model. One reason for this may be
-that overlapping information sources required in a rich emission model
-tend to cause the Naive Bayes model to give overly confident
-probability estimates \citep{Sutton2012}. Combining the probabilities
-given by the emission model with the transition model can therefore be
-problematic.
+Approach \ref{ap:2}, that is making the naive Bayes assumption,
+corresponds to disregarding the dependencies that exist between
+orthography, word collocations and other sources of contextual
+information. In the domain of named entity extraction, which is
+closely related to morphological tagging, \cite{Ruokolainen2013} show
+that approach \ref{ap:2} also fails. In fact the experiments in the
+paper indicate that adding richer context modeling such as adjacent
+words may worsen the performance of a tagger with a Naive Bayes
+emission model. One reason for this may be that the richer sources of
+information are often correlated and this violates the independence
+assumption of the Naive Bayes model. This can cause it to give overly
+confident probability estimates \citep{Sutton2012}. When the emission
+probabilities are over confident, and thus biased, combining them with
+the transition model can be problematic.
 
 In contrast to generative sequence models, discriminative sequence
 models such as Maximum Entropy Markov Models \citep{Ratnaparkhi1998}
@@ -46,78 +51,82 @@ and Conditional Random Fields \citep{Lafferty2001} can incorporate
 overlapping sources of information. They model the conditional
 distribution of label sequences $p(y\cond x)$ directly instead of
 modeling the joint distribution $p(x,\ y)$. Therefore, they do not
-need to model the distribution of sentences at all. 
+need to model dependencies between words and orthographic features.
 
 Discriminative models assign probabilities $p(y\cond x)$ for label
-sequences $y = ({\rm DT},\ {\rm NN},\ {\rm VBZ},\ {\rm .})$ and word sequences $x = ({\rm The},\ {\rm dog},\ {\rm eats},\ {\rm .})$ by extracting local features from
-the input sentence and label sequence. Examples of local features
-include {\it ($x_1$ is ``dog'' and $y_1$ is ``NN'')} and {\it ($y_{0}$ is ``DT'' and
-  $y_1$ is ``NN'')}. Each feature is associated with a parameter value and the
+sequences $y = ({\rm DT},\ {\rm NN},\ {\rm VBZ},\ {\rm .})$ and word sequences $x = ({\rm The},\ {\rm dog},\ {\rm eats},\ {\rm .})$ by extracting {\it features} from
+the input sentence and label sequence. Examples of features
+include {\bf the current word is ``dog'' and its label is NN} and {\bf the previous label is DT and
+  the current label is NN}. Each feature is associated with a parameter value and the
 parameter values are combined to give the conditional likelihood of
 the entire label sequence. Naturally, the label sequence which
 maximizes the conditional likelihood given sentence $x$ is the label
 sequence returned by the discriminative POS tagger.
 
 In generative models, emissions and transitions are independent. Both
-are determined exclusively based on the current label. Contrastingly,
-in discriminative models, there are no emissions or
-transitions. Instead, it is customary to speak about unstructured
-features relating exclusively to the input sentence, and structured
-features, which incorporate information about the label
+are determined exclusively based on the current label. In contrast,
+there are no emissions or transitions in a discriminative
+model. Instead, it is customary to speak about unstructured features
+which relate the label in one position to the input sentence, and
+structured features, which incorporate information about the label
 sequence. Simplifying a bit, discriminative models make no
 independence assumptions among features relating to a single position
 in the sentence. This allows for improved fit to training data but
 parameter estimation becomes more complex as we shall soon
 see. Moreover, discriminative models are more prone to
-over-fitting. This is of course an example of the famous bias-variance
-trade-off \citep{Geman1992}.
+over-fitting.\footnote{This is of course an example of the famous bias-variance
+trade-off \citep{Geman1992}.}
 
 
-\section{Maximum Entropy Modeling}
-\label{sec:me}
+%\section{Maximum Entropy Modeling}
+%\label{sec:me}
 
-\paragraph{Example}
-\label{sec:maxent-ex}
+%\paragraph{Example}
+%\label{sec:maxent-ex}
 
 \section{Basics}
 \label{crf:basics}
 
-I will now describe a CRF POS tagger from a practical
+In this section, I will describe a CRF POS tagger from a practical
 point-of-view. The tagging procedure encompasses two stages: feature
 extraction and inference using an exact or approximate inference
-algorithm. Whereas inference in CRFs is very similar to inference in
-HMMs, we did not discuss feature extraction in association to
-HMMs. This is because HMM taggers use a restricted set of features
-(the current word and preceding labels).
+algorithm. Inference in CRFs is very similar to inference in HMMs. We
+did not discuss feature extraction in association to HMMs. The
+discussion was omitted because HMM taggers use a fixed set of features
+(the current word and preceding labels). In contrast, CRF taggers can
+incorporate a variety of user defined features.
 
-\begin{tabular}{lcccc}
-$y$ & DT & NN & VBZ & .\\
-$x$ & The & dog & eats & .
-\end{tabular}
-
-Features are true logical propositions, which connect aspects of the
-input sentence with labels or parts of the label sequence. Given
-sentence $x$ and label sequence $y$ of length $n$, we extract features
-at every position $t$ in the sentence. For example at position $2$ in
-sentence $x$, we could extract {\it The current word $x_t$ is ``dog''
-  and the label is ``NN''} and {\it The previous label is ``DT'' and
-  the current label is ``NN''}. We could, however, not extract the
-same feature {\it The current word is ``dog'' and the label is ``NN''}
-at position $1$, because this proposition is false when $t = 1$ (the
-word at position 1 is ``The'' and the label is ``VBZ'').
-
-Features are conjunctions of two parts: a feature template, for
-example {\it The current word is ``dog''} and a label {\it the
-  label is ``NN''}. The set of features recognized by a CRF POS tagger
-contains all conjunctions $f \& y$ of feature templates $f$
-present in the training data and labels $y$. For example, the tagger
-would know {\it The current word is ``dog'' and the label is ``DT''}
-although it is unlikely that this feature would ever be observed in
-actual training data.
+As seen above, features are true logical propositions that apply to a
+position $t$ in a labeled sentence. They connect aspects of the input
+sentence to the label at position $t$.\footnote{Although the original
+  first order CRF formulation by \cite{Lafferty2001} allows for
+  features that refer to both unstructured and structured information
+  at the same time, the author has found that such features do not
+  improve model performance significantly. They, however, do increase model
+  size substantially. Therefore, the models used in the thesis extract
+  purely unstructured features, which relate one label to the
+  sentence, and structured features, which only relate adjacent labels
+  to each other.} %Given
+%sentence $x$ and label sequence $y$ of length $n$, we extract features
+%at every position $t$ in the sentence. For example at position $2$ in
+%sentence $x$, we could extract {\it The current word $x_t$ is ``dog''
+%  and the label is ``NN''} and {\it The previous label is ``DT'' and
+%  the current label is ``NN''}. We could, however, not extract the
+%same feature {\it The current word is ``dog'' and the label is ``NN''}
+%at position $1$, because this proposition is false when $t = 1$ (the
+%word at position 1 is ``The'' and the label is ``VBZ'').
+They consist of two components: a feature template, for example {\bf
+  The current word is ``dog''} or {\bf the previous label is DT}, and
+a label {\bf the current label is NN}. The set of features recognized
+by a CRF POS tagger consists of all conjunctions $f \& y$ of a feature
+template $f$ and label $y$. For example, the feature {\bf The current
+  word is ``dog'' and the current label is DT} can be formed although
+it is unlikely that this feature would ever be observed in actual
+training data.
 
 \cite{Ratnaparkhi1996} introduced a rather rudimentary feature set and
 variations of this feature set are commonly used in the literature
-(for example \cite{Collins2002} and \cite{Lafferty2001}). Let $W$ be
+(for example \cite{Collins2002}, \cite{Lafferty2001}, and Publications \ref{pub:5} and \ref{pub:6}). Let $W$ be
 the set of word forms in the training data. Additionally let $P$ and
 $S$ be the sets of prefixes and suffixes of maximal length $4$ of all
 words $w \in W$. Then, the Ratnaparkhi feature set contains the
@@ -128,18 +137,18 @@ structured feature templates in Table \ref{tab:sratna}.
 \begin{tabular}{ll}  
 Feature template & Example\\
 \hline
-The current word is $w$ & The current word is ``dog''\\
-The current word has prefix $p$ & The current word has prefix ``d-''\\
-The current word has suffix $s$ & The current word has suffix ``-og''\\
+The current word is $w \in W$ & The current word is ``dog''\\
+The current word has prefix $p\in P$ & The current word has prefix ``d-''\\
+The current word has suffix $s\in S$ & The current word has suffix ``-og''\\
 The current word contains a digit & \\
 The current word contains a hyphen & \\
-The current word contains a upper case letter & \\
-The previous word is $w$ & The previous word is ``The''. \\
-The next word is $w$ & The next word is ``eats''. \\
+The current word contains an upper case letter & \\
+The previous word is $w \in W$ & The previous word is ``The''. \\
+The next word is $w\in W$ & The next word is ``eats''. \\
 The word before the previous word is $w$ & \\
 The word after the next word is $w$ & \\
 \end{tabular}
-\caption{foo}\label{tab:uratna}
+\caption{The set of unstructured feature templates introduced by \cite{Ratnaparkhi1996}}\label{tab:uratna}
 \end{table}
 
 \begin{table}[!htb]
@@ -150,20 +159,24 @@ The label of the previous word is $y$ & The label of the previous word is ``NN''
 The label of the previous two words are $y'$ and $y$ & The labels of the two previous words are\\
  & ``DT'' and ``NN''. 
 \end{tabular}
-\caption{foo}\label{tab:sratna}
+\caption{The set of structured feature templates introduced by \cite{Ratnaparkhi1996}}\label{tab:sratna}
 \end{table}
 
-These feature templates are then combined with all labels occurring in
-the training set. It is instructive to try to estimate the number of
-features when using a realistic training set of size around a million
-words. The number of features is be $|Y|^3 + |WY|$. For small
-label sets and large training data, the bulk of the feature set tends
-to consist of unstructured features. However, for large label sets in
-the order of $1,000$ labels, there will be a significant number of
-structured features (one billion in this case). This necessitates
-either dropping second order structured features or using sparse
-feature representations. All structured features simply cannot be
-represented in memory. We will see techniques to circumvent these
+As in the case of an HMM, the order of a CRF can be increased. This
+corresponds to including more label context in structured features. It
+is instructive to estimate the number of features when using a
+realistic training set. It is
+$|\mathcal{Y}|^3 + |\mathcal{F}||\mathcal{Y}|$, where $\mathcal{Y}$ is
+the set of morphological labels and $\mathcal{F}$ is the set of
+unstructured feature templates.
+
+For small label sets and large training data, the bulk of all features
+consists of unstructured features. However, for large
+label sets in the order of $1,000$ labels, there will be a significant
+number of structured features (one billion in this case). This
+necessitates either dropping second order structured features or using
+sparse feature representations. All structured features simply cannot
+be represented in memory. We will see techniques to circumvent these
 problems. Especially the averaged perceptron is essential.
 
 It is common to represent the CRF using linear algebra. Each position
@@ -173,15 +186,16 @@ selection of features is finite because it is limited by the training
 data. There are only finitely many word forms, suffixes, morphological
 labels and so on in the training data. The elements of each vector
 $\phi_t$ represent activations of features. In the present work all
-elements are either $0$ or $1$ mirroring false and true truth values,
-but other activations in $\mathbb{R}$ can also be used if the truth
-values of the feature propositions exist on a non-binary scale.
+elements are either $0$ or $1$ mirroring the truth value of a feature
+at position $t$ in the labeled sentence. Other activations in
+$\mathbb{R}$ can also be used when appropriate.
 
 In order to represent sentence positions as vectors, we need an
 injective index function $I$ which maps features onto consecutive
 integers starting at 1. For each feature $f$, $I(f)$ will correspond
-to one dimension in $\phi_t$. In concrete implementations, the index
-function $I$ can be implemented as a hash function.
+to one dimension in $\phi_t$. In a concrete implementation of a CRF
+tagger, features can be represented as strings and the index function
+$I$ can be implemented as a hash function.
  
 Given a sentence $x$ and label sequence $y$, we can extract the set of features
 $F_t(x)$ for each position $t$ in $x$. Let $\phi_t \in \mathbb{R}^N$ be a vector defined by
@@ -194,7 +208,6 @@ Specifically, the same parameter vector $\omega$ is shared by all
 sentence positions and the probability $p(y|x)$ is a log linear
 combination of parameter values in $\omega$.
 
-\cite{Lafferty2001}
 \section{Logistic Regression}
 %\begin{itemize}
 %\item Detailed view of logistic regression. 
@@ -204,22 +217,22 @@ combination of parameter values in $\omega$.
 %\end{itemize}
 
 The simplest Conditional Random Field is the {\it Logistic Regression
-  Model} (LRM). It is an unstructured probabilistic discriminative
+  Model}. It is an unstructured probabilistic discriminative
 model. In this section, I will present a formal treatment of the
-LRM because it aids in understanding more general
+logistic regression model because it aids in understanding more general
 CRFs.
 
-Regular linear regression models a {\it real valued quantity} $y$
-based on independent variables $x_1$, ..., $x_n$. In contrast the LRM
-is a regression model which models {\it the probability} that an
-observation $x$ belongs to a class $y$ in a finite class set $Y$. For
-example, the logistic classifier can be used to model the probability
-of a tumor belonging to the class {\sc MALIGNANT} or BENIGN. The
-probability is based on quantifiable information about the tumor such
-as its size, shape and the degrees of expression of different genes in
-the tumor cells. These quantifiable information sources are the {\it
-  feature templates} of the logistic classifier and combined with
-class labels they make up the features of the
+Regular linear regression models a {\it real valued quantity} $y$ as a
+function of an input $x = (x_1, ..., x_n)$. In contrast, the logistic
+regression model models {\it the probability} that an observation $x$
+belongs to {\it a class} $y \in |\mathcal{Y}|$, where $\mathcal{Y}$ is
+a finite set of classes. For example, a logistic classifier can be
+used to model the probability of a tumor belonging to the class {\sc
+  MALIGNANT} or BENIGN. The probability is based on quantifiable
+information about the tumor such as its size, shape. These quantifiable
+sources of information are the {\it feature templates} of the logistic
+classifier and combined with class labels they constitute the features of
+the
 model. %In concrete terms, let $f$ be the feature template {\it Tumor diameter greater then 5 cm} and $y$ be the class MALIGNANT, then we can form a feature $f \& y$ ``{\it Tumor diameter greater than 5 cm} and the tumor is MALIGNANT''.
 
 The material at hand deals with linguistic data where most information
@@ -227,11 +240,10 @@ sources are binary, for example whether a word ends in suffix ``-s''
 and whether a word is preceded by the word ``an''. In other domains
 such as medical diagnostics, more general features can be used. These
 can be real valued numerical measurements such as the diameter of a
-tumor. This treatment of logistic classifiers will focus on the binary
-valued case. When using binary features, we can equate the example $x$
-with the set of feature templates $F_x \subset F$ that it {\it
-  activates}, that is {\it Tumor diameter $\geq$ 5 cm}, {\it Preceded
-  by ``an''} and so on. Examples that activate the exactly same
+tumor. This treatment of logistic classifiers will assume binary
+feature activations. When using binary features, we can equate the example $x$
+with the set of feature templates $F_x \subset \mathcal{F}$ that it {\it
+  activates}, that is {\bf Tumor diameter $\geq$ 5 cm}, {\bf The previous word is ``an''} and so on. Examples that activate the exactly same
 feature templates will be indistinguishable from the point of view of the
 Logistic Regression model.
 
@@ -240,12 +252,12 @@ template and class with a unique feature and a corresponding real
 valued parameter. Intuitively, the logistic classifier models
 correlations of feature templates and classes by changing the
 parameter values of the associated features. For example, it might
-associate the feature template {\it Tumor diameter $\geq$ 5 cm} more
+associate the feature template {\bf Tumor diameter $\geq$ 5 cm} more
 strongly with the class MALIGNANT than the class BENIGN if large
 tumors are cancerous more often than smaller ones. This could be
 reflected in the parameter values of the model that correspond to the
-features $f =$ {\it Tumor diameter $\geq$ 5 cm and class is MALIGNANT}
-and $f' =$ {\it Tumor diameter $\geq$ 5 cm and class is BENIGN} so
+features $f =$ {\bf Tumor diameter $\geq$ 5 cm and class is MALIGNANT}
+and $f' =$ {\bf Tumor diameter $\geq$ 5 cm and class is BENIGN} so
 that the parameter value for $f$ is greater than the parameter value
 for $f'$. In general parameter values, however, also depend on other
 features and feature correlations in the model. Therefore we can say
@@ -255,19 +267,18 @@ the model accurately reflects the original distribution of class
 labels among examples. In the general case, where there are several
 feature templates, this might fail to hold.
 
-Formalizing the notation used in Section \ref{crf:basics}, let $F$ be
-a finite set of feature templates and $Y$ a finite set of
-classes. Each combination of feature template $f \in F$ and class $y
-\in Y$ corresponds to a unique feature. Therefore, the model will have
-$|F \times Y|$ features in total. Let $\theta$ be a real valued
-parameter vector in $\R^{|F \times Y|}$ and let ${\mathrm I}$ be a
-1-to-1 index function which maps each combination of feature template
-and class onto the indexes of $\theta$, that is $1 \leq {\mathrm I}(f,
-y) \leq |F \times Y|$.
+Formalizing the notation used in Section \ref{crf:basics}, let $\mathcal{F}$ be
+a finite set of feature templates and $\mathcal{Y}$ a finite set of
+classes. Each combination of feature template $f \in \mathcal{F}$ and class $y
+\in \mathcal{Y}$ corresponds to a unique feature. Therefore, the model will have
+$|\mathcal{F} \times \mathcal{Y}|$ features in total. Let $\theta \in \R^{|\mathcal{F} \times \mathcal{Y}|}$ be a real valued
+parameter vector and let ${\mathrm I}$ be a
+1-to-1 index function which maps each feature onto and index of $\theta$, that is $1 \leq {\mathrm I}(f,
+y) \leq |\mathcal{F} \times \mathcal{Y}|$.
 
-For each example $x$, let $F_x$ be the set of feature templates that $x$ activates and let $y \in Y$ be a class. Then the feature vector associated with $x$ and $y$ is $\phi(x,y) = \{0, 1\}^{|F \times Y|}$ defined by
+For each example $x$, let $F_x \subset \mathcal{F}$ be the set of feature templates that $x$ activates and let $y \in \mathcal{Y}$ be a class. Then the feature vector associated with $x$ and $y$ is $\phi(x,y) = \{0, 1\}^{|\mathcal{F} \times \mathcal{Y}|}$ defined by
 \[
-  \phi(x,y)[i] = \left\{
+  \phi(x,y)_i = \left\{
   \begin{array}{ll}
   1 & {\rm iff\ } i = {\mathrm I}(f,y) {\rm\ for\ some\ }f \in F_x{\rm,} \\ 
   0 & {\rm otherwise.}  
@@ -279,30 +290,26 @@ For each example $x$, let $F_x$ be the set of feature templates that $x$ activat
 
 Now the conditional probability $p(y\cond x)$ defining the Logistic
 classifier is given by Equation \eqref{eq:logistic}. The equation
-defines a probability distribution over the set of classes $Y$ because
-each quantity $p(y\cond x\parcond\theta)$ is a positive real and the
-quantities sum to 1. 
+defines a probability distribution over the set of classes
+$\mathcal{Y}$ because each quantity $p(y\cond x\parcond\theta)$ is a
+positive real and the quantities sum to 1.
 
 \begin{equation}
 p(y\cond x\parcond \theta) = \frac{\exp(\theta^\top \phi(x,y))}{\sum_{z \in Y}\exp(\theta^\top \phi(x,z))}\label{eq:logistic}
 \end{equation}
 
-\paragraph{Inference} Inference for a Logistic Regression Model means finding the
-probability of each class label $y \in Y$ given example $x$. The full
-computation of the probability is, however, not needed when the model
-is used as a classifier. For simply finding the class $y_{max}$ which
-maximizes the conditional likelihood in equation
-\ref{eq:logistic,inference} given fixed parameters $\theta$ it is
-sufficient to maximize the numerator of $p(y \cond x\parcond\theta)$.
+\paragraph{Inference} Inference for a Logistic Regression Model
+corresponds to performing the maximization in Equation \ref{eq:logistic,inference}. As the equation demonstrates, the full computation of the probability is not required when classifying. The maximization can be performed without normalization.
 
 \begin{equation}y_{max} = \argmax_{y \in Y} p(y\cond x\parcond \theta) = \argmax_{y\in Y} \frac{\exp(\theta^\top \phi(x,y))}{\Z(x;\theta)} = \argmax_{y \in Y} \exp(\theta^\top \phi(x,y))\label{eq:logistic,inference}\end{equation}
 
 To avoid underflow when using finite precision real numbers (such as
 floating-point numbers), the maximization is usually rephrased as the
 minimization of a loss function in Equation
-\ref{eq:logistic,inference,log}
+\ref{eq:logistic,inference,log} by applying a logarithmic
+transformation $x \mapsto -\log(x)$.
 
-\begin{equation}y_{max} = \argmin_{y\in Y} \theta^\top \phi(x,y)\label{eq:logistic,inference,log}\end{equation}
+\begin{equation}y_{min} = \argmin_{y\in Y} -\theta^\top \phi(x,y)\label{eq:logistic,inference,log}\end{equation}
 
 From a practical implementation perspective, the minimization in
 Equation \ref{eq:logistic,inference,log} boils down to computing one
@@ -322,14 +329,13 @@ loss function $\mathcal{L}$.
 \begin{equation}
 \mathcal{L}(\theta\parcond\mathcal{D}) = -\log p(y\cond x\parcond \theta) = log(\Z(x;\theta)) - \theta^\top F_y(x)\label{eq:logistic,log}
 \end{equation}
-Here $Z(x;\theta) = \sum_{z \in Y}\exp(\theta^\top F_{z}(x))$ is the partition function of the data point $(x,y)$.
+Here $Z(x;\theta) = \sum_{z \in Y}\exp(\theta^\top F_{z}(x))$ is the partition function for example $x$.
 
-Given labeled training data $\data = \{(x_1,\ y_1),\ ...,\
-(x_n,\ y_n)\}$, there exist several options for estimating the
-parameters $\theta$. The most commonly used is the maximum likelihood,
-or equivalently minimum loss, estimation. The minimum loss estimate
-for the parameters $\theta$ using $\data$ is given by equation
-\eqref{eq:logistic,ml}.
+Given labeled training data $\data = \{(x_1,\ y_1),\ ...,\ (x_n,\
+y_n)\}$, there exist several options for estimating the parameters
+$\theta$. The most commonly used is {\it empirical risk minimization},
+which finds a parameter vector that minimizes the loss $\mathcal{L}$ on the
+training data $\mathcal{D}$ as shown in Equation \eqref{eq:logistic,ml}.
 
 \begin{equation}
 \theta = \argmin_{\theta'} \mathcal{L}(\theta\parcond \mathcal{D}) = \argmin_{\theta'}\sum_{(x,\ y) \in \mathcal{D}} \Z(x\parcond \theta) - {\theta'}^\top F_y(x)\label{eq:logistic,ml}
@@ -349,8 +355,8 @@ $p$ is a parameter. This has three important consequences:
 
 Smoothness follows from the fact that each factor $a \mapsto e^{ap}$
 is smooth and products and sums of smooth functions are
-smooth. Convexity of the likelihood follows by a straightforward application of the Hölder inequality \cite{}. Property 3 is a consequence of properties 1 and 2 and
-Property 4 follows from the discussion in Section \ref{sec:me}.
+smooth. Convexity of the likelihood follows by a straightforward application of the Hölder inequality \cite{}. Property 3 is a consequence of properties 1 and 2.
+Property 4 is discussed in \cite{foo}.
 
 Although the maximization in Equation \ref{eq:logistic} cannot be
 solved exactly in general, the convexity and smoothness of
@@ -368,33 +374,37 @@ and $g(\theta\parcond\mathcal{D}) = \sum_{(x,y) \in
   \mathcal{D}}\theta^\top F_y(x)$. The partial derivative of $g$
 w.r.t. parameter $i$ can be computed in the following way
 $$\frac{\partial g}{\partial i} = \sum_{(x,y) \in \mathcal{D}} F_y(x)[i]$$
-This quantity represents the total activation of feature $i$ in the training data and is called {\it the observed count} of feature $i$. Using the chain rule of derivatives, we get the partial derivative of $f$ w.r.t. to param $i$, is
-$$\frac{\partial f}{\partial i} = \sum_{(x,y) \in \mathcal{D}} \frac{\sum_{y \in \mathcal{Y}}F_y(x)[i] \exp(\theta^\top F_y(x))}{\Z(x\parcond\theta)} = \sum_{(x,y) \in \mathcal{D}} \sum_{y' \in \mathcal{Y}}F_y(x)[i] p(y'|x\parcond\theta)$$
+This quantity represents the total activation of feature $i$ in the training data and is called {\it the observed count} of feature $i$. 
+
+Using the chain rule of derivatives, we get the partial derivative of $f$ w.r.t. to param $i$
+$$\frac{\partial f}{\partial i} = \sum_{(x,y) \in \mathcal{D}} \frac{\sum_{y' \in \mathcal{Y}}F_{y'}(x)[i] \exp(\theta^\top F_{y'}(x))}{\Z(x\parcond\theta)} = \sum_{(x,y) \in \mathcal{D}} \sum_{y' \in \mathcal{Y}}F_{y'}(x)[i] p(y'|x\parcond\theta)$$
 This is the {\it expected count} of feature $i$ which is the
 activation of feature $i$ in the data set $x_1, ...,x_n$ predicted by
 the model given all possible label assignments.
 
 Using the partial derivatives of the functions $f$ and $g$, we see that the gradient of the loss function $\mathcal{L}$ is defined by
-\begin{equation}\nabla L[i] = \sum_{(x,y) \in \mathcal{D}} \Big( \sum_{y' \in \mathcal{Y}}F_y(x)[i] p(y'|x\parcond\theta) \Big) - F_y(x)[i] \label{eq:reg-loss}\end{equation}
+\begin{equation}\nabla \mathcal{L}[i] = \sum_{(x,y) \in \mathcal{D}} \Big( \sum_{y' \in \mathcal{Y}}F_{y'}(x)[i] p(y'|x\parcond\theta) \Big) - F_y(x)[i] \label{eq:reg-loss}\end{equation}
 Equation \ref{eq:reg-loss} shows that the loss is zero when the
-expected and observed counts for each feature agree. The properties
-for the logistic regression model discussed above guarantee that this
-there is at most one $\theta_{ML}$ like this and, when it exists,
-$\theta_{ML}$ is the maximum likelihood estimate for the parameters.
+expected and observed counts for each feature agree.\footnote{As each feature $i$ is label specific in the current work, the sum $\sum_{y' \in \mathcal{Y}}F_{y'}(x)[i] p(y'|x\parcond\theta)$ reduces to $F_y(x)[i] p(y|x\parcond\theta)$. It is thus easy to see that the loss vanishes if $p(y|x\parcond\theta) = 1$ for each $(x,y)\in\mathcal{D}$.} The
+properties for the logistic regression model discussed above guarantee
+that this there is at most one $\theta_{ML}$ like this and, when it
+exists, $\theta_{ML}$ is the maximum likelihood estimate for the
+parameters.
 
-Regularization methods such as $L_1$ and $L_2$ introduced in Chapte
+Regularization methods such as $L_1$ and $L_2$ introduced in Chapter
 \ref{chap:ml} can also be applied to the model. This naturally changes
 the gradient and also the properties of the model. Analysis of the
 regularized model falls outside of the scope of this thesis.
 
 \section{The Perceptron Classifier}
+\label{sec:perc}
 
-The perceptron algorithm \citep{Rosenblatt1958} is an alternative to the MLE
-for learning the weights of a discriminative classifier. As seen
-above, the logistic classifier optimizes the conditional probability
-of gold standard classes given training inputs. In contrast, the
-perceptron rule directly optimizes the classification performance of
-the discriminative classifier.
+The perceptron algorithm \citep{Rosenblatt1958} is an alternative to
+empirical risk minimization for learning the weights of a
+discriminative classifier. As seen above, the logistic classifier
+optimizes the conditional probability of gold standard classes given
+training inputs. In contrast, the perceptron rule directly optimizes
+the classification performance of the discriminative classifier. 
 
 Intuitively, the multi-class perceptron algorithm works by labeling
 each training example in order using a current estimate of the
@@ -403,23 +413,26 @@ training examples are incorectly labeled. Consequently, the perceptron
 algorithm is an online learning algorithm.
 
 \paragraph{Inference} Similarly as in the case of any linear
-classifier, each example $x$ and class $y$ receives a score
-$\theta^\top\phi(x,y)$ which is computed using the current estimate of
-the parameter vector. If the score of the gold standard class
-$y_{gold}$ is not the highest one, that is there is a class $y$ which
-scores higher or equally high, then the parameter vector $\theta$ is
-modified in a way which increases the score for the gold standard
-class and decreases the score for the highest scoring class $y$.
+classifier, the perceptron classifier scores each example $x$ and class $y$ by
+$\theta^\top\phi(x,y)$. Example $x$ is labeled by the $y \in \mathcal{Y}$ which maximizes the score.
+
+% which is computed using the current estimate of
+%the parameter vector. 
+%If the score of the gold standard class
+%$y_{gold}$ is not the highest one, that is there is a class $y$ which
+%scores higher or equally high, then the parameter vector $\theta$ is
+%modified in a way which increases the score for the gold standard
+%class and decreases the score for the highest scoring class $y$.
 
 \paragraph{Estimation} The perceptron algorithm is an error-driven
 online learning algorithm. When a classification error is encountered
 during estimation, that is $\theta^\top\phi(x,y) >
-\theta^\top\phi(x,y_{gold})$, the parameter vector $\theta$ is
+\theta^\top\phi(x,y_{gold})$ for some $y \ne y_{gold}$, the parameter vector $\theta$ is
 adjusted for relevant features. For every feature template $f$ which
 is activated by the example $x$, the weights $\theta[I(f, y_{gold})]$
 and $\theta[I(f, y)]$ are adjusted. Here $I(f, y_{gold})$ and $I(f,
 y)$ are the features corresponding to the template $f$ and classes
-$y_{gold}$ and $y$ repectively. The perceptron rule for weight
+$y_{gold}$ and $y$, respectively. The perceptron rule for weight
 adjustment is the following:
 $$\theta[I(f, y_{gold})] = \theta[I(f, y_{gold})] + 1 {\rm\ and\ }\theta[I(f, y)] = \theta[I(f, y)] - 1$$
 
@@ -429,7 +442,7 @@ $$\theta[I(f, y_{gold})] = \theta[I(f, y_{gold})] + 1 {\rm\ and\ }\theta[I(f, y)
 \begin{lstlisting}[linewidth=\textwidth]
 def infer(x, fextractor, theta, label_set)
     """
-        x          - An obesrvation.
+        x          - An observation.
         fextractor - A vector valued function. 
                      len(fextractor(x,y)) == len(theta). 
         theta      - A parameter vector.
@@ -472,7 +485,7 @@ def perceptron(data, fextractor, theta, label_set):
 
 The perceptron adjustment does not guarantee that example $x$ is
 correctly classified. However, it does guarantee that the score
-difference between the gold class and erroneous class decreases.\footnote{There are refiniements of the perceptron algorithm, such as the passive-aggressive learning algorithm, which aim to make fewer updates by updating more aggressively when the difference in scores between the erroneous class and gold class is large \citep{Crammer2006}} Given
+difference between the gold class and erroneous class decreases.\footnote{There are refinements of the perceptron algorithm, such as the passive-aggressive learning algorithm, which aim to make fewer updates by updating more aggressively when the difference in scores between the erroneous class and gold class is large \citep{Crammer2006}} Given
 training data consisting of just one example, it is easy to see that
 the perceptron algorithm will eventually classify the example
 correctly. If there are more examples, it may however happen that a
@@ -487,7 +500,7 @@ that correctly classifies the training data \citep{Freund1999}. Such a
 data set is called linearly separable. The term originates from a
 geometrical interpretation of the 2-class perceptron algorithm, where
 the parameter vector defines a hyper plane in the feature space which
-divides the apce into two halves. A data set is called separable if
+divides the space into two halves. A data set is called separable if
 there is a hyper space which separates the examples in each of the
 classes into their own half space.
 
@@ -515,7 +528,7 @@ parameter vector is considered a separate classifier and the
 classification is performed by taking a majority vote of all of the
 classification results. This is impractical, because there are
 thousands of classifiers. Therefore, averaging is used in order to
-achieve almost the same effect.
+achieve approximately the same effect.%almost the same effect.
 
 \section{CRF -- A Structured Logistic Classifier}
 
@@ -524,8 +537,8 @@ This Section presents Linear Chain Conditional Random Fields
   mostly fall beyond the scope of this thesis. See \citep{Sutton2012}
   for further details.} Just as the HMM is a structured equivalent of
 the NB classifier, the CRF is the structured equivalent of the
-LRM. Consequently, many of the algorithms required to build a CRF
-tagger are similar to the algorithms required to build an HMM
+logistic regression model. Consequently, many of the algorithms required to run a CRF
+tagger are similar to the algorithms required to run an HMM
 tagger. Estimation of model parameters is, however, different because
 of the discriminative nature of the model.
 
@@ -535,36 +548,36 @@ set of features. This increases the size of the model. It also makes
 the discriminative tagger slow in comparison to the generative
 tagger. The slowdown is demonstrated by the experiments in
 Publication \ref{pub:6}. However, the accuracy of the discriminative
-model is significantly superior to the generative HMM tagger.
+model in morphological tagging is superior to the generative HMM tagger.
 
-Intuitively, the CRF model resembles a sequence of LR classifiers
+Intuitively, the CRF model resembles a sequence of logistic regression classifiers
 with shared parameters. Given a sentence $x = (x_1,\ ...,\ x_T)$,
 label sequence $y = (y_1,\ ...,\ y_T)$ and parameters $\theta$ for the
-LR model, a score for the label $y_i$ in position $i$ $s(x, y_{i-2},
-y_{i-1}, y_i, i\parcond \theta)$ can be computed. Here the LR model
-utilizes the input sentence $x$ as well as labels $y_{i - 2}$, $y_{i-1}$ and
-$y_i$ to extract unstructured and structured features from the
+logistic regression model, a score for the label $y_i$ in position $t$ $s(x, y_{t-2},
+y_{t-1}, y_t, t\parcond \theta)$ can be computed. Here the logistic regression model
+utilizes the input sentence $x$ as well as labels $y_{t - 2}$, $y_{t-1}$ and
+$y_t$ to extract unstructured and structured features from the
 sentence and label sequence. The score $s$ takes on a familiar form
-$$s(x, y_{i-2}, y_{i-1}, y_i, i\parcond \theta) = \theta^\top F_y(x, i, y_{i-2}, y_{i-1})$$
+$$s(x, y_{t-2}, y_{t-1}, y_t, t\parcond \theta) = \exp(\theta^\top F_y(x, t, y_{t-2}, y_{t-1}))$$
 where $F_y$ is a vector valued feature extraction function. Each
 feature associated to the label $y$ corresponds to one element of the
-vector $F_y(x, i, y_{i-2}, y_{i-1})$. As in the case of the LR model,
+vector $F_y(x, t, y_{t-2}, y_{t-1})$. As in the case of the logistic regression model,
 each entry of the vector can be an arbitrary real number but in this
 thesis they will always be either $0$ or $1$.
 
 The probability of label sequence $y \in \mathcal{Y}^T$ given a sentence $x$ of length $T$ is
-\begin{equation}\label{eq:crf}p(y|x\parcond\theta) \propto \prod_{i = 1}^T s(x, y_{i-2}, y_{i-1}, y_i, i\parcond \theta)\end{equation}
+\begin{equation}\label{eq:crf}p(y|x\parcond\theta) \propto \prod_{t = 1}^T s(x, y_{t-2}, y_{t-1}, y_t, t\parcond \theta)\end{equation}
 In Equation \ref{eq:crf}, the labels $y_{-1}$ and $y_0$ are special
 stop labels which do not belong to the label set $\mathcal{Y}$. The partition function of the sentence $x$ is given by
-\begin{equation}\sum_{y\in \mathcal{Y}^T}\prod_{i = 1}^T s(x, y_{i-2}, y_{i-1}, y_i, i\parcond \theta)\end{equation}
+\begin{equation}\sum_{y\in \mathcal{Y}^T}\prod_{t = 1}^T s(x, y_{t-2}, y_{t-1}, y_t, t\parcond \theta)\end{equation}
 
 It is noteworthy, that the probability in Equation \ref{eq:crf} is
-normalized for {\it the entire sentence}, not in each position. A
-similar model, where normalization happens in each position is called
-the Maximum Entropy Markov Model (MEMM). It has been shown to give
-inferior performance in POS tagging of English
-\citep{Lafferty2001}.\footnote{The inferior performance of the MEMM has
-  been thought to be a result of the so called label bias problem
+normalized for {\it the entire sentence}, not for each position in
+isolation. A similar model, where normalization happens in each
+position is called the Maximum Entropy Markov Model (MEMM). It has
+been shown to give inferior performance in POS tagging of English
+\citep{Lafferty2001}.\footnote{The inferior performance of the MEMM
+  has been thought to be a result of the so called label bias problem
   \citep{Lafferty2001} although {\it observation} bias may be more
   influential in POS tagging \citep{Klein2002}.}
 
@@ -579,129 +592,179 @@ probabilities of labels.
 
 \paragraph{Estimation} Estimation of the CRF model parameters is more
 involved than the straightforward counting which is sufficient for HMM
-training. Estimation is instead very similar to estimation of the LR
-model parameters. However, the structured nature of the CRF model
-complicates matters slightly.
+training. Estimation is instead very similar to estimation of the
+logistic regression model parameters. However, the structured nature
+of the CRF model complicates matters slightly.
 
-Let $\mathcal{D} = \{(x_1, y_1), ..., (x_n, y_n)\}$ be a training data
-set consisting of $n$ labeled sentences and let $y_k^l$ be the label
-of the $l$th word in sentence $l$. Now the expected count of feature
-$i$ in position $k$ in sentence $l$ is
-$$\frac{\sum_{y \in \mathcal{Y}^T}F_y(x_l, k, y_{k - 2}, y_{k-1}, y_k)[i] \exp(\theta^\top F_y(x))}{\Z(x\parcond\theta)}$$
-The quantities $\sum_{y \in \mathcal{Y}^T}F_y(x_l, k, y_{k - 2},
-y_{k-1}, y_k)[i]$ and $\Z(x\parcond\theta)$ have to be computed using
-the forward backward algorithm because the number of computations is
-too large otherwise. The need of the forward backward algorithm is the
-most important difference between LR and CRF estimation.  Commonly,
+Let $(x, y)$ be a labeled sentence. The observed count of feature $i$ in position $t$ is $F_{y}(x, t, y_{t-2},y_{t-1},y_t)[i]$ and its expected count is
+%$$\frac{\sum_{y' \in \mathcal{Y}^T}F_y(x, t, y_{t - 2}', y_{t-1}', y_t')[i] 
+%%\exp(\theta^\top F_y(x, t, y_{t - 2}', y_{t-1}', y_t'))
+%s(x, t, y_{t-2}', y_{t-1}', y_t')}{\Z(x\parcond\theta)}$$
+$$\sum_{y' \in \mathcal{Y}^T} F_y(x, t, y_{t - 2}', y_{t-1}', y_t')[i] p(y'\cond x \parcond \theta)$$
+The partial derivative w.r.t. to the loss $\mathcal{L}$ is the difference between the expected and observed counts as in the case of logistic regression.
+$$\frac{\partial\mathcal{L}}{\partial i} = \sum_{t=1}^T \Big( \sum_{y' \in \mathcal{Y}^T} F_y(x, t, y_{t - 2}', y_{t-1}', y_t')[i] p(y'\cond x \parcond \theta)\Big) - F_{y}(x, t, y_{t-2},y_{t-1},y_t)[i]$$ 
+The quantities $\sum_{y' \in \mathcal{Y}^T} F_y(x_l, t, y_{t - 2}',
+y_{t-1}', y_t')[i] p(y'\cond x \parcond \theta)$ have to be computed using
+the forward backward algorithm because a naive algorithm has too high computational cost. The need of the forward backward algorithm is the
+most important difference between logistic regression and CRF estimation.  Commonly,
 the SGD algorithm and L-BFGS are used for the optimization of $\theta$
-\citep{Vishwanathan2006}. As in the case of LR model, the CRF model
-can also be regularizaed using for example L1 or L2 regularization
-\cite{Sutton2006}.
+\citep{Vishwanathan2006}. As in the case of logistic regression model, the CRF model
+can also be regularized using for example L1 or L2 regularization
+\citep{Sutton2012}.
 
 Held out development data is commonly used to set the number of
 training epochs, model order and regularization hyper-parameters.
 
-\paragraph{Approximative estimation} In addition to the ML estimator,
-a variety of estimators are available for CRF models. These
-alternative estimators are mainly used due to the fact that ML
-estimation can be resouce intesive. The most commonly substitute for
-the ML estimator is the averaged perceptron estimator described in
-Section \ref{sec:prec-tagger} and taggers trained using the averaged
-perceptron tagger are often called perceptron taggers (see for example
-\cite{Collins2002}). Other examples mentioned by \cite{Sutton2012} are
-the pseudlikelihood \cite{Besag1975} and piecewise pseudolikelihood estimators
+\paragraph{Alternative estimators} In addition to the ML estimator, a
+variety of estimators are available for discriminative taggers. These
+alternative estimators are predominantly used because ML estimation
+can be quite resource intensive. A commonly used substitute for the ML
+estimator is the structured variant of the averaged perceptron
+algorithm described in Section \ref{sec:prec-tagger} and taggers
+trained using the averaged perceptron algorithm are often called
+perceptron taggers (see for example \cite{Collins2002}). Other
+examples mentioned by \cite{Sutton2012} are the pseudlikelihood
+\cite{Besag1975} and piecewise pseudolikelihood estimators
 \cite{Sutton2007}. Publication \ref{pub:4} investigates a
 pseudolikelihood inspired variant of the perceptron estimator.
 
-Given a training example $(x,y) \in \mathcal{D}$ where $x = x_1, ..., x_T$ and $y = y_1, ..., y_T$, the pseudolikelihood of $y$ given $x$ is given by equation \ref{eq:pl}
-\begin{equation}\label{pl}\prod_{t = 1}^T p(y_t | x, i, y_{\neg t} \parcond \theta)\end{equation}
-where $y_{\neg t}$ refers to all the labels in $y$ except label
-$y_t$. This is substantially more efficient than ML estimation because
-the labels can be maximized separately in each position. However, it
-may result in poor accuracy \citep{someone}.
+Given a training example $(x,y) \in \mathcal{D}$ where $x = x_1, ..., x_T$ and $y = y_1, ..., y_T$, the pseudolikelihood of $y$ given $x$ is given by equation \ref{eq:pl}. The notation $y_{\neg t}$ in Equation \ref{eq:pl} refers to all the labels in $y$ except label
+$y_t$. 
+\begin{equation}\label{eq:pl}\prod_{t = 1}^T p(y_t | x, i, y_{\neg t} \parcond \theta)\end{equation}
 
-Piecewise-pseudo.
+The complexity of optimizing the parameters $\theta$ with regard to pseudolikelihood is linear linear with regard to sentence length. In contrast, ML estimation which requires the forward-backward algorithm is has quadratic complexity.
+This means that the pseudolikelihood estimator is substantially more efficient than ML estimation. However, it
+may result in poor accuracy as indicated by the experiments in Publication \ref{pub:4}.
 
-Pseudoperceptron.
-
-\begin{itemize}
-\item Hierarchical CRF \cite{Muller2013}, \cite{Weiss2010} and \cite{Charniak2005}.
-\end{itemize}
 
 \section{The Perceptron Tagger}
 \label{sec:prec-tagger}
 
-Whereas the perceptron classifier is a discriminative classifier
-similar to the LR model except that it uses perceptron estimation, a
+Whereas the unstructured perceptron classifier presented in Section
+\ref{sec:perc} is a discriminative classifier similar to the logistic
+regression model except that it uses perceptron estimation, a
 perceptron tagger \citep{Collins2002} is a sequence labeling model
 similar to the CRF except that it uses perceptron estimation.
 
 The model is formulated very similarly as the CRF model. It also uses
-a real valued parameter vector $\theta$ and the score of a label
-sequence $y$ given sentence $x$ is defined as
-\begin{equation}s(y|x\parcond\theta) \propto \prod_{i = 1}^T s(x,
-  y_{i-2}, y_{i-1}, y_i, i\parcond
-  \theta)\label{eq:perc-classifier}\end{equation} In Equation
-\ref{eq:perc-classifier}, $s(x, y_{i-2}, y_{i-1}, y_i, i\parcond
-\theta) = \theta^\top F_y(x, i, y_{i-2}, y_{i-1})$, where $F_y$ is the
-vector valued feature extraction function for label $y$.
+a real valued parameter vector $\theta$ but the definition of the score of a label sequence $y$ given sentence $x$ is different 
+\begin{equation}s(y|x\parcond\theta) = \sum_{i = 1}^T s(x, y_{i-2},
+  y_{i-1}, y_i, i\parcond
+  \theta)\label{eq:perc-classifier}\end{equation} The definition of
+the score $s$ in an individual position $t$ in Equation
+\ref{eq:perc-classifier} is defined as $s(x, y_{i-2}, y_{i-1}, y_i,
+i\parcond \theta) = \theta^\top F_y(x, i, y_{i-2}, y_{i-1})$, where
+$F_y$ is the vector valued feature extraction function for label
+$y$. The definition of the perceptron model is simpler than the
+definition of the CRF model. The reason is that the perceptron model
+is not intended for defining a probability distribution among label
+sequence. It can only be used for determining the best label sequence
+with regard to a sentence $x$.
 
 \paragraph{Inference} The Perceptron tagger uses the Viterbi algorithm
 for exact inference. Beam search can be used for faster approximate
-inference together with a label dictionary as shown in Publication \ref{pub:6}
+inference together with a label dictionary as shown in Publication
+\ref{pub:6}. Chapter \ref{chapter:finnpos} presents experiments on
+varying beam widths.
 
 \paragraph{Estimation}Whereas, CRF estimation requires the
 forward-backward algorithm, perceptron estimation only requires the
-Viterbi algorithm.  Exactly as in the case of the regular perceptron
+Viterbi algorithm.  Exactly as in the case of the unstructured perceptron
 algorithm, each training example (i.e. sentence) is labeled and
 unstructured and structured features are updated accordingly. The
-number of training epochs is determined using held-out data. Parameter
-averaging is useful for improving the accuracy of the percetron
-tagger.
+number of training epochs is determined using held-out data. As in the
+case of the unstructured perceptron algorithm, parameter averaging is
+useful for improving the accuracy of the percetron tagger.
+
+Besides the standard perceptron algorithm, there are many
+approximative perceptron variants. Publication \ref{pub:4} introduces
+the pseudopeceptron and piece-wise pseudoperceptron estimators which
+are inspired by the pseudolikelihood and piecewise pseudolikelihood
+estimators for the CRF model. In the spirit of pseudolikelihood, the
+pseudoperceptron maximizes the score of each label in isolation as shown by equation \ref{eq:pp}. The
+remaining labels in the sentence are fixed to their gold standard
+values.
+\begin{equation}\label{eq:pp}
+s(y|x,y_{gold}\parcond\theta) = \sum_{t=1}^T s(y|x,y_{gold,\neg t}\parcond \theta).
+\end{equation}
 
 \paragraph{Beam search for estimation} A high model order and large
 label set can result in a prohibitive runtime for the Viterbi
-algorithm which has a complexity that is dependent on the $n$th power
-of the label set size for an order $n$ model. This problem can be
-avoided using beam search during estimation instead of the Viterbi
-algorithm. Because beam search is an approximative inference
-algorithm, it may however not give the correct MAP assignment for a
-sentence. It may happen that beam search returns a label sequence
-$y_{sys}$ for training sentence $x$ whose score w.r.t. to model
+algorithm.  It has a time complexity that is dependent on the $n +
+1$st power of the label set size for an $n$th order model. This
+problem can be avoided using beam search during estimation instead of
+the Viterbi algorithm. This reduces the complexity to
+$O(T|\mathcal{Y}|b$, where $T$ is the size of the training data,
+$\mathcal{Y}$ the label set and $b$ is the beam width.
+
+Because beam search is an approximative inference algorithm, it may
+however not give the correct MAP assignment for a sentence. It may
+happen that beam search returns a label sequence $y_{sys}$ for
+training sentence $x$ whose score with regard to the current model
 parameters is lower than the score of the gold label sequence
-$y_{gold}$. This lead to perceptron updates which are not necessary
-because the model already correctly labels sentence $x$ if only exact
-inference is used. [WHY IS THIS SO BAD?]
+$y_{gold}$. This leads to perceptron updates which are not necessary
+because the model would already correctly label sentence $x$, if only exact
+inference were used. In some domains such as syntactic parsing, this
+leads to significant reduction in classification performance
+\citep{Huang2012}
 
 \paragraph{Violation fixing} To avoid superfluous perceptron updates,
 a technique called violation fixing can be used \citep{Huang2012}
 (this is an extension of the early update technique suggested for
 incremental parsing in \cite{Collins2004}). \cite{Huang2012} suggest
 several related violation fixing methods. The essence of the methods
-is to compute the score each prefix $y_{sys}^i$ of the label sequence
-$y_{sys}$ returned by beam search and $y_{gold}^i$ the gold standard
-label sequence $y_{gold}$. One $i$ is then selected so that the score
-of $y_{sys}^i > y_{gold}^i$ (if such an $i$ exists). Updates are then
-performed for $y_{sys}^i$ and $y_{gold}^i$. The choice of $i$ depends
-on the violation fixing method. For example, the last $i$ which
-exhibits a violation can be used.
+is to compute the score for each prefix of the label sequence
+$y_{sys}$ returned by beam search and each prefix of the gold standard
+label sequence $y_{gold}$. One prefix length $i$ is then selected so
+that the score of $y_{sys}[1:i]$ is higher than
+$y_{gold}[1:i]$.\footnote{If such an $i$ does not exist, then the
+  score for $y_{sys}$ is in fact higher than the score of $y_{gold}$.}
+Updates are then performed for $y_{sys}[1:i]$ and $y_{gold}[1:i]$. The
+choice of $i$ depends on the violation fixing method. For example, the
+maximum violation criterion corresponds to choosing an $i$ which
+maximizes the score difference between $y_{sys}[1:i]$ and
+$y_{gold}[1:i]$.
 
 In the experiments presented in Publication \ref{pub:6}, violation
 fixing did not result in consistent statistically significant
-improvements. It may be that it is more influential in parsing than
-POS tagging or morphological tagging.
+improvements. It may be that violation fixing is more influential in
+parsing than POS tagging or morphological tagging.
 
-\paragraph{Label guessing} As in the case of the CRF tagger, a
-cascaded model can be used to shorten training time as shown in Publication \ref{pub:6}. Instead of a cascade of discriminative
-classifiers, used in \citep{Muller2013}, the system presented in Publication \ref{pub:6} uses a
-combination of a generative label guesser of the type presented in
-Section \ref{sec:hmm-counting}. The number of guesses can be
-determined either beased on a probability mass threshold ot using a
-fixed number of guesses per word. Setting the threshold too low will
-result in a training task that is to easy. Consequently the model will
-overfit the training data. Higher thresholds will approximate the
-original training task more cloasely but will also lead to longer
-training times.
+\begin{itemize}
+\item Hierarchical CRF \cite{Muller2013}, \cite{Weiss2010} and \cite{Charniak2005}.
+\end{itemize}
+
+\paragraph{Label guessing} Beam search can be used to speed up
+estimation for the perceptron tagger. For large label sets, even beam
+search may not lead to sufficient run-time optimization because the
+complexity of beam search is dependent on the label set
+size. Publication \ref{pub:6} introduces a method to optimize
+estimation even further by only considering a subset of $\mathcal{Y}$
+in every position in the training data.
+
+The approach is an application of the idea of structured prediction
+cascaded presented by \cite{Weiss2010}. They propose to use a cascade
+of increasingly complex models. Each model prunes the label candidates
+available at a position in the input data. Subsequent models only
+consider those labels that were not pruned by an earlier model in the
+cascade. This leads to accelerated inference and
+estimation. \cite{Muller2013} applied the idea of structured
+prediction cascades to CRF models. Their results suggest that this can
+lead to both accelerated estimation and improved tagging results.
+
+As in the case of the CRF model, a cascaded model structure can be
+used to shorten training time of a perceptron tagger as shown in
+Publication \ref{pub:6}. Instead of a cascade of discriminative
+classifiers, used by \cite{Muller2013}, the system presented in
+Publication \ref{pub:6} uses a combination of a generative label
+guesser of the type presented in Section \ref{sec:hmm-counting} and a
+structured perceptron tagger. The number of guesses can be determined
+either based on a probability mass threshold or using a fixed number
+of guesses per word. Setting the threshold too low will result in a
+training task that is to easy. Consequently the model will over-fit the
+training data. Higher thresholds will approximate the original
+training task more closely but will also lead to longer training
+times.
 
 Like beam search, label guessing modifies the training task. It does,
 however, not require violation fixing because it does not influence
@@ -711,10 +774,23 @@ standard label should always be added to the set of guesses given by
 the label guesser.
 
 The combination of beam search and model cascading results in a fast
-training with a tolerable decrease in tagging accuracy even large
-label sets and for second order models as shown in Section
-\ref{sec:finnpos}.
+training with a tolerable decrease in tagging accuracy even for large
+label sets and for second order models as shown by the experiments in Chapter
+\ref{chapter:finnpos}.
 
+An early approach that resembles the structured cascade approach is
+tiered tagging used by \cite{Tufis1999} and \cite{Ceausu2006}. In
+tiered tagging, the label set is first projected onto a smaller set of
+coarse labels. A tagger is first used for labeling text with coarse
+labels. Subsequently another tagger is used to convert coarse labels
+into full morphological labels. The structured prediction cascades
+seem to deliver superior results as indicated in Publication
+\ref{pub:5}, however, direct comparison is difficult because
+\cite{Ceausu2006} uses a MEMM tagger and Publication \ref{pub:5} uses
+a perceptron tagger. However, this seems plausible because both
+tagging with coarse labels and subsequent recovery of fine-grained
+labels represent potential error sources.
+ 
 \section{Enriching the Structured Model}\label{sec:sub-labels}
 As seen above, the feature set of a discriminative classifier with
 $|\mathcal{Y}|$ classes and $|F|$ feature templates has on the order
@@ -723,59 +799,57 @@ where $n$ is the model order. When $\mathcal{Y}$ is large, this gives
 rise to data sparsity because each feature template is seen with quite
 few labels $y \in \mathcal{Y}$. Large morphological label sets,
 however, are typically internally structured. For example, the noun
-label ``noun+sg+nom'' and adjective label ``adj+sg+nom'' share the
-same number ``sg''and case ``nom'' .
+label noun+sg+nom and adjective label adj+sg+nom share the
+same number sg and case nom.
 
-One way to combat data sparsity, is to add a number of new feature
-extraction functions in addition to the feature extraction functions
-$F_y$ for each label $y\in \mathcal{Y}$. For example, there can be a
-function $F_{{\rm +sg}}$ which extracts features for each label that
-has singular number. We call the features speicifed by these astracted
-feature extraction functions, {\it sub-label features}.
+Often data sparsity is combated by introducing more abstract features
+that will be activate more often than the existing features. In the
+case of large structured feature sets, a natural choice is to extract
+features for the components of morphological labels as well as for the
+entire labels. I will call such features {\it sub-label features}.
 
-For the label ``noun+sg+nom'', the activation which is extracted is by a standard CRF is
-$$F_{\rm noun+sg+nom}(x, i, y_{i-2}, y_{i-1})$$
-When using sub-label features, we instead extract the activation
-$$\sum_{y \in \{{\rm noun+sg+nom,\ noun,\ sg,\ nom\}}} F_{y}(x, i, y_{i-2}, y_{i-1})$$
-The features extraction function will also utilize the internal
-structure of the argument labels $y_{i-1}$ and $y_{i-2}$. Examples of
-sub-label features include ``A word dog is singular'' and ``a singular
-word follows another singular word''. It is, however, best to do this
-in a restricted manner. The experiments in Chapter
-\ref{chapter:finnpos} demonstrate that in a second order CRF tagger,
-structured sub-label features of order one result in consistent
-improvement in accuracy but higher order sub-label features give no
-improvement.
+For the label noun+sg+nom, the features which are extracted is by a standard CRF are given by
+$$F_{\rm noun+sg+nom}(x, t, y_{t-2}, y_{t-1})$$
+When using sub-label features, we additionally extract features for the components of noun+sg+nom
+$$\sum_{y \in \{{\rm noun+sg+nom,\ noun,\ sg,\ nom\}}} F_{y}(x, t, y_{t-2}, y_{t-1})$$
+The features extraction function also utilizes the internal structure
+of the argument labels $y_{t-1}$ and $y_{t-2}$. Examples of sub-label
+features include {\bf a word dog is singular} and {\bf a singular word
+  follows another singular word}. It is, however, best to do this in a
+restricted manner. The experiments in Chapter \ref{chapter:finnpos}
+demonstrate that in a second order CRF tagger, structured sub-label
+features of order one result in consistent improvement in accuracy but
+higher order sub-label features give no improvement.
 
 Sub-label features can help combat data sparsity. Additionally, they
 are useful for modeling linguistic phenomena such as congruence. For
-example congruence in case and number can be modeled separately and
-independently from other inflectional and derivational information.
+example, two adjacent singular words will activate the set of features
+for the singular sub-label regardless of the main POS of the words.
 
-Restricted form of sub-label features have been utilized by for
-example \cite{Muller2013}, \cite{Smith2005}. \cite{Spoustova2009} also
-use a linguistically motivated selection of unstructured and
-structured sub-labels (at least for main part-of-speech and case of
-nominals) for tagging Czech, however, it is difficult to establish
-exactly what kind of features they use because this is not documented
-in a detailed way in \cite{Spoustatova2009}.
- 
-\cite{Muller2013} uses sub-labels exclusively for unstructured
-features. While sub-labels seem to be most beneficial in combination
-with unstructured features in a morphological tagging setting where a
-morphological analyzer is not utilized, this is not the case in a
-morphological disambiguation setting as the experiemtns in Chapter
-\ref{chapter:finnpos} indicate. When using a morphological analyzer,
-sub-labels result in the greatest improvement when combined with
-structured features.
+In restricted form, sub-label features have been utilized by for
+example \cite{Muller2013}. They use sub-labels
+exclusively for unstructured features. While sub-labels seem to be
+most beneficial in combination with unstructured features in a
+morphological tagging setting where a morphological analyzer is not
+utilized, this is not the case in a morphological disambiguation
+setting as the experiments in Chapter \ref{chapter:finnpos}
+indicate. When using a morphological analyzer, sub-labels result in
+the greatest improvement when combined with structured features.
 
-\cite{Smith2015} utilize structured sub-labels, however, only in a
-restricted way. They build separate structured chains modeling the
+\cite{Smith2005} also utilize structured sub-labels, however, only in
+a restricted way. They build separate structured chains modeling the
 sequence of main POS classes, cases, numbers, genders and lemmas of
-neighoring words. Their system cannot model cross category
-dependencies such as dependence between a verb and the case of its
-object.
+neighoring words. Due to the lack of cross-dependencies between
+different grammatical categories, is doubtful that their system could
+model phenomena like the dependence between a verb and the case of its
+object. 
 
+\cite{Spoustova2009} also use a linguistically motivated selection of
+unstructured and structured sub-labels (at least for main
+part-of-speech and case of nominals) for tagging Czech, however, it is
+difficult to establish exactly what kind of features they use because
+this is not documented in a detailed manner in \cite{Spoustova2009}.
+ 
 Publication \ref{pub:5} extends this approach to fully take
 into account structured features. As the experiments in Chapter
 \ref{chapter:finnpos}, structured sub-labels have a substantial impact
@@ -783,13 +857,6 @@ on tagging accuracy both in morphological tagging setting without a
 morphological analyzer and in morphological disambiguation
 setting. For Finnish, the impact of sub-label features on tagging
 accuracy seems to be on par with the impact of higher model order.
-
-Another approach which utilizes sub-labels is the tiered tagging
-approach \citep{Tufis1999,Ceausu2006}. In tiered tagging, the label
-set is first projected onto a smaller set of coarse labels. A tagger
-is first used for labeling text with coarse labels. Subsequently
-another tagger is used to convert coarse labels into full
-morphological labels.
 
 \section{Model Pruning}\label{sec:pruning}
 
@@ -807,9 +874,9 @@ Different methods have been propsed for pruning of perceptron
 models. \cite{Goldberg2011} prune the models based on update
 count. Parameters that receive less than a fixed amount of updates
 during training will be omitted from the final model. Another approach
-is to pruning by feature count. For example \cite{Hulden2013} prune
+is to prune by feature count. For example \cite{Hulden2013} prune
 out features for words occurring less than a fixed amount of times in
-the training data. More generally, fetures that are activate less than
+the training data. More generally, features that are activated less than
 a fixed amount of times may be pruned out. 
 
 Some regularization techiques can also be used to learn sparse
@@ -825,7 +892,7 @@ I have explored two different pruning strategies
 \end{itemize}
 \cite{Goldberg2011} show that update count based pruning beats feature
 count based pruning in dependency parsing and POS tagging. Therefore,
-I decided not to compare those approaches. Instead I compare update
+I decided not to compare those approaches. Instead, I compare update
 count based pruning to pruning based on final parameter value.
 
 \paragraph{Update Count Pruning} When using this strategy, each
@@ -842,16 +909,18 @@ during training, only those parameters that already received at least
 $n$ updates are used. However, updates are performed on all
 parameters. When the update count of a parameter exceeds $n$, the
 parameter value will therefore already be of similar magnitude with
-the rest of the parameter values in the model.
+the rest of the parameter values in the model. This speeds up
+estimation as \cite{Goldberg2011} note.
 
-\citep{Goldberg2011} do not explore early stopping. Preliminary
-experiments showed that it is best to first set the number of training
-passes without parameter pruning and then set the pruning threshold
-$n$ separately using develpment data. If the number of passes and the
-update count threshold are set at the same time, the model parameters
-converge quite slowly resulting in many training epochs and
-consequently many parameter updates. This has an adverse effect on the
-number of parameters that can be pruned from the final model.
+\cite{Goldberg2011} do not explore pruning in an early stopping
+scenario. My preliminary experiments showed that it is best to first
+set the number of training passes without parameter pruning and then
+set the pruning threshold $n$ separately using develpment data. If the
+number of passes and the update count threshold are set at the same
+time, the model parameters converge quite slowly resulting in many
+training epochs and consequently many parameter updates. This has an
+adverse effect on the number of parameters that can be pruned from the
+final model without resulting in improved accuracy.
 
 \paragraph{Value Based Pruning} A very simple strategy for
 parameter pruning is to prune based on the parameter value. The model

@@ -14,12 +14,12 @@ of the current state-of-the-art in morphological tagging.
 %\end{itemize}
 
 Words are the most readily accepted linguistic units at least in
-Western written language. I define a word as a segments of letters
-and possible numbers which is surrounded by white-space or
+Western written language. I define a word as a sequence of letters,
+and possible numbers, which is surrounded by white-space or
 punctuation. Matters are more complex in spoken language, written
 languages that do not use white space (such as Chinese), and sign
 language. Still, this definition covers most cases of interest from
-the point of view of this the field of morphological tagging.
+the point of view of the field of morphological tagging.
 
 \paragraph{Morphemes} Morphology is the sub-field of linguistics that
 studies the internal structure of words. According to \cite{Bybee85},
@@ -47,10 +47,10 @@ Cross-linguistically, the most common form of non-concatenative
 morphology is {\it suppletion}. Suppletion is the irregular
 relationship between word forms examplified by the English infinitive
 verb ``go'' and its past tense ``went''. Such irregularity occurs in
-all languages. Even though suppletion is cross-linguistically very
-common, most lexemes in a language naturally adhere to regular inflection
+all languages. Even though suppletion is cross-linguistically common,
+most lexemes in a language naturally adhere to regular inflection
 patterns. For example, most English verbs form a past tense by
-adjoining the suffix ``-ed'' onto the lemma. 
+adjoining the suffix ``-ed'' onto the verb stem.
 
 Morphophonological alternations are a further example of
 non-concatenative morphology. These are sound changes that occur at
@@ -74,7 +74,7 @@ importance to be able to handle concatenative morphology.
 words and are therefore called {\it free morphemes}. Inflectional
 affixes cannot. Therefore, they are called {\it bound morphemes}. More
 generally, {\it morphotax} the sub-field of morphology concerned with
-defining the the rules that govern the concatenative morphology of a
+defining the rules that govern the concatenative morphology of a
 language. For example, ``dog'' and ``dog+s'' are valid from the point
 of view of English morphotax whereas ``dogdog'' and ``s'' (in the
 meaning plural number) are not.
@@ -111,7 +111,7 @@ usually contain lemmas. Therefore, it is useful to be able to {\it
 \paragraph{Categories of Bound Morphemes} Whereas free morphemes are
 grouped into word classes, bound morphemes are grouped into their own
 categories according to meaning and co-occurrence restrictions. For
-example, Finnish nouns can take a singular number
+example, Finnish nouns can take a plural number
 marker. Additionally, they can take one case marker from an inventory
 of $15$ possible case markers, one possessive suffix from an inventory
 of $6$ possible markers and a number of clitic affixes
@@ -178,7 +178,7 @@ whereas the FinnTreeBank contains about 46,000 word forms even though
 it is only 20\% of the size of the English corpus. These
 considerations illustrate the need for morphological processing for
 morphologically rich languages like Finnish which make extensive use
-of inflective morphology. Methods which purely rely on word forms will
+of inflective morphology. Methods which rely purely on word forms will
 simply suffer too badly from data sparsity.
 
 \paragraph{Variants} There are different kinds of morphological analysis
@@ -202,13 +202,13 @@ Turkish.\footnote{However, they may suffice in some
 Morphological segmentation software, such as Morfessor
 \citep{Creutz2002}, are another type of morphological analyzers often
 utilized in speech recognition for languages with rich morphology. The
-Morfessor system splits word forms into a sequence of morpheme like
-substrings. For example, the word form ``dogs'' could be split into
+Morfessor system splits word forms into a sequence of morphemelike
+sub-strings. For example, the word form ``dogs'' could be split into
 ``dog'' and ``s''.  This type of morphological segmentation is useful
 in a wide variety of language technological applications, however it
 is more ambiguous than a traditional morphological analysis where the
-bound morphemes are represented by linguistic analysis symbols such as
-+plural. Moreover, Morfessor output does not contain information about
+bound morphemes are represented by linguistic labels such as
+plural. Moreover, Morfessor output does not contain information about
 morphological categories that are not overtly marked. For example, in
 Finnish the singular number of nouns is not overtly marked (only
 plural number is marked by an affix ``i''). This information can
@@ -316,8 +316,8 @@ taggers primarily utilize morphologically labeled training data for
 learning a {\it model} that represents the relationship between text
 and morphological labels. The model is typically based on very simple
 facts called {\it features} that can be extracted from labeled
-text. For example {\it the second word in the sentence is ``dog'' and
-  its label is noun+sg+nom} and {\it the second word has label
+text. For example {\bf the second word in the sentence is ``dog'' and
+  its label is noun+sg+nom} and {\bf the second word has label
   noun+sg+nom and the third word has label verb+pres+3sg}. Each
 feature corresponds to a weight which determines its relative
 importance and reliability. During training, these weights are
@@ -390,7 +390,7 @@ sentences and label sequences at the same time. Unfortunately, this is
 very difficult without making simplistic assumptions about the labeled
 data. For example, a standard assumption is that the probability of a
 word is determined solely based on its morphological label. This
-assumptions is obviously incorrect as demonstrated by word
+assumption is obviously incorrect as demonstrated by word
 collocations. In practice, such independence assumptions rule out many
 useful tagger features such as word collocations.
 
@@ -504,7 +504,7 @@ estimate statistics for sub-labels, such as ``noun'', of complex
 labels ``noun+sg+nom''. This approach is explored by for example
 \cite{Spoustova2009} who extract linguistically motivated sub-label
 features. Publication \ref{pub:5} further investigate this approach and
-show that general unstructured and structured sub-label features lead
+shows that general unstructured and structured sub-label features lead
 to substantial improvement in accuracy. Additional experiments are
 reported in Chapter \ref{chapter:finnpos}.
 
@@ -514,8 +514,8 @@ speed up training and combat data sparsity. Publications \ref{pub:5} and
 \ref{pub:6} continue this line of research by setting up a
 cascade of a perceptron classifier and a generative classifier used
 for pruning label candidates. This combination delivers competitive
-results with the cascaded CRF approach as demonstrated by
-Publication \ref{pub:6} while at the delivering faster training times.
+results compared to the cascaded CRF approach as demonstrated by
+Publication \ref{pub:6} while also delivering faster training times.
 
 Morphological tagging can be done concurrently with parsing.
 \cite{Bohnet2013} present experiments on the Turku Dependency Treebank

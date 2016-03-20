@@ -85,7 +85,13 @@ RAIN    & $0.2$ &  $0.8$         \\
 \hline
 \end{tabular}
 \end{center}
-\caption{Foo FIXME}\label{hmm-ex-1}
+\caption{The probability distributions which define the HMM in the
+  weather forecast example. $\iota$ specifies the initial probability
+  of CLEAR and RAIN. $T$ shows the transition distributions, which
+  specify the probability of CLEAR and RAIN given the weather on the
+  previous day. Finally, $E$ shows the emission distributions, which
+  specify the probabilities of seeing an umbrella depending on the
+  weather.}\label{hmm-ex-1}
 \end{figure}
 
 Let us assume that Jill observes the nurse for one week. She sees the
@@ -125,7 +131,7 @@ representing the transition structure of the HMM outlined in Figure
 %\end{itemize}
 
 Abstracting from the example above, an HMM is a probabilistic model
-that generates sequences of state-observation pairs. At each step $t$
+that generates sequences of state observation pairs. At each step $t$
 in the generation process, the model generates an observation by
 sampling the {\it emission distribution} $\varepsilon_{y_t}$ of the
 current state $y_t$. It will then generate a successor state $y_{t+1}$
@@ -140,7 +146,9 @@ have finite duration. Therefore, a special {\it final state} $f$ is
 required. When the process arrives at the final state, it stops:
 no observations or successor states are generated.
 
-Following \cite{Rabiner1989}, I formally define a {\it discrete} HMM as a
+Following \cite{Rabiner1989}\footnote{The definition of HMMs in this
+  thesis differs slightly from \cite{Rabiner1989} since I utilize
+  final states.  }, I formally define a {\it discrete} HMM as a
 structure $(Y,\ X,\ i,\ T,\ E,\ F)$ where:
 \begin{enumerate}
 \item $Y$ is the set of hidden states ($Y = \{{\rm CLEAR},$ ${\rm RAIN}\}$
@@ -164,21 +172,14 @@ in the example in Figure
 \item $f \in Y$ is the final state. The state $f$ emits no
   observations and there are no transitions from $f$.
 \end{enumerate}
-The definition of HMMs in this thesis differs slightly from
-\cite{Rabiner1989} since I utilize final states. Final states were
-used in for example \cite{foo}. Absorbing states \cite{bar} could also
-be used. FIXME.
 
-Figure \ref{hmm-ex-3} is a more accurate description of the HMM in
-Figure \ref{hmm-ex-1} than Figure \ref{hmm-ex-2}. The image has been
-augmented with initial distribution and a final state. 
-
+Figure \ref{hmm-ex-3} gives a visualization of the HMM in Figure \ref{hmm-ex-1} with an added final state. 
 Because the progression of days is infinite for all practical purposes, the
 probability of transitioning to the final state $f$ in example
 \ref{hmm-ex-2} is 0 regardless of the current state. Hence, the
 probability of any single sequence of states and emissions is
-0. Still, the probability of an initial segment of a state sequence
-may still be non-zero.\footnote{The probability of an initial segment
+0. The probability of an initial segment of a state sequence
+may, however, be non-zero.\footnote{The probability of an initial segment
   up to position $t$ can be computed using the forward algorithm,
   which is presented in Section \ref{sec:forward}.}% For example, the
 %probability that the first three states are (RAIN, RAIN, CLEAR) is X.
@@ -211,9 +212,9 @@ An HMM models a number of useful quantities:
 
 To formally define these probabilities, let $\theta = \{\iota,\ T,\
 E\}$ be the parameters of some HMM with observation set $X$ and hidden
-state set $Y$, $x = (x_1,\ ...,\ x_T) \in X^T$ be a sequence of
-observations and $y = (y_1,\ ...,\ y_T, y_{t+1} = f) \in Y^{T+1}$ a sequence of
-hidden states. Note, that the last state in $y$ has to be the final state
+state set $Y$, $x \in X^T$ be a sequence of
+observations and $y \in Y^{T+1}$ a sequence of
+hidden states. The last state $y_{T+1}$ in $y$ has to be the final state
 $f$. Then the joint probability $p(x,y\parcond\theta)$ of $x$ and $y$
 given $\theta$ is defined by Equation \eqref{hmm-joint-prob}.
 \begin{equation}
@@ -225,15 +226,27 @@ initial and transition probabilities, and the probability of the
 emissions $x_t$ given hidden states $y_t$ determined by the emission
 probabilities.
 
-FIXME: Talk about language models and stuff.
+%FIXME: Talk about language models and stuff.
+When the HMM model is used as a morphological tagger, the emissions
+are word forms and the hidden states are morphological labels. This
+allows for capturing simple grammatical dependencies between adjacent
+morphological labels. For example, in English, a determiner is often
+followed by an adjective, participle, noun or adverb, but rarely
+followed by an active verb form or another determiner. The HMM can,
+therefore, be seen as a simple probabilistic model of grammar
+where the grammar rules only concern co-occurrences of words and
+labels as well as co-occurrences of adjacent labels. As demonstrated
+by the success of the HMM model in POS tagging, this simple model can
+be surprisingly effective.
 
-There is no limit on the number of hidden states in $Y$ that can emit
-a given observation. Therefore, it is quite possible that several
-state sequence $y \in Y^{T+1}$ can be generate the same sequence of observations
-$x \in X^T$. The marginal probability $p(x\parcond\theta)$ of an observation
-sequence $x$ can be found by summing over all state sequences that
-could have generated $x$. It is defined by Equation
-\eqref{hmm-obs-prob}.
+In the standard HMM, every hidden states in $Y$ has a probability for
+emitting any given observation (of course, the emission probability
+for a particular observation can be zero in some states). Therefore,
+several state sequence $y \in Y^{T+1}$ can be generate the same
+sequence of observations $x \in X^T$. The marginal probability
+$p(x\parcond\theta)$ of an observation sequence $x$ can be found by
+summing over all state sequences that could have generated $x$. It is
+defined by Equation \eqref{hmm-obs-prob}.
 \begin{equation}
 p(x\parcond\theta) = \sum_{y \in Y^{T+1},\ y_{T+1} = f} p(x, y\parcond \theta)\label{hmm-obs-prob}
 \end{equation}
@@ -247,7 +260,7 @@ assignment of observation sequence $x$. It is defined by Equation
 \begin{equation}
 p(y\cond x\parcond\theta) = \frac{p(x,y\parcond\theta)}{p(x\parcond\theta)}\label{hmm-cond-prob}
 \end{equation}
-It is noteworthy, that $p(y\cond x\parcond\theta) \propto p(x,y\parcond\theta)$ because the marginal probability $p(x\parcond\theta)$ is independent of $y$. Therefore, $y$ maximizes $p(y\cond x\parcond\theta)$ if and only if, it maximizes $p(x,y\parcond\theta)$. This facilitates inference.
+It is noteworthy, that $p(y\cond x\parcond\theta) \propto p(x,y\parcond\theta)$ because the marginal probability $p(x\parcond\theta)$ is independent of $y$. Therefore, $y$ maximizes $p(y\cond x\parcond\theta)$ if and only if, it maximizes $p(x,y\parcond\theta)$. This facilitates inference because the MAP assignment for the hidden states can be computed without computing the marginal probability $p(x\parcond\theta)$.
 
 Finally, the posterior marginal probability of state $z$ at position $t$ given
 the observation sequence $x$ is computed by summing, or marginalizing,
@@ -301,12 +314,13 @@ tagging. However, they are often quite correlated and, at least in POS
 tagging, it does not matter in practice which of the criteria is used
 \citep{Merialdo1994}. Most systems, for example
 \cite{Church1988,Brants2000,Halacsy2007}, have chosen to use MAP
-inference.
+inference, possibly because it is easier to implement and faster in
+practice.
 
 Although, MM inference is more rarely used with HMMs, computing the
 marginals is important both in unsupervised estimation of HMMs and
 discriminative estimation of sequence models. Therefore, an efficient
-algorithm for MM inference, the {\it forward algorithm}, is presented below.
+algorithm for MM inference, the {\it forward-backward algorithm}, is presented below.
 
 There are a number of strongly related algorithms for both exact MAP
 and MM inference. The work presented in this thesis, uses the Viterbi
@@ -322,9 +336,8 @@ algorithm.
 Since cyclic models fall beyond the scope of this thesis and both the
 Viterbi and forward-backward algorithms are amenable to well known
 optimizations, which are of great practical importance, I will not
-discuss belief propagation belief propagation
-further. \cite{Koller2009} gives a nice treatment of belief
-propagation and graphical models at large.
+discuss belief propagation further. \cite{Koller2009} gives a nice
+treatment of belief propagation and graphical models at large.
 
 Before introducing the Viterbi and forward-backward algorithm, it is
 necessary to investigate the forward algorithm, which is used to
@@ -375,11 +388,11 @@ time $t$, when we have emitted the prefix $x[1:t]$.
 To compute the belief state at position $t$, we first need to compute
 the {\it forward probabilities} for each state $z \in Y$. The forward
 probability $\fw_{t,z}(x)$ of state $z$ at position $t$ is the
-probability of emitting prefix $x[1:t]$ and ending up in state $z \in
+probability of emitting prefix $(x_1, ..., x_t)$ and ending up in state $z \in
 Y$. For example, given an infinite observation 
 %$x = (${\sc umbrella},
 %{\sc umbrella}, {\sc no umbrella},\ ...$)$
-$\{\includegraphics[width=0.4cm]{umbrella},\ \includegraphics[width=0.4cm]{umbrella},\ \includegraphics[width=0.4cm]{no_umbrella},\ ...\}$, the forward probability
+$(\includegraphics[width=0.4cm]{umbrella},\ \includegraphics[width=0.4cm]{umbrella},\ \includegraphics[width=0.4cm]{no_umbrella},\ ...)$, the forward probability
 $\fw_{3,\textsc{RAIN}}$ is the probability that the third day is rainy,
 when the nurse carried an umbrella on the first and second days, but
 did not carry one on the third day.
@@ -388,7 +401,7 @@ I am going to make a technical but useful definition. The {\it prefix probabilit
 \begin{equation}
 p(x,\ y\parcond \theta) = \Bigg(\iota(y_1) \cdot \Bigg(\prod_{u = 1}^{t - 1} \tau_{y_u}(y_{u + 1}) \Bigg) \cdot \prod_{u = 1}^t \varepsilon_{y_u}(x_u)\Bigg),\ t \le T\label{prefix_prob}
 \end{equation}
-When $t = T$, this is very similar to the joint probability of $x$ and
+When $t = T$, this is almost the same as the joint probability of $x$ and
 $y$, but the final transition is missing.
 
 Conceptually, the forward probability is computed by summing over the
@@ -729,7 +742,7 @@ Muschamp, but one thing's for certain: he did things the right way off
 the field.''. To avoid this kind of problems caused by data sparsity,
 both emission and transition counts need to be smoothed.
 
-\paragraph{Counting for Supervised ML Estimation}
+\paragraph{Counting for Supervised ML Estimation}\label{sec:hmm-counting}
 When HMMs are used in linguistic labeling tasks, such as
 part-of-speech tagging, they are usually estimated in a supervised
 manner. Each label is thought to represent a hidden variable, and the

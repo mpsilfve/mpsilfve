@@ -1,23 +1,26 @@
 \chapter{Introduction}
 \label{ch:intro}
 
-The topic of this thesis is morphological tagging. A morphological
-tagger is a piece of computer software which provides complete
-morphological descriptions of the words in a sentence as seen in
-Figure \ref{fig:mt-example}. The main application of morphological
-taggers is as a pre-processing step for some other natural language
-application, for example a syntactic parser.
+A morphological tagger is a piece of computer software that provides
+complete morphological descriptions of sentences. An example is given
+in Figure \ref{fig:mt-example}. Each of the words in the sentence is
+assigned a detailed morphological label, which specifies
+part-of-speech and inflectional information. It also receives a
+lemma. Morphological tagging is typically a pre-processing step for
+other language processing applications, for example syntactic parsers,
+machine translation software and named entity recognizers.
 
 The task of morphological tagging is closely related to part-of-speech
-tagging (POS tagging) where a coarse morphological labels, such as
-noun or verb, is given for each word in sentence. In contrast to a POS
-tagger, a morphological tagger, however, provides more detailed
-morphological descriptions accompanied by lemmas. This is necessary
-when processing {\it morphologically rich languages}, which utilize
-the internal structure of words to encode a variety of structural and
-semantic information. For these languages, a plain part-of-speech does
-not provide enough information to enable successful further
-processing.
+tagging (POS tagging) where the words in a sentence are tagged using
+coarse morphological labels, such as noun and verb, which
+approximately correspond to main word classes. POS taggers are
+sufficient for processing languages where the scope of productive
+morphology is restricted, for example English. Morphological taggers
+are, however, necessary when processing {\it morphologically rich
+  languages}, which utilize extensive inflection and compounding for
+encoding structural and semantic information. For these languages, a
+coarse POS tag simply does not provide enough information to enable
+accurate downstream processing such as syntactic parsing.
 
 \begin{figure}[!htb]
 \begin{center}
@@ -31,10 +34,11 @@ A & dog & sleeps & on & the & mat & .\\
 \hline
 \end{tabular}
 \end{center}
+\caption{A morphologically tagged sentence}\label{fig:mt-example}
 \end{figure}
 
 At first glance, the task of assigning morphological descriptions, or
-{\it morphological labels}, seems very easy. Simply form a list of
+{\it morphological labels}, seems almost trivial. Simply form a list of
 common word forms and their morphological labels and look up words in
 the list when tagging unseen sentences. Unfortunately, this approach
 fails because of the following reasons.
@@ -62,12 +66,13 @@ learning techniques to derive tagger models.
 
 \section{Motivation}
 Data-driven methods have dominated the field of natural language
-processing (NLP). Although these methods have been applied to
-virtually all language processing tasks, research has predominantly focused
-on the English language. For many smaller languages such as Finnish,
-statistical methods have not been applied to the same extent. This is
-probably due to the fact that large training corpora required by
-supervised data-driven methods are available for very few languages.
+processing (NLP) since the nineties. Although these methods have been
+applied to virtually all language processing tasks, research has
+predominantly focused on a few languages, English in particular. For
+many languages with fewer speakers, such as Finnish, statistical
+methods have not been applied to the same extent. This is probably due
+to the fact that large training corpora required by supervised
+data-driven methods are available for very few languages.
 
 The lack of statistical work on NLP for languages besides English is a
 problem because the languages of the word differ substantially with
@@ -75,7 +80,7 @@ regard to syntax, morphology, phonology and orthography. These
 differences have very real consequences for the design of NLP
 systems. Therefore, it is impossible to make general claims about
 language processing without testing these claims on other languages
-than English.
+in addition to English.
 
 This thesis presents work that focuses on data-driven methods for
 morphological tagging of Finnish which is the native language of the
@@ -156,7 +161,7 @@ tagging of Finnish both using generative and discriminative
 models. The aim of my work has been creation of practicable taggers
 for morphologically rich languages. Therefore, the main contributions
 of this thesis are practical in nature. I present methods for
-improving tagging accuracy, estimation speed, tagging speed and reduce
+improving tagging accuracy, estimation speed, tagging speed and reducing
 model size. More specifically, the main contributions of the thesis
 are as follows.
 
@@ -198,8 +203,8 @@ are as follows.
   is important. A faster and less accurate tagger can often be
   preferable compared to more accurate but slower tagger in real world
   applications where high throughput is vital. Estimation speed, in
-  turn, because it affects the development process of the tagger. For
-  these reasons, Publications \ref{pub:4} and \ref{pub:5}
+  turn, is important because it affects the development process of the
+  tagger. For these reasons, Publications \ref{pub:4} and \ref{pub:5}
   explore known and novel approximate inference and estimation
   techniques. I show that these lead to substantial reduction in
   training times and faster tagging times compared to available
@@ -250,7 +255,7 @@ Chapter \ref{chap:fsm} introduces finite-state machines and a
 formulation of generative morphological taggers in finite-state
 algebra. It also shows how finite-state algebra can be used to
 formulate generative taggers in a generalized manner encompassing
-traditional HMM taggers and but also other kinds of models.  Chapter
+both traditional HMM taggers and other kinds of models.  Chapter
 \ref{chapter:crf} deals with discriminative morphological taggers and
 introduces the contributions of the author to the field of
 discriminative morphological tagging.  Chapter

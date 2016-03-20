@@ -1,16 +1,40 @@
 \chapter{Experiments}
 \label{chapter:finnpos}
 
-FinnPos presented in Publication \ref{pub:5}.  is a discriminative morphological
-tagger based on the CRF model and averaged perceptron estimation. It
-is especially geared toward morphologically rich languages and
-incorporates features which make it especially suited for use
-with these languages
+FinnPos presented in Publication \ref{pub:6}.  is a discriminative
+morphological tagger based on the averaged perceptron classifier. It
+is especially geared toward morphologically rich languages. To this
+end, it is implemented as a cascade of a generative label guesser and
+an averaged perceptron classifier. To further speed up estimation and
+inference, it employs beam search. Moreover, it extracts unstructured
+and structured features for sub-labels in order to improve accuracy in
+presence of large structured label sets.
+
+This chapter presents experiments on morphological tagging in Finnish
+using FinnPos. The experiments augment the experiments in Publication
+\ref{pub:6}.
 
 \section{Data Sets}
-FTB
+All experiments are conducted on both the Turku Dependecy Treebank
+\citep{haverinen2009,haverinen2014} (TDT) and FinnTreeBank
+\citep{Voutilainen2011} (FTB) described in Section \ref{sec: treebanks}.
 
-TDT
+\paragraph{FinnTreeBank}
+FTB \citep{Voutilainen2011} is a morphologically tagged and dependency parsed collection of example sentences from Iso Suomen Kielioppi, a descriptive grammar of the Finnish language \citep{Hakulinen2004}. Similarly to TDT, FTB contains text from various domains including newspapers and fiction. The major difference between TDT and FTB, therefore, is that FTB contains a variety of grammatical examples, whereas TDT contains more real-life language use.
+Both the morphological tagging and dependency structures have been manually prepared.
+The morphological analyses of word tokens are post-processed outputs of OMorFi, an open-source morphological analyzer for Finnish \citep{Pirinen2011}. % The post-processing steps reported by \citet[Section 5.2]{haverinen2014} comprise x, y, and z.  
+
+\paragraph{Turku Dependency Treebank} TDT \citep{Haverinen2013} contains text from ten different domains, for example Wikipedia articles, blog entries, and financial news. The annotation has been prepared by manually correcting the output of an automatic annotation process.
+%The domains and the respective section sizes are presented in Table \ref{tab: TDT}. 
+%In addition, the treebank contains a publicly non-available test set of 1,554 sentences (21,211 tokens) for evaluation purposes.
+Similarly to FTB, the morphological analyses of word tokens in FTB are
+post-processed outputs of OMorFi \citep{Pirinen2011}. However, the
+treebanks are based on different versions of OMorFi. Moreover, the
+post-processing steps applied in TDT and FTB differ. This results in
+somewhat different annotation schemes.  The TDT annotation for each
+word token consists of word lemma (base form), part-of-speech (POS),
+and a list of detailed morphological information, including case,
+number, tense, and so forth.
 
 Often in particular sub-fields of natural language processing, there
 exist established data sets with established splits into training,
@@ -20,9 +44,14 @@ using the data splits introduced by \cite{Collins2002}. This is sound
 because it guarantees that results reported in different papers are
 comparable. For the data sets used in this thesis, Finn TreeBank
 \citep{Voutilainen2011} and Turku Dependency Treebank
-\citep{Haverinen2013}, there are no established splits. 
+\citep{Haverinen2013}, there are no established splits. Therefore, the
+experiments use 80\% of the data for training, 10\% as development
+data and 10\% as final test data. The data is split in the following
+way: For each consecutive ten sentences, the first eight are assigned
+to the training set, the ninth one to the development set and the
+tenth one to the test set.
 
-80-10-10 splits.
+\section{Setup for the Experiments}
 
 \begin{itemize}
 \item Structured and unstructured sub label dependencies (see Section \ref{}) are used to improve accuracy with large structured label sets.
@@ -329,7 +358,7 @@ when not using it. It is noteworthy that the increas in accuracy
 resulting from the morphological analyzer is substantially larger for
 both data sets.
 
-\section{Utilizing Sub-Label Dependencies}
+\section{Sub-Label Dependencies}
 
 In this section I examine the impact of sub-label order order on
 tagging accuracy, training time and decoding time both using a
