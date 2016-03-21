@@ -1,30 +1,79 @@
 \chapter{Experiments}
 \label{chapter:finnpos}
 
-FinnPos presented in Publication \ref{pub:6}.  is a discriminative
+FinnPos, presented in Publication \ref{pub:6}, is a discriminative
 morphological tagger based on the averaged perceptron classifier. It
-is especially geared toward morphologically rich languages. To this
-end, it is implemented as a cascade of a generative label guesser and
-an averaged perceptron classifier. To further speed up estimation and
-inference, it employs beam search. Moreover, it extracts unstructured
-and structured features for sub-labels in order to improve accuracy in
-presence of large structured label sets.
+is specifically geared toward morphologically rich languages. To this
+end, it implements beam search and a cascaded model architecture for
+speeding up estimation and tagging speed. To improve accuracy, it
+includes an option to use a morphological analyzer during
+tagging. Moreover, it extracts sub-label dependencies for unstructured
+and structured features in order to improve tagging accuracy in presence of
+large structured label sets.
 
 This chapter presents experiments on morphological tagging in Finnish
-using FinnPos. The experiments augment the experiments in Publication
-\ref{pub:6}.
+using FinnPos. These experiments are intended to augment the
+experiments in Publication \ref{pub:6}. I will present the following
+experiments
+
+\begin{itemize}
+\item {\bf Cascaded Model Architecture} What is the effect of different settings for the label guesser on tagging accuracy, estimation speed and tagging speed?
+\item {\bf Beam Search} What is the effect of beam width on tagging accuracy, estimation speed and tagging speed?
+\item {\bf Model Order} What is the effect of model order on tagging accuracy, estimation speed and tagging speed? Experiments are presented both when tagging with and without a morphological analyzer.
+\item {\bf Sub-Label Order} What is the effect of the order of sub-label dependencies on tagging accuracy, estimation speed and tagging speed? Experiments are presented both when tagging with and without a morphological analyzer.
+\item {\bf Model Pruning} Which is the better model pruning strategy: update count based or value based pruning?
+\end{itemize}
+
+
 
 \section{Data Sets}
 All experiments are conducted on both the Turku Dependecy Treebank
-\citep{haverinen2009,haverinen2014} (TDT) and FinnTreeBank
-\citep{Voutilainen2011} (FTB) described in Section \ref{sec: treebanks}.
+\citep{Haverinen2013} (TDT) and FinnTreeBank \citep{Voutilainen2011}
+(FTB). Two distinct data sets, containing text from different genres,
+are used in order to justify general claims about the performance of
+the system in Finnish morphological tagging. Table \ref{tab:data} gives a
+numerical overview of both data sets.
+
+\begin{table}[htb!]
+%\begin{small}
+\begin{center}
+\begin{tabular}{l|l|l} 
+ & TDT & FTB \\
+\hline
+size & 13,572 sent. (183,118 tok.) & 19,121 sent. (162,028 tok.) \\
+\# labels & 2,014 & 1,399 \\
+OMorFi coverage & 94.2\% & 99.0\% \\
+\end{tabular}
+\end{center}
+%\end{small}
+% \caption{A post-processed and disambiguated OMorFi analysis with Turku Dependency Treebank annotation for an exemplar sentence \emph{H\"an ei asu pieness\"a kyl\"ass\"a} adapted from \citet{haverinen2014}.}
+\caption{Summary of Turku Dependency Treebank (TDT) \citep{Haverinen2013} and FinnTreeBank (FTB) \citep{Voutilainen2011}. The OMorFi coverage refers to coverage per token.}
+\label{tab:data} 
+\end{table}
 
 \paragraph{FinnTreeBank}
-FTB \citep{Voutilainen2011} is a morphologically tagged and dependency parsed collection of example sentences from Iso Suomen Kielioppi, a descriptive grammar of the Finnish language \citep{Hakulinen2004}. Similarly to TDT, FTB contains text from various domains including newspapers and fiction. The major difference between TDT and FTB, therefore, is that FTB contains a variety of grammatical examples, whereas TDT contains more real-life language use.
-Both the morphological tagging and dependency structures have been manually prepared.
-The morphological analyses of word tokens are post-processed outputs of OMorFi, an open-source morphological analyzer for Finnish \citep{Pirinen2011}. % The post-processing steps reported by \citet[Section 5.2]{haverinen2014} comprise x, y, and z.  
+FTB is a morphologically tagged and dependency parsed collection of
+example sentences from Iso Suomen Kielioppi, a descriptive grammar of
+the Finnish language \citep{Hakulinen2004}. The examples have been
+harvested from newspapers, novels and blogs. Additionally, some
+examples represent spoken language. 
 
-\paragraph{Turku Dependency Treebank} TDT \citep{Haverinen2013} contains text from ten different domains, for example Wikipedia articles, blog entries, and financial news. The annotation has been prepared by manually correcting the output of an automatic annotation process.
+The FTB corpus only contains isolated sentences and each sentence has
+been selected to illustrate some grammatical phenomenon. Therefore, it
+is safe to say that FTB does not represent a random sample of Finnish
+text. It probably contains a high number of rare grammatical
+phenomena. This can be seen as a weakness because results on the FTB
+corpus may not carry over to other data sets. However, it also makes
+the corpus interesting and challenging from the point of view of
+morphological tagging because the data is expected to be complex.
+
+Both the morphological tagging and dependency structures of FTB have
+been manually prepared.  The morphological analyses of word tokens are
+post-processed outputs of OMorFi, an open-source morphological
+analyzer for Finnish
+\citep{Pirinen2011}. % The post-processing steps reported by \citet[Section 5.2]{haverinen2014} comprise x, y, and z.
+
+\paragraph{Turku Dependency Treebank} TDT contains text from ten different domains, for example Wikipedia articles, blog entries, and financial news. The annotation has been prepared by manually correcting the output of an automatic annotation process.
 %The domains and the respective section sizes are presented in Table \ref{tab: TDT}. 
 %In addition, the treebank contains a publicly non-available test set of 1,554 sentences (21,211 tokens) for evaluation purposes.
 Similarly to FTB, the morphological analyses of word tokens in FTB are
@@ -36,43 +85,34 @@ word token consists of word lemma (base form), part-of-speech (POS),
 and a list of detailed morphological information, including case,
 number, tense, and so forth.
 
-Often in particular sub-fields of natural language processing, there
-exist established data sets with established splits into training,
-development and test data. For example, most work on English POS
-tagging reports results on the Penn Treebank corpus \citep{Marcus1993}
-using the data splits introduced by \cite{Collins2002}. This is sound
-because it guarantees that results reported in different papers are
-comparable. For the data sets used in this thesis, Finn TreeBank
-\citep{Voutilainen2011} and Turku Dependency Treebank
-\citep{Haverinen2013}, there are no established splits. Therefore, the
-experiments use 80\% of the data for training, 10\% as development
-data and 10\% as final test data. The data is split in the following
-way: For each consecutive ten sentences, the first eight are assigned
-to the training set, the ninth one to the development set and the
-tenth one to the test set.
+\paragraph{Data Splits} Well established data sets usually have
+established splits into training, development and test data. For
+example, most work on English POS tagging reports results on the Penn
+Treebank corpus \citep{Marcus1993} using the data splits introduced by
+\cite{Collins2002}. This is sound because it guarantees that results
+reported in different papers are comparable. For the data sets used in
+this thesis, Finn TreeBank \citep{Voutilainen2011} and Turku
+Dependency Treebank \citep{Haverinen2013}, there are no established
+splits. Therefore, the experiments use 80\% of the data for training,
+10\% as development data and 10\% as final test data. The data is
+split in the following way: For each consecutive ten sentences, the
+first eight are assigned to the training set, the ninth one to the
+development set and the tenth one to the test set.
 
 \section{Setup for the Experiments}
 
-\begin{itemize}
-\item Structured and unstructured sub label dependencies (see Section \ref{}) are used to improve accuracy with large structured label sets.
-\item Adaptive beam search is used to speed up estimation (see Section \ref{}).
-\item A generative label guesser is used to speed up estimation (see Section \ref{}).
-\item A morphological analyzer is used during tagging and training (see Section \ref{}).
-\end{itemize}
+%This section is intended to augment the treatment
+%in Publication \ref{pub:5}. It presents several experiments on
+%morphological tagging using the FinnPos tagger toolkit which were
+%omitted from the paper in favor of clarity.
 
-This section is intended to augment the treatment
-in Publication \ref{pub:5}. It presents several experiments on
-morphological tagging using the FinnPos tagger toolkit which were
-omitted from the paper in favor of clarity.
-
-Because FinnPos incorporates a variety of optimizations, governed by
-different hyper-parameters, both to accuracy and speed, it is
-impossible to conduct exhaustive experiments (a grid search would
-simply include too many experiments). Instead I have chosen the
-settings presented in Publication \ref{pub:6} as vantage point and
-examined the impact of changing one hyper-parameter at a time. These
-settings were chosen because they give state-of-the-art accuracy as
-presented in the paper. 
+Because FinnPos incorporates a variety of optimizations to accuracy
+and speed governed by different hyper-parameter, it is impossible to
+conduct exhaustive experiments (a grid search would simply include too
+many experiments). Instead I have chosen the settings presented in
+Publication \ref{pub:6} as vantage point and examined the impact of
+changing one hyper-parameter at a time. These settings were chosen
+because they give state-of-the-art accuracy as presented in the paper.
 
 The basic setting for all experiments is 
 \begin{itemize}
@@ -81,35 +121,34 @@ The basic setting for all experiments is
 \item 99.9\% mass for the generative label guesser.
 \item 99.9\% mass for the adaptive beam search.
 \end{itemize}
-A morphological analyzer is only used when separately indicated. A
-label dictionary is used in all experiments both to speed up decoding
-and improve accuracy. The label dictionary is also used when the
+
+A morphological analyzer is only used when indicated. A label
+dictionary is used in all experiments both to speed up decoding and
+improve accuracy. The label dictionary is also used when the
 morphological analyzer is used. The reason for this is that a liberal
 compounding or derivation mechanism (such as the one implemented in
 the OMorFi morphological analyzer) can result in improbable
 analyses. The analyses that have been attested in the training corpus
 should be preferred when possible.
 
-The features for the tagger and lemmatizer follow
-Publication \ref{pub:6}.
-
-Let $x = (x_1 ... x_T)$ be a sentence, $y = (y_1 ... y_T)$ a label
-sequence and $t$ and index. Then the unstructured features templates
-for the morphological tagger are the familiar Ratnaparkhi features
-\citep{Ratnaparkhi1998} augmented with a few additional features. For
-all words, FinnPos uses the following feature templates
+The feature set used in the experiments follows Publication
+\ref{pub:6}.  Let $x = (x_1 ... x_T)$ be a sentence, $y = (y_1
+... y_T)$ a label sequence and $t$ and index. Then the unstructured
+features templates for the morphological tagger are the familiar
+Ratnaparkhi features \citep{Ratnaparkhi1998} augmented with a few
+additional features. For all words, FinnPos uses the following feature
+templates
 \begin{itemize}
 \item The word form $x_t$ and the lower cased version of $x_t$.
 \item The length $|x_t|$ of word form $x_t$.
-\item Word form $x_{t-2}$, when $t > 2$.
-\item Word form $x_{t-1}$, when $t > 1$.
-\item Word form $x_{t+2}$, when $t + 1 < T$.
-\item Word form $x_{t+1}$, when $t > T$.
+\item Each word form in a four word window around $t$: $x_{t-2}$, $x_{t-1}$, $x_{t+1}$ and $x_{t+2}$.
+\item The word form bigrams $(x_{t-1}, x_t)$ and $(x_t,x_{t+1})$.
 \end{itemize}
-For rare words\footnote{The list of common words is user defined but
-  in these experiments I have defined common words to be words having
-  frequency 10 or higher in the training corpus}, it additionally
-extracts the following features
+For rare words\footnote{A rare word is one that is not common. The
+  list of common words is user defined but in these experiments I have
+  defined common words to be words having frequency 10 or higher in
+  the training corpus}, it additionally extracts the following
+features
 \begin{itemize}
 \item {\tt DIGIT} when $x_t$ contains a digit.
 \item {\tt UC} when $x_t$ contains an upper case letter.
@@ -118,19 +157,19 @@ extracts the following features
 When a morphological analyzer is used, each morphological label given
 to word $x_t$ is also used as a feature template.
 
-Let $x = x_1 ... x_n$ be a word form of length $n$ and $y$ its
-label. Then the features for the lemmatizer are
-\begin{itemize}
-\item The lower cased variant of $x$.
-\item Prefixes of $x$ up to length 5 and suffixes up to length 7.
-\item The infixes $x_{n - 2}x_{n - 1}$, $x_{n - 3}x_{n - 2}$ and $x_{n - 4}x_{n - 3}$.
-\item The label $y$ and its main part-of-speech.
-\item {\tt DIGIT} when $x$ contains a digit.
-\item {\tt UC} when $x$ contains an upper case letter.
-\end{itemize}
-Additionally a combination of each feature template and the
-morphological label $y$ is used as a feature template. Naturally, the
-combination of $y$ with itself is omitted.
+%Let $x = x_1 ... x_n$ be a word form of length $n$ and $y$ its
+%label. Then the features for the lemmatizer are
+%\begin{itemize}
+%\item The lower cased variant of $x$.
+%\item Prefixes of $x$ up to length 5 and suffixes up to length 7.
+%\item The infixes $x_{n - 2}x_{n - 1}$, $x_{n - 3}x_{n - 2}$ and $x_{n - 4}x_{n - 3}$.
+%\item The label $y$ and its main part-of-speech.
+%\item {\tt DIGIT} when $x$ contains a digit.
+%\item {\tt UC} when $x$ contains an upper case letter.
+%\end{itemize}
+%Additionally a combination of each feature template and the
+%morphological label $y$ is used as a feature template. Naturally, the
+%combination of $y$ with itself is omitted.
 
 Some baseline runs are impossible to run: FinnPos uses a second order
 model. With a label set size of 1,000, trellises used during inference
@@ -140,8 +179,8 @@ training.
 
 The results of the experiments presented here differ minutely from the
 results presented in Publication \ref{pub:6} due to added features
-(lower cased word form and word length) and some bug fixes related to
-the lemmatizer.
+(lower cased word form and word length) and a few bug fixes that have
+improved results.
 
 \section{Using a Cascaded Model}
 
@@ -522,8 +561,8 @@ yes                    & 96.3\%, 5.5M   & 96.3\%, 1.2M   & 96.3\%, 0.8M & 96.2\%
 \end{center}
 \end{table}
 
-\section{Lemmatizer}
+%\section{Lemmatizer}
 
-Remember to check how often the correct edit script exists.
+%Remember to check how often the correct edit script exists.
 
-Test leaving out the word form as a feature.
+%Test leaving out the word form as a feature.

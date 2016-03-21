@@ -4,40 +4,68 @@
 In this section, I will present the task of data driven
 lemmatization. I will examine different approaches to data driven
 lemmatization and present the lemmatizer used in the FinnPos toolkit
-\cite{Silfverberg2015}.
+presented in Publication \ref{pub:6}.
 
-A lemmatizer is a system which takes text as input and returns the
-lemma of each word in the text. Lexical resources such as dictionaries
-or morphological analyzers are very helpful for the lemmatization
-task. In fact, lemmatization is often seen as one of the sub tasks of
-morphological analysis. Another task which is closely related to
-lemmatization is {\it morphological paradigm induction}
-\citep{Ahlberg2014}. Here the task is to generate all, or a
-selection, of the inflectional forms of a word form. Therefore,
-lemmatization is a sub-task of morphological paradigm induction.
+A lemmatizer is a system that takes text as input and returns the
+lemmas of words in the text. Because dictionaries and other lexical
+resources often list lemmas but omit other word forms, lemmatizers are
+useful for example for information extraction. They are particularly
+useful for morphologically rich languages where a substantial part of
+words occurring in text undergo various inflection.
 
-I will treat lemmatization as a follow up task to morphological
-labeling. That is to say, the lemmatizer has access to the
-morphological labels in the text. The morphological label is extremely
-important for lemmatization. For example, in Finnish a word ending
-``-ssa'' could be a noun or verb form. If it is a noun form it could
-be either a nominative or an inessive. All of these analyses
-correspond to different lemmas. If the correct morphological label is
-known, some of the alternative lemmas can be ruled out.
+Lexical resources such as dictionaries or morphological analyzers are
+very helpful for the lemmatization task. In fact, lemmatization is
+often seen as one of the sub tasks of morphological analysis. Another
+task which is closely related to lemmatization is {\it morphological
+  paradigm induction} \citep{Ahlberg2014}. Here the task is to
+generate all, or a selection, of the inflectional forms of a word
+form. Therefore, lemmatization can also be seen as a sub-task of
+morphological paradigm induction.
 
-A morphological analyzer can be used for lemmatization of the words in
-a text where words have morphological labels. First, analyze each word
-using the morphological analyzer. This produces a set of morphological
-labels and associated lemmas. Then simply pick the lemma which is
-associated with the correct morphological label.
+\begin{table}[!htb]
+\begin{center}
+\begin{tabular}{c|c|c|c}
+Word & Label & Translation & Lemma  \\
+\hline
+kissa & noun+sg+nom & a/the cat & kissa \\
+sanoessa & verb+act+inf+ine & while saying (something) & sanoa \\
+talossa & noun+sg+ine & in a/the house & talo
+\end{tabular}
+\caption{Lemmatization of three Finnish word forms ending ``-ssa''.}\label{tab:3wf}
+\end{center}
+\end{table}
 
-Problems arise when word forms are not recognized by the morphological
-analyzer. There are several approaches to solving these problems. One
-approach is to utilize the morphological analyzer (for example a
-finite-state analyzer) to produce a guess for a lemma even though the
-word form is not recognized. The guess is based on orthographically
-similar words which are recognized and lemmatized by the morphological
-analyzer. As an example of this approach, see \cite{Linden2009}.
+I will treat lemmatization as a follow-up task of morphological
+labeling. Therefore, the lemmatizer has access to the morphological
+labels of the words in the text. The morphological label provides very
+useful information for lemmatization because it can help to
+disambiguate between candidate lemmas. As an example, consider the
+three Finnish word form ending ``-ssa'' in Table \ref{tab:3wf}. The
+different morphological analyses correspond to different ways of
+forming the lemma. For example in the case of a singular inessive of a
+noun (``talossa''), the lemma (``talo'') is formed by removing the
+suffix ``-ssa''. If the word form is instead a nominative, the lemma
+is identical to the word form. As the example shows, the morphological
+label can help to rule out incorrect lemmas.
+
+A morphological analyzer can be used for lemmatization of a
+morphologically tagged text. First, analyze each word using the
+morphological analyzer. This produces a set of morphological labels
+and associated lemmas. Then simply pick the lemma which is associated
+with the correct morphological label. As long as the morphological
+label assigned to each word is also known by the morphological
+analyzer, this works perfectly. Problems arise when word forms are not
+recognized by the morphological analyzer or when words are assigned
+morphological labels not recognized by the analyzer. There are
+several approaches to solving these problems. One approach is to
+utilize the morphological analyzer (for example a finite-state
+analyzer) to produce a guess for a lemma even though the word form is
+not recognized. The guess is based on orthographically similar words
+which are recognized and can be lemmatized by the morphological
+analyzer. As an example of this approach, see \cite{Linden2009} who
+use finite-state algebra to transform a morphological analyzer into a
+morphological guesser that can generate the lemma for words that are
+not recognized by the original analyzer.
 
 The main advantage of basing a data driven lemmatizer on an existing
 morphological analyzer is that large coverage morphological analyzers
@@ -60,17 +88,16 @@ observation that word forms can be transformed into lemmas using an
 {\it edit script}. For example, the English noun ``dogs'' has the
 lemma ``dog''. To convert ``dogs'' into ``dog'' one needs to remove
 the suffix ``s''. This is a very simple example of an edit script
-which I will denote $[-s \rightarrow \epsilon]$. All edit scripts
-cannot be applied to all word forms. For example, the edit script which
-removes a final ``s'' cannot be applied on past English participle
-form ending ``ed''.
-
+which I will denote $[-s \rightarrow \epsilon]$. %All edit scripts
+%cannot be applied to all word forms. For example, the edit script which
+%removes a final ``s'' cannot be applied on past English participle
+%form ending ``ed''.
 Classifier based lemmatizers frame the lemmatization task as a as
-classification task. The lemmatizer will use edit scripts as
-labels. Subsequently to labeling a word form with an edit script
-class, the lemmatizer will apply the edit script thus giving a lemma.
+classification task. As labels, the classifier uses edit
+scripts. Subsequently to labeling a word form with an edit script
+class, the lemmatizer will apply the edit script thus constructing a lemma.
 
-The advantage with using a classifier based lemmatizer is that the
+The main advantage of using a classifier based lemmatizer is that the
 classifier can use a feature based discriminative model. In contrast
 to analyzer based lemmatizers, classifier based lemmatizers can
 therefore use richer information sources such as prefixes and word
@@ -86,18 +113,19 @@ lemmatizers partly because the work of \cite{Linden2009} already
 investigates analyzer based lemmatization for Finnish. When performing
 morphological disambiguation based on the output of a morphological
 analyzer, the current system does use the morphological analyzer for
-lemmatization of all word forms which it recognizes. For all remaining
-words, the data driven lemmatizer is used.
+lemmatization of all word forms which are recognized by the
+analyzer. For all remaining words, the data driven lemmatizer is used.
 
 In the field of morphological paradigm generation, there exists work
-which in a sense combines the analyzer and classifier based approaches, for example
-\citep{Hulden2014}. However, their starting point is not a morphological
-analyzer. Instead a list of morphological paradigms is used. It would
-be interesting to explore this but it falls beyond the scope of the
+which in a sense combines the analyzer and classifier based
+approaches, for example \citep{Hulden2014}. However, their starting
+point is not a morphological analyzer. Instead a list of morphological
+paradigms is used. It would be interesting to explore this but it
+falls beyond the scope of the current work. Another interesting
+direction for future research is joint tagging and lemmatization which
+has yielded improvements both in tagging and lemmatization accuracy
+\cite{Muller2015}. However, this also falls beyond the scope of the
 current work.
-
-Joint tagging and lemmatization has also been explored and yields some
-improvements \cite{Muller2015}.
 
 %\begin{itemize}
 %\item Classifier based: \cite{Chrupala2008}.
@@ -105,10 +133,13 @@ improvements \cite{Muller2015}.
 %\item Combination: \cite{Hulden2014}.
 %\end{itemize}
 
-A classification based lemmatizer reads in an input form, identifies
-the set of edit scripts that can be applied to the input form and
-scores the candidate scripts using the input form, its morphological
-label and a feature based classifier. Finally, the winning edit script
+\section{Lemmatization in FinnPos}
+
+The classification based lemmatizer in the FinnPos toolkit reads an
+input word, identifies the set of edit scripts that can be applied to
+the input and scores the candidate scripts using the input form, and
+its morphological label. The score is given by a feature based
+classifier. Finally, the edit script that receives the highest score
 is applied on the input form and the lemma is recovered.
 
 \paragraph{Extracting Edit Scripts} Given a word form such as ``dogs''
@@ -119,19 +150,20 @@ which adequately recovers the lemma.
 
 The FinnPos system only extracts edit scripts which delete a suffix
 and appends another suffix such as the script $[-s \rightarrow
-\epsilon]$. This is mostly sufficient for Finnish all words except numerals
-exclusively exhibit inflection at the end of words. Naturally, this would
-not be sufficient in general. More general edit scripts hav therefore been used,
-for example by \cite{Chrupala2008}.
+\epsilon]$. This is sufficient for Finnish where all words except
+numerals exclusively exhibit inflection at the end of
+words. Naturally, this would not be sufficient in general. More
+general edit scripts are therefore applied with other languages, for
+example by \cite{Chrupala2008}.
 
-For morphologically complex languages, a large number of edit
-scripts may be extracted from training data. For example, Finnpos
-system extracts 4835 different edit scripts for the 145953 tokens in
-the training and development data of FinnTreeBank. Therefore, many of
-the classes occur few times in the training data. This leads to
-data sparsity. However, increasing the amount of the training data
-would probably alleviate the problem significantly because the
-inventory of inflectional paradigms is finite.
+For morphologically complex languages, a large number of edit scripts
+may be extracted from training data. For example, the Finnpos system
+extracts 4835 different edit scripts for the 145953 tokens in the
+training and development data of FinnTreeBank. Therefore, many of the
+classes occur only a few times in the training data. This leads to data
+sparsity. However, increasing the amount of the training data would
+probably alleviate the problem significantly because the inventory of
+inflectional paradigms, and consequently edit scripts, is finite.
 
 \paragraph{Features for Lemmatization} For a word $w = (w_1...w_n)$ and
 a morphological label $y$, the lemmatizer in the FinnPos system
@@ -139,17 +171,17 @@ currently uses the following feature templates:
 \begin{itemize}
 \item The word form $w$.
 \item The morphological label $y$.
-\item Suffixes $(w_n)$, $(w_{n-1}w_n)$, ... Up to length 10.
-\item Prefixes $(w_1)$, $(w_1w_2)$, ... Up to length 10.
-\item Infixes $(w_{n-2}w_{n-1})$, $(w_{n-3}w_{n-2})$ and $(w_{n-4}w_{n-3})$.
+\item Suffixes $(w_n)$, $(w_{n-1},w_n)$, ... Up to length 10.
+\item Prefixes $(w_1)$, $(w_1,w_2)$, ... Up to length 10.
+\item Infixes $(w_{n-2},w_{n-1})$, $(w_{n-3},w_{n-2})$ and $(w_{n-4},w_{n-3})$.
 \end{itemize}
 For each feature template $f$ (except the morphological label template
 $y$), FinnPos additionally uses a combination template $(f,y)$ which
 captures correlations between morphological labels and the
 orthographical representation of the word form.
 
-The infix templates are useful because they model the environment of
-where an inflectional suffix like ``-s'' is removed and a lemma suffix
+The infix templates are useful because they model the environment
+where an inflectional suffix (such as ``-ssa'') is removed and a lemma suffix
 is added. They aim at preventing phonotactically impossible
 combinations.
 
