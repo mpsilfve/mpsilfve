@@ -1,7 +1,7 @@
 \chapter{Experiments}
 \label{chapter:finnpos}
 
-FinnPos, presented in Publication \ref{pub:6}, is a discriminative
+Publication \ref{pub:6} presents FinnPos, which is a discriminative
 morphological tagger based on the averaged perceptron classifier. It
 is specifically geared toward morphologically rich languages. To this
 end, it implements beam search and a cascaded model architecture for
@@ -13,8 +13,8 @@ large structured label sets.
 
 This chapter presents experiments on morphological tagging in Finnish
 using FinnPos. These experiments are intended to augment the
-experiments in Publication \ref{pub:6}. I will present the following
-experiments
+experiments in Publication \ref{pub:6}. I will present experiments on
+the following themes
 
 \begin{itemize}
 \item {\bf Cascaded Model Architecture} What is the effect of different settings for the label guesser on tagging accuracy, estimation speed and tagging speed?
@@ -58,14 +58,14 @@ the Finnish language \citep{Hakulinen2004}. The examples have been
 harvested from newspapers, novels and blogs. Additionally, some
 examples represent spoken language. 
 
-The FTB corpus only contains isolated sentences and each sentence has
-been selected to illustrate some grammatical phenomenon. Therefore, it
-is safe to say that FTB does not represent a random sample of Finnish
-text. It probably contains a high number of rare grammatical
-phenomena. This can be seen as a weakness because results on the FTB
-corpus may not carry over to other data sets. However, it also makes
-the corpus interesting and challenging from the point of view of
-morphological tagging because the data is expected to be complex.
+Each sentence in the FTB corpus has been selected to illustrate some
+grammatical phenomenon. Therefore, it is safe to say that FTB does not
+represent a random sample of Finnish text. It probably contains a high
+number of rare grammatical phenomena. This can be seen as a weakness
+because results on the FTB corpus may not carry over to other data
+sets. However, it also makes the corpus interesting and challenging
+from the point of view of morphological tagging because the data is
+expected to be complex.
 
 Both the morphological tagging and dependency structures of FTB have
 been manually prepared.  The morphological analyses of word tokens are
@@ -85,14 +85,14 @@ word token consists of word lemma (base form), part-of-speech (POS),
 and a list of detailed morphological information, including case,
 number, tense, and so forth.
 
-\paragraph{Data Splits} Well established data sets usually have
-established splits into training, development and test data. For
-example, most work on English POS tagging reports results on the Penn
-Treebank corpus \citep{Marcus1993} using the data splits introduced by
-\cite{Collins2002}. This is sound because it guarantees that results
-reported in different papers are comparable. For the data sets used in
-this thesis, Finn TreeBank \citep{Voutilainen2011} and Turku
-Dependency Treebank \citep{Haverinen2013}, there are no established
+\paragraph{Data Splits} Widely used data sets usually have established
+splits into training, development and test data. For example, most
+work on English POS tagging reports results on the Penn Treebank
+corpus \citep{Marcus1993} using the data splits introduced by
+\cite{Collins2002} (Sections 1-18 for training, 19-21 for development
+and 22-24 for testing). This is sound because it guarantees that
+results reported in different papers are comparable. For the data sets
+used in this thesis, FTB and TDT, there are no established
 splits. Therefore, the experiments use 80\% of the data for training,
 10\% as development data and 10\% as final test data. The data is
 split in the following way: For each consecutive ten sentences, the
@@ -106,13 +106,21 @@ development set and the tenth one to the test set.
 %morphological tagging using the FinnPos tagger toolkit which were
 %omitted from the paper in favor of clarity.
 
-Because FinnPos incorporates a variety of optimizations to accuracy
-and speed governed by different hyper-parameter, it is impossible to
-conduct exhaustive experiments (a grid search would simply include too
-many experiments). Instead I have chosen the settings presented in
-Publication \ref{pub:6} as vantage point and examined the impact of
-changing one hyper-parameter at a time. These settings were chosen
-because they give state-of-the-art accuracy as presented in the paper.
+Exhaustive experiments on the effect and interactions of the different
+hyper-parameters used by the FinnPos tagger would require hundreds of
+experiments because FinnPos incorporates a variety of optimizations to
+accuracy and speed governed by different
+hyper-parameters.\footnote{Experiments should vary beam width, the
+  settings of the label guesser, model order and order of sub-label
+  dependencies. Moreover, experiments should be conducted using a
+  morphological analyzer and without one. Assuming 10 different
+  settings for beam, and guesser and three settings for model order
+  and sub-label order, this gives $10^2\cdot 3^2 \cdot 2 = 1800$
+  distinct experiments.} I did not deem this feasible in
+practice. Instead I have chosen the settings presented in Publication
+\ref{pub:6} as vantage point and examined the impact of changing one
+hyper-parameter at a time. These settings were chosen because they
+give state-of-the-art accuracy as presented in the paper.
 
 The basic setting for all experiments is 
 \begin{itemize}
@@ -121,15 +129,25 @@ The basic setting for all experiments is
 \item 99.9\% mass for the generative label guesser.
 \item 99.9\% mass for the adaptive beam search.
 \end{itemize}
+This setting is varied with respect to the hyper-parameter that is being investigated.
 
-A morphological analyzer is only used when indicated. A label
+In all experiments, hyper parameters are first set using development
+data. Then the development data and training data are combined and
+this data set is used to train the final model, which is then
+evaluated using the test set. Training times refer to training the
+final model. Thus they do not contain the cost of development. This
+setup was used because it is also used in Publications \ref{pub:4},
+\ref{pub:5} and \ref{pub:6}.
+
+A morphological analyzer is used when specifically indicated. A label
 dictionary is used in all experiments both to speed up decoding and
-improve accuracy. The label dictionary is also used when the
-morphological analyzer is used. The reason for this is that a liberal
-compounding or derivation mechanism (such as the one implemented in
-the OMorFi morphological analyzer) can result in improbable
-analyses. The analyses that have been attested in the training corpus
-should be preferred when possible.
+improve accuracy. The label dictionary is also used when a
+morphological analyzer is used in tagging. The reason for this is that
+a liberal compounding and derivation mechanisms (such as the ones
+implemented in the OMorFi morphological analyzer) can result in a
+number of unlikely analyses for longer word forms. Analyses that have
+been attested in the training corpus should, therefore, be preferred
+when possible.
 
 The feature set used in the experiments follows Publication
 \ref{pub:6}.  Let $x = (x_1 ... x_T)$ be a sentence, $y = (y_1
@@ -171,16 +189,17 @@ to word $x_t$ is also used as a feature template.
 %morphological label $y$ is used as a feature template. Naturally, the
 %combination of $y$ with itself is omitted.
 
-Some baseline runs are impossible to run: FinnPos uses a second order
-model. With a label set size of 1,000, trellises used during inference
-become very large and inference is prohibitively slow. Therefore, it
-was not feasible to run experiments without label pruning during
-training.
+Some baseline runs are impossible to run. FinnPos uses a second order
+model. With a label set size of 1,000, inference using the plain
+Viterbi algorithm is prohibitively slow because the time complexity of
+the algorithm is dependent on the third order of the label set size.
+Therefore, it was not feasible to run experiments without label
+pruning during training.
 
-The results of the experiments presented here differ minutely from the
-results presented in Publication \ref{pub:6} due to added features
-(lower cased word form and word length) and a few bug fixes that have
-improved results.
+Finally, the results of the experiments presented here differ minutely
+from the results presented in Publication \ref{pub:6} due to added
+features (lower cased word form and word length) and a few bug fixes
+that have improved results.
 
 \section{Using a Cascaded Model}
 
@@ -229,42 +248,81 @@ Guess Count & Tagging Accuracy (\%) & Training time (min) & Dec. Speed (KTok/s) 
 30       & 92.81  (OOV: 74.87)          & 12 min, 9 epochs          & 5            \\
 40       & 92.91  (OOV: 75.35)          & 14 min, 9 epochs            & 5            \\
 \end{tabular}
-\caption{Different label guesser settings for Turku Dependency Treebank}
+\caption{Different label guesser settings for Turku Dependency Treebank}\label{tab:prune-res}
 \end{center}
 \end{table}
 
-This subsection presents experiments on using different settings for
-the generative label guesser included as a pre-pruning step during
-training as explained in Section \ref{}.
+This section presents experiments on using different settings for the
+generative label guesser included as a pre-pruning step during
+training as explained in Section \ref{sec:prec-tagger}.
 
-For both Turku Treebank and FinnTreeBank, I compare a fixed amount of
-label guesses to choosing a varying amount of guesses per word using a
-generative label guesser. It was not possible to run experiments
-without any form of label pruning during training because of
-prohibitive runtime and memory requirements. The most important point
-of these experiments is that using some kind of label guesser during
+\paragraph{Setup}For both TDT and FTB, I present results for using a fixed amount of
+label guesses and for choosing a varying amount of guesses per word
+based on probability mass. Because of the prohibitive runtime and
+memory requirements, it was not possible to run experiments without
+any form of label pruning during training. The most important point of
+these experiments is that using some kind of label guesser during
 training is almost necessary if one wants to train a second order
 model for label sets of several hundreds or thousands of labels.
 
-In general, using a larger amount of label guesses improves
-accuracy. For both FTB and TDT, the accuracy levels off already at 40
-guesses per word. 
+\paragraph{Results} As Table \ref{tab:prune-res} demonstrates, using a
+larger amount of label guesses improves accuracy in general. When
+using a fixed number of guesses for every word, the accuracy levels
+off at 40 guesses per word for both FTB and TDT.
 
-For FTB, the mass 0.9999 yields approximately the same accuracy than
-as 40 guesses. For TDT, however, 40 label guesses results in
-$0.2\%$-points better accuracy than using the mass $0.9999$.
+When pruning label candidates based on probability mass, the results
+differ between the treebanks. For FTB, the mass 0.9999 yields
+approximately the same accuracy than as 40 guesses. For TDT, however,
+40 label guesses result in $0.2\%$-points better accuracy than using
+the mass $0.9999$. The difference is substantial.
 
 The training time per epoch is clearly related to the amount of label
 guesses, however, the number of epochs seems to fluctuate somewhat
 from two to four for FTB and from five to eleven for TDT. Therefore,
-it is difficult to see a clear trend.
+it is difficult to see a clear trend for the total training time. It
+is also not possible to say that mass based pruning always leas to a
+faster training time when compared to a fixed number of guesses which
+yield similar accuracy.
 
 The amount of label guesses influences decoding speed to some degree
 because the same setting is used for the label guesser during
 decoding. Because the label guesser is only used for OOV words, the
 exact setting of the guesser does however only have a moderate impact.
 
+\paragraph{Discussion} Whereas training a second order tagger for a
+label set exceeding a thousand labels requires a prohibitive amount of
+computational resources when estimation and inference utilize the
+standard Viterbi algorithm or even a beam search, the experiments in
+this section demonstrate that a cascaded model architecture allows for
+training second order models rather fast. The memory requirement was
+moderate as it did not exceed the 16 GB available on the author's
+computer.
+
+It is not clear whether pruning based on probability mass is superior
+to pruning based on a fixed amount of guesses. It is concerning that
+the results on the TDT data set for the mass $0.9999$ were clearly
+inferior to the result when using $40$ guesses for each
+word. Increasing the the probability mass also did not seem to improve
+the results further. A reason for this may be that the TDT corpus is
+larger than the FTB corpus. The generative guesser may suffer from
+over-confident probability estimates when the amount of training data
+is increased and it may be quite difficult to set the threshold for
+the probability mass. A discriminative guesser could be used instead,
+but its training time would exceed that of the generative
+guesser. This would reduce overall performance. An alternative might
+be to decreases the amount of training data for the guesser, but this
+requires further experiments.
+
 \section{Beam Search}
+This subsection presents experiments using different beam settings
+during training and decoding. Experiments are presented both for fixed
+beam widths and adaptive beam, which is described in Section
+\ref{sec:prec-tagger}.
+
+\paragraph{Setup} I compare fixed beam width to an adaptive beam
+presented in Section \ref{sec:prec-tagger}. Additionally, I include
+training and decoding results when no beam is used. The same beam
+width is used during in training and when tagging the test set.
 
 \begin{table}[htb!]
 \begin{center}
@@ -304,26 +362,21 @@ Beam Width & Tagging Accuracy (\%) & Training time (min) & Dec. Speed (KTok/s) \
 1        & 91.80 (OOV: 71.26)           & 6 min, 9 epochs            & 6            \\
 10       & 92.83 (OOV: 74.85)           &  7 min, 6 epochs           & 6            \\
 20       & 92.60 (OOV: 73.98)           & 10 min, 7 epochs            & 6            \\
-$\infty$       & 91.58??  (OOV: 69.46)          & 199 min, 8 epochs            & 6            \\
+$\infty$       & 91.58  (OOV: 69.46)          & 199 min, 8 epochs            & 6            \\
 \end{tabular}
 \caption{Different beam settings for Turku Dependency Treebank.}
 \end{center}
 \end{table}
 
-This subsection presents experiments using different beam settings
-during training and decoding. 
 
-I compare fixed beam width to an adaptive beam presented in Section
-\ref{}. Additionally, I include training and decoding results when no
-beam is used.
-
-It is difficult to see a clear relation between the beam width and
-tagging accuracy. The fixed beam of width one is clearly the worst for
-both TDT and FTB. However, all higher beams seem to give results in
-the same range. Moreover, increasing the beam from 10 to 20 results in
-a $0.1\%$-point drop in accuracy for FTB. Additionally, the system
-without any beam search performs worse than systems with adaptive or
-fixed beam width for TDT.
+\paragraph{Results} It is difficult to see a clear relation between
+the beam width and tagging accuracy. The fixed beam of width one is
+clearly the worst for both TDT and FTB. Larger beams give improved
+results when compared to beam width one, however, all larger beams seem
+to give results in the same range. Moreover, increasing the beam from
+10 to 20 results in a $0.1\%$-point drop in accuracy for
+FTB. Additionally, the system without beam search performs worse
+than systems with adaptive or fixed beam width for TDT.
 
 A small beam width results in a faster training time than a larger
 beam. When using an infinite beam, the training time for TDT is
@@ -333,10 +386,55 @@ number of label guesses. When no beam is used, this results in very
 long tagging times for the sequences because a second order model is
 used.
 
+\paragraph{Discussion} It seems that the effect of beam width on
+tagging accuracy is not easy to analyze. Beam width one gives inferior
+results when compared to other beam settings but all other beam
+settings seem to deliver accuracy in the same range. The effect on
+training time is, however, clear. Larger beam width slows down
+training. 
+
+The effect of large beam widths on training time can be dramatic as
+exemplified by the results for TDT using infinite beam width. Analysis
+of the problem revealed that there are sentences in the treebank that
+contain words which consist of characters that only occur in those
+words. Such words will receive a very large amount of guesses when
+label guesses are pruned based probability mass. This happens because
+the suffix based label guesser uses Laplace smoothing. The
+distribution $p(y|x)$ of labels $y$ given a word form $x$ becomes
+almost flat when the suffixes of $x$ only occur a single time in the
+training data. For example, the three Greek words in ``Larnakan
+lentoasema (kreik. Διεθνές Aεροδρόμιο Λάρνακας) on Kyproksen
+kansainvälinen lentoasema'' receive 1287 label guesses each, that is
+every label in the TDT label set, when using mass $0.999$. When no
+beam is employed, sequences of consecutive words with extremely many
+labels candidates result in extreme tagging times for the
+sentence.\footnote{FinnPos has now been fixed to employ a user defined
+  ceiling on the amount of guesses used during training. This setting
+  will, however, degrade the accuracy of the tagger to some
+  extent. Therefore, the setting has not been used in these
+  experiments.}
+
+In contrast to training time, the effect of beam width on decoding
+time is minimal. This happens because decoding uses the label
+dictionary which means that for most words the tagger will choose the
+label from a very restricted set of candidates, typically one or two
+analyses.
+
 Contrary to what the literature indicates
 \citep{Huang2012,Collins2004}, violation fixing gave no significant
 improvements in accuracy in preliminary experiments. As it only slows
 down training, it was not included in FinnPos.
+
+In conclusion, it seems that the effect of beam width on tagging
+accuracy is erratic but the effect on training time is
+clear. Therefore, it is probably recommendable to use a beam. The mass
+based beam resulted in similar training times and tagging accuracies
+as the fixed beam. 
+
+I think it is interesting that infinite beam width results in inferior
+results for TDT when compared with other beam settings. This effect
+was also noted by \cite{Huang2012} when performing experiments in POS
+tagging. I have no explanation for this at the current time.
 
 \section{Model Order}
 
@@ -364,6 +462,7 @@ Model Order & Tagging Accuracy (\%) & Training time & Dec. Speed (KTok/s)\\
 \begin{table}[htb!]
 \begin{center}
 \begin{tabular}{cccc}
+\multicolumn{4}{c}{Without a Morphological Analyzer}\\
 Model Order & Tagging Accuracy (\%) & Training time (min) & Dec. Speed (KTok/s)\\
 \hline
 0        & 91.15            & 6 min, 4 epochs            & 6            \\
@@ -382,54 +481,66 @@ Model Order & Tagging Accuracy (\%) & Training time (min) & Dec. Speed (KTok/s)\
 \end{table}
 
 In this section I examine the impact of model order on tagging
-accuracy, training time and decoding time. The experiments in this
-section do not use sublabel features in order to clearly reveal the
-impact of model the order in isolation of other factors.
+accuracy, training time and decoding time. I examine the effect of
+model order both when tagging without an analyzer and wen using an
+analyzer.
 
-The accuracy on both FTB and TDT increases when going from order zero
-to a first order model. Further increasing the model order only gives
-an improvement for TDT.
+\paragraph{Setup} The experiments in this section do not use sub-label
+features in order to clearly reveal the impact of model order in
+isolation of other factors.
+
+\paragraph{Results} The accuracy on both FTB and TDT increases when
+going from order zero to a first order model. Further increasing
+model order only gives an improvement for TDT.
 
 The increase in accuracy when going from a unstructured (order zero)
 model to a second order model is approximately 0.5\%-points for both
-FTB and TDT. This applies both when using a morphologial analyzer and
-when not using it. It is noteworthy that the increas in accuracy
+FTB and TDT. This applies both when using a morphological analyzer and
+when not using it. It is noteworthy that the increase in accuracy
 resulting from the morphological analyzer is substantially larger for
 both data sets.
 
+\paragraph{Discussion} The fact that a second order model improves
+results only for TDT could be a result of the fact that FTB is
+smaller, however, the difference in corpus size is quite small (only about
+11\% or about 20,000 words). A more likely explanation relates to the
+fact that the average sentence length in TDT is 13 words, whereas
+sentences in FTB only have 8 words on average. Higher sentence length
+translates to longer average distance between syntactically
+dependent words. Therefore, a second order model, which can model longer
+dependencies, may be more helpful when tagging TDT.
+
+Overall, it seems like the improvement from using a second order model
+over a zeroth order model is quite small. Partly, this is probably a
+result of the fact that both of the data sets are quite
+small. Moreover, the unstructured word context features included in
+the feature set partly overlap with structured features and thus
+diminish their effect.
+
+Finally, it is interesting to see that the improvement resulting from
+model order is about equal when using a morphological analyzer and
+when not using one even though the tagging accuracies for the zeroth
+order models when using an analyzer and without one are about 4
+\%-points apart. This shows that using the analyzer does not nullify
+the improvement from other improvements to tagging accuracy. Ultimately,
+the impact of the analyzer on tagging accuracy is however of a
+higher magnitude than the impact of model order.
+ 
 \section{Sub-Label Dependencies}
 
-In this section I examine the impact of sub-label order order on
+In this section I examine the impact of sub-label order on
 tagging accuracy, training time and decoding time both using a
 morphological analyzer and without a morphological analyzer. The
 results in this section differ slightly from Publication \ref{pub:6}
 because of minor bug fixes and improvements to the feature set of the
 tagger.
 
-The total improvement in accuracy stemming from sub-label features is
-approximately 0.8\%-points for both FTB and TDT when not using a
-morphological analyzer and around 0.3\%-points when using a
-morphological analyzer. Contrasting these results with the previous
-section examining model order, we can see that the added improvement
-from sub-label features is larger than improvement given by incresing
-model from order 0 to 2 when not using the morphological
-analyzer. Moreover, the imporovement is approximately approximately
-the same as going from model order 0 to 1 when using a morphological
-analyzer.
-
-Only for FTB do second order sub-label features give added accuracy
-compared to first order features and only when using the morphological
-analyzer. In other cases, second order sub-labels perform worse than
-first order sub-labels.
-
-Training time increases and decoding speed decreases with incresing
-sub-label order. However, sub-labels seems to decrease the amount of
-training epochs needed to converge to the final model parameters.
-
-For both FTB and TDT, unstructured sub-label features are more
-influential for accuracy than structured sub-label features when the
-morphological analyzer is not used. Then it is used, structured
-sub-labels, converesly, give a larger improvement.
+\paragraph{Setup} The different model configurations, which are
+investigated and shown in Tables \ref{tab:ftb-sl-res} and
+\ref{tab:tdt-sl-res}, are (1) no sub-label dependencies, (2)
+unstructured sub-label dependencies, (3) unstructured and first order
+sub-label dependencies and (4) unstructured, first and second order
+sub-label dependencies.
 
 \begin{table}[htb!]
 \begin{center}
@@ -450,7 +561,7 @@ None     & 95.98 (OOV: 91.41)           & 3 min, 8 epochs  & 25                 
 1        & 96.24 (OOV: 92.28)           & 1 min, 2 epochs  & 21                       \\
 2        & 96.31 (OOV: 92.58)           & 4 min, 3 epochs  & 19                       \\
 \end{tabular}
-\caption{Different Sub-Label Orders for FinnTreeBank}
+\caption{Different Sub-Label Orders for FinnTreeBank}\label{tab:ftb-sl-res}
 \end{center}
 \end{table}
 
@@ -474,10 +585,37 @@ None            &  96.12 (OOV: 91.12)   & 3 min, 5 epochs  & 19                 
 1               &  96.39 (OOV: 91.84)   & 3 min, 5 epochs  & 16                       \\
 2               &  96.29 (OOV: 91.69)   & 12 min, 8 epochs  & 16                       \\
 \end{tabular}
-\caption{Different Sub-Label Orders for Turku Dependency Treebank}
+\caption{Different Sub-Label Orders for Turku Dependency Treebank}\label{tab:tdt-sl-res}
 \end{center}
 \end{table}
 
+
+\paragraph{Results} The total improvement in accuracy stemming from
+sub-label features is approximately 0.8\%-points for both FTB and TDT
+when not using a morphological analyzer and around 0.3\%-points when
+using a morphological analyzer. Contrasting these results with the
+previous section examining model order, we can see that the added
+improvement from sub-label features is larger than improvement given
+by increasing model from order 0 to 2 when not using the morphological
+analyzer. Moreover, the improvement is approximately
+the same as going from model order 0 to 1 when using a morphological
+analyzer.
+
+Only for FTB do second order sub-label features give added accuracy
+compared to first order features and only when using the morphological
+analyzer. In other cases, second order sub-labels perform worse than
+first order sub-labels.
+
+Training time increases and decoding speed decreases with increasing
+sub-label order. However, sub-labels seems to decrease the amount of
+training epochs needed to converge to the final model parameters.
+
+For both FTB and TDT, unstructured sub-label features are more
+influential for accuracy than structured sub-label features when the
+morphological analyzer is not used. Then it is used, structured
+sub-labels, converesly, give a larger improvement.
+
+\paragraph{Discussion}
 
 \section{Pruning the Model}
 
