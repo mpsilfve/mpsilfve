@@ -1,9 +1,9 @@
 \chapter{Morphology and Morphological Tagging}
 \label{chap:morphology}
 
-This Chapter will briefly introduce the field of linguistic
-morphology and morphological tagging. It will also present an overview
-of the current state-of-the-art in morphological tagging.
+This Chapter introduces the field of linguistic morphology and
+morphological tagging. It will also present an overview of the current
+state-of-the-art in morphological tagging.
 
 \section{Morphology}
 %\begin{itemize}
@@ -13,9 +13,9 @@ of the current state-of-the-art in morphological tagging.
 %\item Inflectional categories.
 %\end{itemize}
 
-Words are the most readily accepted linguistic units at least in
-Western written language. I define a word as a sequence of letters,
-and possible numbers, which is surrounded by white-space or
+\paragraph{Words} Words are the most readily accepted linguistic units
+at least in Western written language. I define a word as a sequence of
+letters, and possible numbers, which is surrounded by white-space or
 punctuation. Matters are more complex in spoken language, written
 languages that do not use white space (such as Chinese), and sign
 language. Still, this definition covers most cases of interest from
@@ -27,7 +27,7 @@ morphology has traditionally been concerned with charting the {\it
   morpheme inventory} of language. That is, finding the minimal
 semantic units of language and grouping them into classes according to
 behavior and meaning. For example, the English word form ``dogs''
-consists of two morphemes ``dog'' and ``s''. The first one being a
+consists of two morphemes ``dog'' and ``-s''. The first one being a
 {\it word stem} and the second one being an {\it inflectional affix}
 marking plural number.
 
@@ -61,8 +61,8 @@ English prefix ``in-''. The ``n'' in ``input'' and ``inset'' is
 pronounced as ``m'' and ``n'', respectively.
 
 Languages differ with regard to the amount of non-concatenative
-morphology. Some, like Turkish employ almost exclusively
-concatenation.  Others, such as English employ a mix of concatenation
+morphology. Some, like Turkish, employ almost exclusively
+concatenation.  Others, such as English, employ a mix of concatenation
 and non-concatenative phenomena. Still, concatenative morphology is
 probably found to some degree in all languages. It is especially
 prevalent in languages with rich morphology, such as Finnish or
@@ -72,30 +72,30 @@ importance to be able to handle concatenative morphology.
 
 \paragraph{Morphotax} Stems in English can often occur on their own as
 words and are therefore called {\it free morphemes}. Inflectional
-affixes cannot. Therefore, they are called {\it bound morphemes}. More
-generally, {\it morphotax} the sub-field of morphology concerned with
-defining the rules that govern the concatenative morphology of a
-language. For example, ``dog'' and ``dog+s'' are valid from the point
-of view of English morphotax whereas ``dogdog'' and ``s'' (in the
-meaning plural number) are not.
+affixes cannot. Therefore, they are called {\it bound morphemes}. Such
+rules belong to {\it morphotax}: the sub-field of morphology
+concerned with defining the rules that govern the concatenative
+morphology of a language. For example, ``dog'' and ``dog+s'' are valid
+from the point of view of English morphotax whereas ``dogdog'' and
+``s'' (in the meaning plural number) are not.
 
 \paragraph{Word Class} The word forms ``dogs'' and ``cats'' share a
-common number marker ``s'' but they have different stems. Still, there
+common number marker ``-s'' but they have different stems. Still, there
 is a relation between the stems ``dog'' and ``cat'' because they can
 occur with similar inflectional affixes and in similar sentence
 contexts. Therefore, they can be grouped into a common {\it word
   class} or {\it part-of-speech}, namely nouns.  The inventory of word
 classes in a language cannot be determined solely based on word
-internal examination. Instead one has to combine knowledge about the
+internal examination. Instead, one has to combine knowledge about the
 structure of words with knowledge about interaction of the words in
 sentences. The concept of word class, therefore, resides somewhere
 between the linguistic disciplines morphology and {\it syntax} which
-is the study of combination of words into larger units, phrases and
+is the study of combination of words into larger units: phrases and
 sentences.
 
 \paragraph{Lexeme and Lemma} Word forms such as ``dog'' ``dogs'' and
 ``dog's'' share a common stem ``dog''. Each of the word forms refers
-to the concept {\sc dog}, however different forms of the word are
+to the concept of {\sc dog}, however, different forms of the word are
 required depending on context. Different word forms, that denote the
 same concept, belong to the same {\it lexeme}. Each lexeme has a {\it
   lemma} which is a designated word form representing the entire
@@ -104,7 +104,8 @@ form, for example ``dog''. In the case of English verbs, the
 infinitive, for example ``to run'', is usually used. The particular
 choice depends on linguistic tradition. 
 
-Lemmas are important for language technology because dictionaries
+Lemmas are important for language technology because dictionaries and
+word lists, which can be used to derive information about lexemes,
 usually contain lemmas. Therefore, it is useful to be able to {\it
   lemmatize} a word form, that is produce the lemma given a word form.
 
@@ -121,25 +122,25 @@ share a particular class of bound morphemes. For example, both
 adjectives and nouns take a number in English.
 
 \paragraph{Morphological analysis} In many applications such as
-information retrievel systems and syntactic parsers, it is useful to
-be able to provide an exhaustive decription of the morphological
-information associated with a word form. Such an descrption is called
-a {\it morphological analysis} or {\it morphological tag} of the word
+information retrieval systems and syntactic parsers, it is useful to
+be able to provide an exhaustive description of the morphological
+information associated with a word form. Such a description is called
+a {\it morphological analysis} or {\it morphological label} of the word
 form. For example, the English word form ``dogs'' could have a
 morphological analysis ``dog+Noun+Plural''. The granularity and
 appearance of the morphological analysis depends on linguistic
-tradition and the linguistic theory which is being applied, however
+tradition and the linguistic theory which is being applied, however,
 the key elements are the lemma of the word form as well as a list of
 the bound morphemes associated to the word form.
 
 \section{Morphological Analyzers}
 Word forms in natural languages can be ambiguous. For example, the
-English ``dogs'' is both the plural form of noun and the present third
-person form of a verb. The degree of ambiguity varies between
+English ``dogs'' is both a plural form of a noun and the present third
+person singular form of a verb. The degree of ambiguity varies between
 languages. To some degree, it is also a function of the morphological
-description. A coarse morphological description results in less
-ambiguity than a finer one. A morphological analyzer is a system which
-processes word forms and returns the complete set of possible
+description: a coarse morphological description results in less
+ambiguity than a finer one. A {\it morphological analyzer} is a system
+which processes word forms and returns the complete set of possible
 morphological analyses for each word form.
 
 \paragraph{Applications} Morphological analyzers are useful both when
@@ -147,9 +148,9 @@ the lemma of the word is important and when the information about
 bound morphemes is required. The lemma is useful in tasks where the
 semantics of the word form is of great importance. These task include
 information extraction and topic modeling. In contrast, bound
-morphemes tend to convey structural information instead of semantic
+morphemes predominantly convey structural information instead of semantic
 information. Therefore, they are more important for syntactic parsing and
-chunking which aim at uncovering the structure of linguistic
+shallow parsing which aim at uncovering the structure of linguistic
 utterances.
 
 \paragraph{Motivation} The need for full scale morphological analyzers
@@ -179,11 +180,13 @@ it is only 20\% of the size of the English corpus. These
 considerations illustrate the need for morphological processing for
 morphologically rich languages like Finnish which make extensive use
 of inflective morphology. Methods which rely purely on word forms will
-simply suffer too badly from data sparsity.
+simply suffer too badly from data sparsity. The experiments presented
+in Chapter \ref{chapter:finnpos} show that a morphological tagger is
+vital for morphological tagging of Finnish.
 
-\paragraph{Variants} There are different kinds of morphological analysis
+\paragraph{Variants} There are different types of morphological analysis
 systems. The first systems used for English information retrieval were
-stemmers, the most famous system being the Porter stemmer
+{\it stemmers}, the most famous system being the Porter stemmer
 \citep{Porter1997}. It uses a collection of rules which strip suffixes
 from word forms. For example, ``connect'', ``connection'' and
 ``connected'' would all receive the stem ``connect''. The system does
@@ -199,32 +202,32 @@ Turkish.\footnote{However, they may suffice in some
   comparable to a full morphological analyzer) in information
   retrieval}
 
-Morphological segmentation software, such as Morfessor
+{\it Morphological segmentation software}, such as Morfessor
 \citep{Creutz2002}, are another type of morphological analyzers often
 utilized in speech recognition for languages with rich morphology. The
 Morfessor system splits word forms into a sequence of morphemelike
 sub-strings. For example, the word form ``dogs'' could be split into
-``dog'' and ``s''.  This type of morphological segmentation is useful
+``dog'' and ``-s''.  This type of morphological segmentation is useful
 in a wide variety of language technological applications, however it
 is more ambiguous than a traditional morphological analysis where the
 bound morphemes are represented by linguistic labels such as
 plural. Moreover, Morfessor output does not contain information about
 morphological categories that are not overtly marked. For example, in
-Finnish the singular number of nouns is not overtly marked (only
-plural number is marked by an affix ``i''). This information can
- be very useful for example in syntactic parsing.
+Finnish, the singular number of nouns is not overtly marked (only
+plural number is marked by an affix ``-i-''). Although not overtly
+marked, such information can very useful for further processing.
 
- The current state-of-the-art for morphological analysis of
- morphologically complex languages are finite-state morphological
- analyzers \citep{Kaplan1994,Koskenniemi1984}. Full scale finite-state
- analyzers can return the full set of analyses for word forms. They
- can model morphotax and morphophonological alternations using
- finite-state rules and a finite-state lexicon \citep{Beesley2003}. In
- contrast to stemmers, which are quite simple, and segmentation
- systems like Morfessor which can be trained in an unsupervised
- manner, full-scale morphological analyzers typically require a lot of
- manual work. The most labor intensive part of the process is the
- accumulation of the lexicon.
+The current state-of-the-art for morphological analysis of
+morphologically complex languages are {\it finite-state morphological
+  analyzers} \citep{Kaplan1994,Koskenniemi1984}. Full scale
+finite-state analyzers can return the full set of analyses for word
+forms. They can model morphotax and morphophonological alternations
+using finite-state rules and a finite-state lexicon
+\citep{Beesley2003}. In contrast to stemmers, which are quite simple,
+and segmentation systems like Morfessor which can be trained in an
+unsupervised manner, full-scale morphological analyzers typically
+require a lot of manual work. The most labor intensive part of the
+process is the accumulation of the lexicon.
 
 Although, full-scale morphological analyzers require a lot of manual
 work, the information they produce is very reliable. Coverage is a
@@ -263,11 +266,11 @@ is the estimated number of atoms in the observable universe.
 
 The exact number of potential English sentences of any given length,
 say ten, is difficult to estimate because all strings of words are not
-valid sentences.\footnote{Moreover, it is not easy to say how many word
-  types the English language includes.} However, it is safe to say
-that it is very large -- indeed much larger than the combined number
-of sentences in POS annotated English language corpora humankind is
-likely to ever produce. Direct estimation of the conditional
+valid sentences.\footnote{Moreover, it is not easy to say how many
+  word types the English language includes.} However, it is safe to
+say that it is very large -- indeed much larger than the combined
+number of sentences in POS annotated English language corpora
+humankind will ever produce. Direct estimation of the conditional
 distributions $p(y\cond x)$, for POS label sequences $y$ and sentences
 $x$, by counting is therefore impossible.
 
@@ -308,7 +311,8 @@ co-ordination can introduce long range dependencies inside
 sentences. Sometimes, even words in another sentence may help in
 disambiguation. It is, however, difficult to utilize this information
 in a tagger because most words that lie far apart are useless for
-disambiguating each others morphological labels.
+disambiguating each others morphological labels, which makes
+estimation of statistics from data quite difficult.
 
 Traditionally, morphological taggers have been classified into two
 categories: {\it data-driven} and {\it rule-based}. Data-driven
@@ -348,14 +352,15 @@ The Brill tagger \citep{Brill1992} is one of the early successes in
 POS tagging. It is in fact a hybrid tagger. The tagger first labels
 data using a simple statistical model (a unigram model of the
 distribution of tags for each word form). It then corrects errors
-introduced by the simple statistical model using rules that can be learned
-from data or specified by linguists. Several layers of rules can be
-used. Each layer corrects errors of the previous layer. Although the
-Brill tagger is an early system, it might still be quite
-competitive as shown by \cite{Horsmann2015} who compared a number of
-POS taggers for English and German on texts in various
-domains. According to their experiments, the Brill tagger was both the
-fastest and most accurate.
+introduced by the simple statistical model using rules that can be
+learned from data or specified by linguists. Several layers of rules
+can be used. Each layer corrects errors of the previous
+layer. Although the Brill tagger is an early system, it might still be
+quite competitive as shown by \cite{Horsmann2015}, who compared a
+number of POS taggers for English and German on texts in various
+domains (these experiments included state-of-the-art models such as
+the averaged perceptron). According to their experiments, the Brill
+tagger was both the fastest and most accurate.
 
 One of the major successes of the rule-based paradigm is the
 Constraint Grammar formalism \citep{Karlsson1995}. The formalism uses
@@ -391,8 +396,8 @@ very difficult without making simplistic assumptions about the labeled
 data. For example, a standard assumption is that the probability of a
 word is determined solely based on its morphological label. This
 assumption is obviously incorrect as demonstrated by word
-collocations. In practice, such independence assumptions rule out many
-useful tagger features such as word collocations.
+collocations. %In practice, such independence assumptions rule out many
+%useful tagger features such as word collocations.
 
 In order to be able to use more sophisticated features to describe the
 relation between the input sentence and its morphological labels,
@@ -407,22 +412,22 @@ morphological labels. The model still has to account for the internal
 structure of $y$ but because $y$ can be anchored much more closely to
 the input sentence, the accurate modeling of relations between the
 individual labels in $y$ is not as important in a discriminative
-tagger.\footnote{This is illustrated by the fact that an
-  unstructured discriminative model which does not model relations
-  between labels at all fares almost as well on tagging the Penn
-  Treebank as a structured model when the taggers use the same
-  unstructured features. According to experiments performed by the
-  author on the Penn Treebank the difference in accuracy can be as
-  small as 0.4\%-points. Dropping the structured features from a
-  typical HMM tagger reduces performance substantially more. [RUN
-  EXPERIMENT USING GEN HMM]}
+tagger.\footnote{This is illustrated by the fact that an unstructured
+  discriminative model which does not model relations between labels
+  at all fares almost as well on tagging the Penn Treebank as a
+  structured model when the taggers use the same unstructured
+  features. According to experiments performed by the author on the
+  Penn Treebank the difference in accuracy can be as small as
+  0.4\%-points (a drop from 97.1\% to 96.7\%). Dropping the structured
+  features from a typical HMM tagger reduces performance substantially
+  more.}
 
 The Maximum Entropy Markov Model (MEMM) used by \cite{Ratnaparkhi1997} is a
 structured model but it is trained in an unstructured fashion. For
 each training sentence $x = (x_1,\ ...,\ x_T)$ and its label sequence
 $y = (y_1,\ ...,\ y_T)$ the model is trained to maximize the
-probability $p(y_t| x,\ y_1,\ ...,\ y_{t - 1},\ y_{t+1},\ ..., y_T)$
-in each position $t$. This means that the model relies on the correct
+probability $p(y_t| x,\ y_1,\ ...,\ y_{t - 1})$
+in each position $t$. This means that the model relies on correct
 label context during training time. This causes the so called {\it
   label bias problem} described by \cite{Lafferty2001}. Essentially,
 label bias happens because the model relies too much on label
@@ -493,10 +498,13 @@ slow training times for morphological taggers in the presence of large
 label sets. \cite{Spoustova2009} use a morphological analyzer to limit
 label candidates during training. This is a plausible approach when a
 morphological analyzer is available and when its coverage is quite
-high. This, however, is not always the case. Moreover, as the
-experiments presented in Chapter \ref{chapter:finnpos} indicate, using
-only the candidates emitted by an analyzer during training degrades
-classification performance.
+high. This, however, is not always the case. Moreover, %as the
+%experiments presented in Chapter \ref{chapter:finnpos} indicate, 
+using only the candidates emitted by an analyzer during training can
+degrade classification performance. Publication \ref{pub:6} and the
+experiments in Chapter \ref{chapter:finnpos} present alternative
+methods for accelerating model estimation using a cascaded model
+architecture.
 
 The structure present in large morphological label sets can be
 leveraged to improve tagging accuracy. For example, it is possible to
@@ -520,9 +528,9 @@ Publication \ref{pub:6} while also delivering faster training times.
 Morphological tagging can be done concurrently with parsing.
 \cite{Bohnet2013} present experiments on the Turku Dependency Treebank
 also used in Publication \ref{pub:6}. Although, the data splits are
-different, it seems like the results obtained in
-Publication \ref{pub:6} are still better than the results of the joint
-tagging and parsing.
+different, it seems that the tagging results obtained in Publication
+\ref{pub:6} are still better than the results of joint tagging and
+parsing.
 
 Morphological tagging includes the task of
 lemmatization. \cite{Chrupala2008} sets up this task as a
@@ -550,12 +558,13 @@ can be directly used as features.
 This thesis will mainly be concerned with a data-driven supervised
 learning setting but semi-supervised systems and hybird systems that
 combine data-driven and linguist dirven methods have also been
-investigated. \cite{Spoustova2009} and \cite{Sogaard2011} apply
-self-training where a large amount of unlabeled text is first tagged
-and then used to train a tagger model in combination with hand
+investigated in the field. \cite{Spoustova2009} and \cite{Sogaard2011}
+apply self-training where a large amount of unlabeled text is first
+tagged and then used to train a tagger model in combination with hand
 annotated training data. This leads to significant improvements for
 English and Chzech. \cite{Spoustova2009} additionally uses a voting
-scheme where different taggers are combined for improved accuracy.
+scheme where different taggers are combined for improved
+accuracy. This remains future work for the author.
 
 \cite{Hulden2012} investigate various combinations of HMM models and
 constraint grammars for tagging. They show that a hybrid approach can

@@ -77,8 +77,11 @@ $s$ by automaton $M$ is given by Equation \ref{eq:string-weight}
 \paragraph{Closure Properties} It is well known that regular languages
 are closed under many unary and binary operations: union, negation,
 concatenation and reversion \citep{Sipser1996}. Similarly, the class
-of weighted finite-state machines is closed under these operations and efficient algorithms for computing these operations exist. Table
+of weighted finite-state machines is closed under these operations and
+efficient algorithms for computing these operations exist. Table
 \ref{tab:fs-algebra}, summarizes the properties of these algorithms.
+
+\paragraph{N-Best}
 
 \paragraph{Optimization} As stated above, a finite state machine where
 each symbol and state is associated to maximally one transition is
@@ -718,7 +721,7 @@ to the inferior tagging accuracy of the system when compared to
 author to consider conditional random fields presented in Chapter
 \ref{chapter:crf}, which naturally support a product formulation.
 
-\section{Beyond the Standard HMM}
+\section{Beyond the Standard HMM}\label{sec:enriched}
 
 The real strength of the system presented in this chapter lies in its
 capability of easily incorporating information not usually present in
@@ -738,9 +741,10 @@ that the correct formulation can result in improved tagging accuracy.
 \paragraph{Richer local structure} The model presented by
 \cite{Halascy2007} can easily be implemented as a finite-state machine
 by a slight modification to the compilation of the sentence model as
-described in Publication \ref{pub:2}. Moreover, it is possible to
+described in Publication \ref{pub:1} and it can be extended to model
+$p(x_t\cond y_{t-1}, y_t, y_{y+1})$. Moreover, it is possible to
 condition transitions on word forms as shown in Publication
-\ref{pub:2}. Both of these modifications are shown to give
+\ref{pub:1}. Both of these modifications are shown to give
 statistically significant improvements over the standard baseline
 model. The problem with including such information in the emission and
 transition models is that it violates the conditional independence
@@ -800,3 +804,115 @@ the generative HMM model.
 %\item OOV words may require different mechanisms depending on language
 %again causing problems for MR lanuages.
 %\end{itemize}
+
+\section{Summary of Publications \ref{pub:1}, \ref{pub:2} and \ref{pub:3}}
+
+Publication \ref{pub:1} presents the finite-state implementation of
+HMMs introduced in this Chapter and Publication \ref{pub:2} presents
+experiments using the model on the Penn Treebank and a Finnish data
+set. The taggers presented in Publications \ref{pub:2} are used in
+Publication \ref{pub:3} to implement a language model for a
+context-sensitive finite-state spelling corrector.
+
+\paragraph{Publication \ref{pub:1}} The main contribution of this
+publication is to present the finite-state implementation of HMMs. The
+publication presents experiments on morphological tagging of Finnish,
+English and Swedish but the experiments presented in the publication
+are nearly void of value because they were conducted on machine
+labeled data and the amount of training data was unrealistic (1
+million sentences for each language). Both factors contribute to
+extremely good, and quite unrealistic, tagging accuracy for all
+languages on test data. Still, the extreme size of the training set
+does demonstrate that the method can use large amounts of training
+data.
+
+For Finnish, experiments on machine labeled data were the only option
+because, at the time, there was no freely available hand-labeled
+morphologically tagged corpus available. For Swedish and English,
+established data sets should have been used.
+
+The formulation of the probabilistic model in Publication \ref{pub:1}
+differs from the formulation in this Chapter in two respects. Instead
+of the usual transitions probabilities $p(y_{t}\cond y_{t-n}, ...,
+y_{t-1})$, Publication \ref{pub:1} uses the joint probability
+$p(y_{t-n}, ..., y_t)$. The model can therefore not be seen as an
+actual HMM. Additionally, the publication uses lexicalized transition
+probabilities. The final probability is thus $p(l_{t-n}, y_{t-n}, ...,
+l_t, y_t)$, where the $l$ refer to lemmas. This is possible because of
+the extremely large training set.
+
+Although the experiments in Publication \ref{pub:1} are flawed, the
+paper is included in the thesis because it describes the finite-state
+implementation for HMM taggers and can be seen as a natural starting
+point for Publications \ref{pub:2} and \ref{pub:3}.
+
+\paragraph{Publication \ref{pub:2}} The main contribution of this
+publication is to present experiments on a standard data set for POS
+tagging of English, the Penn Treebank 2. However, because of
+insufficient knowledge at the time, the experiments were performed on
+a non-standard version of Penn Treebank 2. Publication \ref{pub:1}
+uses the data splits introduced by \cite{Collins2002} but the data
+from the {\tt tagged} sub-directory in the Penn Treebank 2
+distribution. As \cite{Toutanova2003} explain, it is conventional to
+extract the POS tagged sentences from the parse trees in the {\tt
+  parsed} sub-directory in the distribution. Unfortunately, this makes
+the reported accuracies approximately 0.3 \%-points higher than they
+would be if the experiments were performed on the correct data
+set. For Finnish, experiments were performed on machine labeled data by
+necessity, similarly as in the case of Publication \ref{pub:1}.
+
+Publication \ref{pub:2} presents models for Finnish and English which
+use enriched emission models described in Section \ref{sec:enriched},
+which are inspired by the HunPos system \citep{Halacsy2007}. The
+taggers are evaluated against a standard HMM baseline. The results are
+also compared against tagging accuracies reported in \cite{Brants2000}
+and \cite{Halacsy2007}. Because of the unfortunate mix-up with the
+Penn Treebank data set, the results for English are not comparable
+between the different tagging systems. However, Publication
+\ref{pub:2} does show that the enriched emission models yield clear
+improvements over baseline. Moreover, the final system outperforms
+HunPos by 0.4\%-points on the Finnish data set. Because the data set
+is machine labeled, this result may of course not be convincing.
+
+\paragraph{Publication \ref{pub:3}} This publication applies the
+taggers presented in Publications \ref{pub:1} and \ref{pub:2} to the
+task of context-sensitive spelling correction. Many spelling
+correction systems determine the best spelling correction for a
+misspelled word based solely on the misspelled word form
+itself. Typically, correction candidates that have a small edit
+distance to the misspelled word form are ranked higher than more
+remote candidates. Context-sensitive spelling correction systems
+additionally utilize surrounding words to rank correction candidates.
+
+For English, plain word context can improve the accuracy of spelling
+correction \citep{Brill2000}. For example ``cat'' is much more likely
+in the context ``the _ miaowed'' than ``car'' is. As Publication
+\ref{pub:2} shows, word context does improve results for Finnish as
+well. However, Publication \ref{pub:3} also shows that a morphological
+tagger can yield greater improvements in accuracy for both English and
+Finnish when using comparable amounts of training data for the tagger
+and word context model. Of course, the word context model can be
+trained on unlabeled data. Therefore, there is in principle no
+obstacle to using arbitrarily much training data.
+
+The system presented in Publication \ref{pub:3} first generates a set
+of correction candidates for the misspelled word using a finite-state
+spelling correction system based on edit distance. It then uses a
+generative morphological tagger for selecting the best candidate. The
+misspelled form is replaced with each correction candidate $c_1$, ...,
+$c_n$ in turn producing $n$ sentences $x_1$, ..., $x_n$. The sentences
+are then tagged which results in $n$ tag sequences $y_1$, ...,
+$y_n$. The candidates $c_i$ are finally ranked according to the joint
+probability of the sentence and label sequence
+$p(y_i,x_i)$.\footnote{In fact only a sub-sequence of the sentence is
+  tagged as an optimization, however, the basic idea is the same.}
+
+The spelling correction system using the morphological tagger probably
+yields better results, especially for English, because it is less
+susceptible to data sparsity than the word context model. As noted
+above, the amount of training data for the word context model could,
+however, be increased. This is likely to gradually improve
+accuracy. At the same time it, however, increases the size of the
+model. The spelling correction system that uses the morphological
+tagger can be more compact and thus more practicable while delivering
+comparable accuracy.

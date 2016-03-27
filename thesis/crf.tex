@@ -1,6 +1,6 @@
-\chapter{Conditional Random Fields}
+\chapter{Discriminative Models}
 \label{chapter:crf}
-\section{Discriminative modeling}
+%\section{Discriminative modeling}
 
 As seen in Chapter \ref{chapter:hmm}, a first order HMM POS tagger can
 be viewed as a process which alternates between sampling a word from a
@@ -530,7 +530,7 @@ classification results. This is impractical, because there are
 thousands of classifiers. Therefore, averaging is used in order to
 achieve approximately the same effect.%almost the same effect.
 
-\section{CRF -- A Structured Logistic Classifier}
+\section{CRF -- A Structured Logistic Classifier}\label{sec:crf}
 
 This Section presents Linear Chain Conditional Random Fields
 (CRF).\footnote{More general CRF models can be formulated but these
@@ -561,7 +561,10 @@ sentence and label sequence. The score $s$ takes on a familiar form
 $$s(x, y_{t-2}, y_{t-1}, y_t, t\parcond \theta) = \exp(\theta^\top F_y(x, t, y_{t-2}, y_{t-1}))$$
 where $F_y$ is a vector valued feature extraction function. Each
 feature associated to the label $y$ corresponds to one element of the
-vector $F_y(x, t, y_{t-2}, y_{t-1})$. As in the case of the logistic regression model,
+vector $F_y(x, t, y_{t-2}, y_{t-1})$. Since $F_y$ refers to a context
+spanning three labels, the model is a second order model. All
+discriminative taggers discussed in this Chapter are assumed to be
+second order model. As in the case of the logistic regression model,
 each entry of the vector can be an arbitrary real number but in this
 thesis they will always be either $0$ or $1$.
 
@@ -734,10 +737,10 @@ parsing than POS tagging or morphological tagging.
 \item Hierarchical CRF \cite{Muller2013}, \cite{Weiss2010} and \cite{Charniak2005}.
 \end{itemize}
 
-\paragraph{Label guessing} Beam search can be used to speed up
-estimation for the perceptron tagger. For large label sets, even beam
-search may not lead to sufficient run-time optimization because the
-complexity of beam search is dependent on the label set
+\paragraph{Cascaded Model Architecture} Beam search can be used to
+speed up estimation for the perceptron tagger. For large label sets,
+even beam search may not lead to sufficient run-time optimization
+because the complexity of beam search is dependent on the label set
 size. Publication \ref{pub:6} introduces a method to optimize
 estimation even further by only considering a subset of $\mathcal{Y}$
 in every position in the training data.
@@ -932,3 +935,50 @@ hyper-parameter $\kappa$ is determined using a development set.
 In the experiment chapter, I show that value based pruning outperforms
 update count based pruning on the data-sets that I have used. In some
 settings, the difference is substantial.
+
+\section{Summary of Publications \ref{pub:4}, \ref{pub:5} and \ref{pub:6}}
+
+\paragraph{Publication \ref{pub:4}} A central problem training
+perceptron and CRF taggers for morphologically rich languages is that
+the time complexity of the Viterbi algorithm is dependent on the
+$n+1$st order of the label set size, when training an $n$th order
+tagger. When the label set is large, this results in inconvenient
+training times even in the case of first order taggers. Publication
+\ref{pub:4} presents two novel variants of the perceptron algorithm
+which are inspired by the pseudo-likelihood and piecewise
+pseudo-likelihood criterions presented in Section \ref{sec:crf}.
+
+The new estimators, pseudo-perceptron and piecewise pseudo-perceptron
+are shown to be competitive with greedy decoding and passive
+aggressive training with regard to accuracy. Moreover, it delivers
+substantially shorter training times in presence of large label
+sets. The training time is, however, still influenced by the label set
+size because the time complexity of pseudo-perceptron and picewise
+pseudo-perceptron is linear with regard to label set size.
+
+\paragraph{Publication \ref{pub:5}} This publication investigates
+sub-label dependencies in morphological tagging of five languages:
+English, Romanian, Estonian, Czech and Finnish. The experiments show
+that sub-label dependencies yield statistically significant
+improvements for Estonian, Czech and Finnish. Moreover, the
+experiments indicate that addition of sub-label dependencies to a
+first order model results in greater improvement in tagging accuracy
+than going from a first order to a second order model.
+
+\paragraph{Publication \ref{pub:6}} This paper describes FinnPos, an
+open-source morphological tagging and lemmatization toolkit for
+Finnish.  The morphological tagging model is based on the averaged
+structured perceptron classifier. Given training data, new taggers are
+estimated in a computationally efficient manner using a combination of
+beam search and model cascade. The lemmatization is performed
+employing a combination of a rule-based morphological analyzer,
+OMorFi, and a data-driven lemmatization model.
+
+The toolkit is readily applicable for tagging and lemmatization of
+running text with models learned from the recently published Finnish
+Turku Dependency Treebank and FinnTreeBank.  Empirical evaluation on
+these corpora shows that FinnPos performs favorably compared to
+reference systems in terms of tagging and lemmatization accuracy. In
+addition, we demonstrate that our system is highly competitive with
+regard to computational efficiency of learning new models and
+assigning analyses to novel sentences.

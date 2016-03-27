@@ -37,7 +37,7 @@ numerical overview of both data sets.
 \begin{table}[htb!]
 %\begin{small}
 \begin{center}
-\begin{tabular}{l|l|l} 
+\begin{tabular}{lcc} 
  & TDT & FTB \\
 \hline
 size & 13,572 sent. (183,118 tok.) & 19,121 sent. (162,028 tok.) \\
@@ -99,7 +99,7 @@ split in the following way: For each consecutive ten sentences, the
 first eight are assigned to the training set, the ninth one to the
 development set and the tenth one to the test set.
 
-\section{Setup for the Experiments}
+\section{Setup}
 
 %This section is intended to augment the treatment
 %in Publication \ref{pub:5}. It presents several experiments on
@@ -129,7 +129,9 @@ The basic setting for all experiments is
 \item 99.9\% mass for the generative label guesser.
 \item 99.9\% mass for the adaptive beam search.
 \end{itemize}
-This setting is varied with respect to the hyper-parameter that is being investigated.
+This setting is varied with respect to the hyper-parameter that is
+being investigated. All experiments are run on a desktop computer
+(Intel Core i5-4300U with 1.90 GHz and 16 GB of memory).
 
 In all experiments, hyper parameters are first set using development
 data. Then the development data and training data are combined and
@@ -528,7 +530,7 @@ higher magnitude than the impact of model order.
  
 \section{Sub-Label Dependencies}
 
-In this section I examine the impact of sub-label order on
+In this section, I examine the impact of sub-label order on
 tagging accuracy, training time and decoding time both using a
 morphological analyzer and without a morphological analyzer. The
 results in this section differ slightly from Publication \ref{pub:6}
@@ -590,61 +592,88 @@ None            &  96.12 (OOV: 91.12)   & 3 min, 5 epochs  & 19                 
 \end{table}
 
 
-\paragraph{Results} The total improvement in accuracy stemming from
-sub-label features is approximately 0.8\%-points for both FTB and TDT
-when not using a morphological analyzer and around 0.3\%-points when
-using a morphological analyzer. Contrasting these results with the
-previous section examining model order, we can see that the added
-improvement from sub-label features is larger than improvement given
-by increasing model from order 0 to 2 when not using the morphological
-analyzer. Moreover, the improvement is approximately
-the same as going from model order 0 to 1 when using a morphological
-analyzer.
+\paragraph{Results} When a morphological analyzer is not used as part
+of the tagger, total improvement in accuracy stemming from sub-label
+dependencies is approximately 0.8\%-points for both FTB and TDT. This
+is higher than the improvement stemming from increasing model order
+(from model order zero to model order two).
 
-Only for FTB do second order sub-label features give added accuracy
+When a morphological analyzer is used as part of the tagger, total
+improvement in accuracy provided by sub-label dependencies is
+approximately the same as transitioning from model order zero to one.
+
+Only for FTB, do second order sub-label features give added accuracy
 compared to first order features and only when using the morphological
-analyzer. In other cases, second order sub-labels perform worse than
-first order sub-labels.
+analyzer. However, the improvement is not statistically
+significant. In other cases, second order sub-label dependencies
+degrade performance compared to first order sub-label dependencies.
 
-Training time increases and decoding speed decreases with increasing
-sub-label order. However, sub-labels seems to decrease the amount of
-training epochs needed to converge to the final model parameters.
+As can be expected, training time increases and decoding speed
+decreases with increasing sub-label order. However, sub-label
+dependencies seems to decrease the amount of training epochs needed to
+converge to the final model parameters.
 
-For both FTB and TDT, unstructured sub-label features are more
-influential for accuracy than structured sub-label features when the
-morphological analyzer is not used. Then it is used, structured
-sub-labels, converesly, give a larger improvement.
+When a morphological analyzer is not used, unstructured sub-label
+features are more influential for accuracy than structured sub-label
+features for both FTB and TDT.  When the analyzer is used, the
+opposite is true. Structured sub-label dependencies improve
+performance substantially more. In fact, unstructured sub-label
+dependencies alone do not provide a statistically significant
+improvement, when the analyzer is used, whereas a combination of
+unstructured and first order structured sub-label dependencies
+do. Moreover, the improvement given by first order sub-label
+dependencies with regard to unstructured dependencies is greater when
+the analyzer is used than when it is not used.
 
-\paragraph{Discussion}
+\paragraph{Discussion} As stated in Section \ref{sec:prec-tagger}, sub-label dependencies can improve accuracy in two ways
+\begin{enumerate}
+\item they can counteract data sparsity and
+\item capture congruence and other phenomena that transcend individual
+  word classes.
+\end{enumerate}
+Experimentally, it is difficult to discern these two effects (probably
+the experiments in this section cannot do this). Perhaps they are not
+even distinct effects. After all, in the presence of a sufficient
+amount of training data, all combinations of full labels are observed
+and there is no need for modeling congruence and other similar
+phenomena using sub-label dependencies. In practice the data is,
+however, always sparse. And I think that in the case of insufficient
+data, a stronger structured model can yield better results because it
+utilizes the training data in a richer manner.
 
-\section{Pruning the Model}
+Unstructured sub-label dependencies probably mainly act to reduce data
+sparsity. This is a credible explanation for the improvement in
+accuracy because their effect is almost completely nullified by the
+morphological analyzer whose main purpose is similarly to counteract data
+sparsity which arises because of the large variety of inflections in
+Finnish text. In contrast, the effect of structured sub-label
+dependencies is not nullified by the morphological analyzer. In fact
+the improvement is greater when the analyzer is used, when compared to
+the setting where only unstructured sub-label dependencies are used. 
+
+It is possible that the effect of structured sub-label dependencies
+still mainly stems from reduced data sparsity in the structured model
+but a part of the reduction of data sparsity is that significant
+grammatical relations can be learned from the data.
+
+The experiments show that sub-label dependencies deliver at least as
+great improvements as increasing model order which is a standard trick
+in sequence labeling. Still, however, the impact from using a
+morphological analyzer dwarfs both of these effects.
+
+\section{Model Pruning}
 
 In this section, I examine two model pruning strategies: pruning by
 update count and pruning by parameter mass. The strategies are
 presented in \ref{sec:pruning}.
 
-The value for the pruning parameter was set using development
-data. The range of parameter values was chosen so as to show the
-difference in pruning efficiency. The specific parameter values are
-not very important. The important thing is to show the relation of
-model size and accuracy. In these experiments, pruning has not been
-applied to the lemmatizer although that would be possible.
-
-Clearly, mass based pruning is more effective than update count based
-pruning. For FTB, without a morphological analyzer, the full accuracy
-of $93.2\%$ can be maintained even when pruning out 81\% of model
-parameters. When using update count as pruning criterion, full
-accuracy cannot be maintained when pruning out more than 38\% of model
-parameters. For TDT, the corresponding figures are 55\% for mass based
-pruning and 23\% for update based pruning.
-
-When using a morphological analyzer, even further feature pruning is
-possible. For FTB, 84\% of model parameters can be pruned while
-maintining full accuracy when using mass based pruning. When using
-update count based pruning, however, no parameters can be pruned
-without losing accuracy. For TDT, update count based pruning can prune
-out 72\% of the features when using a morphological analyzer but mass
-based pruning can prune out even more -- 81\%.
+\paragraph{Setup} The value for the pruning parameter was set using
+development data. The range of parameter values was chosen so as to
+show the difference in pruning efficiency. The specific parameter
+values are not very important. The important aspect is the relation of
+model size and accuracy. These experiments only investigate pruning
+for tagger parameters. Pruning could, however, also be applied to the
+data-driven lemmatizer.
 
 \begin{table}[htb!]
 \begin{center}
@@ -661,16 +690,7 @@ MA                     & None         & $< 2.0$      & $< 2.5$      & $< 3$     
 no                     & 93.2\%, 4.8M & 93.3\%, 1.8M & 93.2\%, 1.4M & 93.2\%, 1.2M & 93.2\%, 0.9M \\
 yes                    & 96.3\%, 4.3M & 96.3\%, 0.9M & 96.3\%, 0.7M & 96.2\%, 0.3M & 96.1\%, 0.1M \\
 \end{tabular}
-\caption{Result of applying different pruning strategies on FinnTreeBank models.}
-\end{center}
-\end{table}
-
-\begin{table}[htb!]
-\begin{center}
-\begin{tabular}{c|ccccc}
-
-\end{tabular}
-\caption{Result of applying different pruning strategies on Turku Dependency Treebank models.}
+\caption{Result of applying different pruning strategies on FinnTreeBank models.}\label{tab:pruning-ftb}
 \end{center}
 \end{table}
 
@@ -689,15 +709,93 @@ MA                     & None           & $< 4.0$        & $< 5.0$      & $< 6.0
 no                     & 92.8\%, 6.4M   & 92.8\%, 2.9M   & 92.7\%, 2.8M & 92.7\%, 2.6M & 92.6\%, 2.1M \\
 yes                    & 96.3\%, 5.5M   & 96.3\%, 1.2M   & 96.3\%, 0.8M & 96.2\%, 0.2M & 96.2\%, 0.2M \\
 \end{tabular}
-\caption{Result of applying different pruning strategies on Turku Dependency Treebank models.}
+\caption{Result of applying different pruning strategies on Turku Dependency Treebank models.}\label{tab:pruning-tdt}
 \end{center}
 \end{table}
 
-\begin{table}[htb!]
+
+\paragraph{Results} The results for FTB and TDT are shown in Tables
+\ref{tab:pruning-ftb} and \ref{tab:pruning-tdt}, respectively. The
+results are visualized in Figure \ref{fig:pruning-vis}.
+
+Clearly, mass based pruning is more effective than update count based
+pruning. For FTB, without a morphological analyzer, the full accuracy
+of $93.2\%$ can be maintained even when pruning out 81\% of model
+parameters. When using update count as pruning criterion, full
+accuracy cannot be maintained when pruning out more than 38\% of model
+parameters. For TDT, the corresponding figures are 55\% for mass based
+pruning and 23\% for update based pruning.
+
+When using a morphological analyzer, even further feature pruning is
+possible. For FTB, 84\% of model parameters can be pruned while
+maintaining full accuracy when using mass based pruning. When using
+update count based pruning, however, no parameters can be pruned
+without losing accuracy. For TDT, update count based pruning can prune
+out 72\% of the features when using a morphological analyzer but mass
+based pruning can prune out even more -- 81\%.
+
+\begin{figure}[htb!]
 \begin{center}
 \includegraphics[width=\textwidth]{pruning}
 \end{center}
-\end{table}
+\caption{This figure visualizes the trade-off between model accuracy
+  and model size which can be achieved using {\textcolor{red}{value
+      based pruning}} (the red data points) and
+  {\textcolor{blue}{update count based pruning}} (the blue data
+  points). The black data point in each graph represents the original
+  model without pruning. Data points that lie close to the upper
+  left corner of the graph represent models that are pruned
+  efficiently while maintaining a lot of the original accuracy. In
+  contrast, data points closer to the lower right corner represent
+  models where pruning is unable to reduce model size effectively but
+  the accuracy of the model still degrades. The general tendency is
+  that red data points are closer to the upper left corner than blue
+  ones, which means that value based pruning is more effective than
+  update count based pruning.}\label{fig:pruning-vis}
+\end{figure}
+
+\paragraph{Discussion} The guiding principle for pruning based on
+update count is that parameters which receive few updates activate
+rarely. Thus they are not very influential for tagging
+accuracy. Whereas this may give a sufficient criterion for determining
+that a parameter is non-influential, it does not give a necessary
+condition. There are features that activate often but do not help in
+tagging. For example, features sharing the template {\bf The word
+  begins with ``a''} activate often in any realistic data set for
+Finnish morphological tagging. However, they are almost completely
+uninformative. Therefore, provided sufficient data, their update count
+will be high but the absolute value of the features will close to zero
+because the updates cancel out as the features activate approximately
+equally often for all labels. Value based pruning will prune out both
+features that activate rarely and features that activate often but do
+not provide additional information for the tagging task. It is,
+therefore, not surprising that the experiments quite clearly show that
+value based pruning is superior on the FTB and TDT data sets.
+
+Models can be pruned more heavily when the morphological analyzer is
+used. This probably reflects the fact that the tagging task is easier
+when the tagger can rely on the analyzer. For example, a substantial
+part of word forms only receive one label from the morphological
+analyzer. Therefore, the disambiguation task becomes trivial for these
+words.
+
+Value based pruning may not be able to filter out features that are
+highly correlated with other features. This case should be handled
+using for example L1 regularization for perceptron taggers
+\cite{Zhang2014}. 
+
+Training and development times are not included in Tables
+\ref{tab:pruning-ftb} and \ref{tab:pruning-tdt}. However, model
+development is substantially more time consuming when update count
+based pruning is used. This happens because a new model has to be
+trained for every threshold, as the threshold influences the model
+during training. In contrast, mass based pruning can be performed on a
+trained model using several thresholds.
+
+Finally, it is interesting to note that some pruned models yields
+better results for TDT than the original models. It may be that
+pruning can help to regularize the model in some cases, however, the
+differences in these experiments are not statistically significant.
 
 %\section{Lemmatizer}
 
