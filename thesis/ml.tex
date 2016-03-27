@@ -2,14 +2,13 @@
 \label{chap:ml}
 
 This section outlines the basic methodology followed in machine
-learning research for Natural Language Processing. I will briefly
+learning research for NLP. I will briefly
 discuss machine learning from a general point of view and then present
 supervised machine learning in more detail using linear regression as
-example. I will then elaborate on the different kinds of classifiers
-applied in NLP; both unstructured and structured.
+example.
 
 \paragraph{Supervised and Unsupervised ML} There exists a broad
-division of the field of machine learning into three sub-fields.
+division of the field of machine learning into three sub-fields.\footnote{However, for example reinforcement learning and active learning may not fit easily into this classification.}
 \begin{enumerate}
 \item In {\it supervised} machine learning the aim is to learn a mapping
   from inputs $x$ (such as sentences) to outputs $y$ (such as
@@ -84,7 +83,7 @@ She decides to base the model on the following predictors:
 \item Size of the yard.
 \item Distance of the house from the city center.
 \item Age of the house.
-\item Amount of time since the last major renovation.
+\item Elapsed time since the last major renovation.
 \end{enumerate}
 
 Jill decides to use the simplest model which seems reasonable. This
@@ -101,8 +100,8 @@ estimate of the price for the prospective client.
 
 To formalize the linear regression model, let us call the dependent
 variable price $y$ and each of the independent variables living area,
-number of rooms and so on $x_i$. Given a vector $x = (x_1, ...,
-x_n, 1)^\top \in \R^n$, which combines the independent
+number of rooms and so on $x_i$. Given a vector $x = (x_1\ ...\
+x_n\ 1)^\top \in \R^{n+1}$, which combines the independent
 variables $x_i$, a bias term $1$, and a parameter vector $\theta \in
 \R^{n+1}$ the linear regression model is given by Equation
 \ref{eq:linreg}.\footnote{In reality, each of the predictors would probably
@@ -182,20 +181,6 @@ for each parameter vector. Using the concept of loss function, the
 objective of estimation can be reformulated: Find the parameter vector
 $\theta$ that minimizes the average loss over the training data.
 
-%\paragraph{The Exact Solution} In the case of linear regression, there
-%is a well known exact solution for $\theta$ which utilizes linear
-%algebra. The solution is given in Equation \ref{eq:lss-exact}. The
-%matrix $X \in \R^T_n$ is defined by $X_{t,i} = x_t[i]$ and its
-%More-Pennrose pseudoinverse $X^+ \in \R^n_T$ is defined as $X^+ =
-%(X^\top X)^{-1}X^\top$. The vector $Y \in R^T$ is simply the vector of
-%realized house prices $y_t$. The solution $\theta$ exists only when
-%none of the independent variables are linear combinations of each
-%other in the training data.
-
-%\begin{equation}
-%\theta = X^+ Y \label{eq:lss-exact}
-%\end{equation}
-
 \paragraph{Iterative Estimation} In the case of linear regression
 model, there is an exact solution for the optimization of parameter
 vector $\theta$.\footnote{The solution is given by $\theta = X^+Y$
@@ -203,8 +188,8 @@ vector $\theta$.\footnote{The solution is given by $\theta = X^+Y$
   pseudo-inverse of $X$.} This does not hold for more complex
 models. Moreover, the exact solution might often not be the one that
 is desired because it does not necessarily generalize well to unseen
-examples. This is called {\it over-fitting}. Fortunately, the loss
-function can be modified to counteract over-fitting. After the
+examples. This is called {\it overitting}. Fortunately, the loss
+function can be modified to counteract overfitting. After the
 modification, the parameter optimization problem might, however, no
 longer have a closed form solution.
 
@@ -256,11 +241,11 @@ fewer steps in total. In first order methods such as gradient descent,
 $\alpha_t$ can be constant, a decreasing function of $t$ or can also
 be determined by a line search in the direction of $-\nabla
 \mathcal{L}_{\mathcal{D}}(\theta_t)$. For example $\alpha_t =
-t^{-1}$ may work.\footnote{In general, stepsize $(\alpha_t)_{t \in
-\N}$ that resemble the harmonic sequence, that is $\sum \alpha_t^2 <
-\infty$ and $\sum \alpha_t = \infty$, guarantee convergence of
-gradient descent to an minimum of the loss function (if it exists) for
-a wide variety of functions \cite{someone}}
+t^{-1}$ may work.%\footnote{In general, stepsize $(\alpha_t)_{t \in
+%\N}$ that resemble the harmonic sequence, that is $\sum \alpha_t^2 <
+%\infty$ and $\sum \alpha_t = \infty$, guarantee convergence of
+%gradient descent to an minimum of the loss function (if it exists) for
+%a wide variety of functions \cite{someone}}
 
 
 As the meta-algorithm above suggests, gradient based optimization
@@ -286,7 +271,7 @@ methods can be slow and subsequent training when new training examples
 become available is computationally intensive. {\it Online algorithms}
 are an alternative to batch methods, where the loss is instead
 computed for a randomly chosen training example and the parameters are
-the updated accordingly. In practice, online methods
+then updated accordingly. In practice, online methods
 can give fast convergence. Moreover, re-training is relatively
 efficient when new training examples become available.
 
@@ -323,7 +308,7 @@ be transformed into this form by applying an affine transformation $z
 \mapsto az - b$. When doing inference, this affine transformation can
 simply be reversed by applying $z \mapsto a^{-1} (z + b)$. The
 simplest parameter vector $\theta$ is clearly the zero vector $\theta
-= (0 ... 0)^\top$. It corresponds to the hypothesis that the
+= (0 ... 0)$. It corresponds to the hypothesis that the
 predictors $x_i$ have no effect on the dependent variable
 $y$. According to this hypothesis, the prediction for the house price
 is identically zero.
@@ -337,7 +322,7 @@ function, we can however encourage simple solutions while at the same
 time also preferring solutions that give a good fit. There are several
 ways to accomplish this but the most commonly used are so called $L_1$
 and $L_2$ regularization.\footnote{Another approach to counteracting
-  over-fitting is provided by Bayesian statistics where the parameter
+  overfitting is provided by Bayesian statistics where the parameter
   vector $\theta$ is drawn from a prior distribution. In practice,
   Bayesian methods and regularization are often equivalent.} These are
 general regularization methods that are employed in many models in
@@ -375,18 +360,18 @@ vector and when it decreases $\theta$ approaches the parameters that
 fit the training data as closely as possible. This is called
 under-fitting.
 
-\paragraph{Hyper-parameters} The regularizer is a so called {\it hyper-parameter} of the
-regularized liner regression model. It is easy to see that increasing
-$\lambda$ will automatically increase the loss. Therefore, there is no
-direct way to estimate its correct magnitude simply using the training
-data. Instead {\it held-out data} can be used. Held-out data is
-labeled data that is not used directly for estimating model
-parameters. If the model over-fits the training data, that is
-generalizes poorly to unseen examples, the held-out data will have a
-high loss. However, it will also have a high loss if the model
-under-fits, that is, performs poorly on all data. Held-out data can
-therefore be used to find an optimal values for the regularizer
-$\lambda$. Often one tries several potential values and chooses the
+\paragraph{Hyper-parameters} The regularizer is a so called {\it
+  hyper-parameter} of the regularized liner regression model. It is
+easy to see that increasing $\lambda$ will automatically increase the
+loss. Therefore, there is no direct way to estimate its correct
+magnitude simply using the training data. Instead {\it held-out data}
+can be used. Held-out data is labeled data that is not used directly
+for estimating model parameters. If the model over-fits the training
+data, that is generalizes poorly to unseen examples, the held-out data
+will have a high loss. However, it will also have a high loss if the
+model under-fits, that is, performs poorly on all data. Held-out data
+can therefore be used to find an optimal values for the regularizer
+$\lambda$. Often, one tries several potential values and chooses the
 one that minimizes the loss of the held-out data. Usually, one uses
 the unregularized loss function for the held-out data.
 
@@ -409,18 +394,20 @@ labeled data and follow a set pattern.
 \item {\bf Tuning} The model hyper-parameters are set using
   development data.
 \item {\bf Training} When model parameters and hyper-parameters are
-  set, the model is trained. Training time is measured at this point.
+  set, the final model is trained on the combined training and
+  development data. Training time is measured at this point.
 \item {\bf Evaluation} The performance of the model is measured on the
   test data in order to derive an estimate of tagging accuracy and
   tagging speed.
 \end{enumerate}
 
-A crucial component of machine learning experiment is the
-baseline. For example, when investigating the impact of a set of
+A crucial component of machine learning experiment is the {\it
+  baseline}. For example, when investigating the impact of a set of
 features on tagging accuracy, the baseline will be the model which
-does not include those features. When investigating the tagging
-accuracy, tagging speed or training speed of the FinnPos toolkit, the
-baseline will be another established tagger toolkit.
+does not include those features. In Publication \ref{pub:6}, which
+investigates the tagging accuracy, tagging speed or training speed of
+the FinnPos toolkit, other established tagger tool-kits are used as
+baseline.
 
 When comparing tagging accuracy of two taggers, we compare their
 accuracies on the test set. However, this is only an estimate of the
@@ -449,227 +436,3 @@ actually has the higher accuracy although we know that one of the
 systems performs better on the test set.\footnote{This was suggested
   by one of the reviewers of Publication \ref{pub:6}.}
 
-%\begin{itemize}
-%\item Evaluation metric.
-%\item Training set, development set, test set.
-%\item Significance of results.
-%\item Estimating variance.
-%\item Statistical significance testing.
-%\end{itemize}
-
-%\section{Classification}
-%\begin{itemize}
-%\item Naïve Bayes' classifier.
-%\item Generative and Discriminative Classifiers.
-%\item Linear classifiers: logistic classifier, perceptron classifier \citep{Freund1999},
-%  SVM \citep{Cortes1995}.
-%\end{itemize}
-
-%The main topic of this thesis is morphological tagging. It can be seen
-%as a structured {\it classification task} where each word in a
-%sentence is assigned one morphological label.\footnote{which may have
-%  internal structure as is seen in Section
-%  \ref{sec:sub-labels}.} Classification is a fundamental supervised
-%machine learning task where the objective is to learn a mapping from
-%objects like words, sentences, documents or images onto discrete
-%classes such as morphological labels (Noun+Sg+Nom) or sentiments
-%(Positive sentiment versus Negative Sentiment).
-
-%Classification resembles regression. The output of a classifier is, however, not
-%a single real value $y$ but a distribution over the set of nominal
-%classes.
-
-%Probabilistic classifiers can broadly be divided into two groups,
-%namely generative and discriminative. Generative classifiers learn a
-%joint distribution $p(x,y)$ over labels $y$ and input examples
-%$x$. Given an example $x$, a distribution over classes $y$ can be
-%computed using the marginal probability of example $x$, which is $p(x)
-%= \sum_{y' \in Y} p(y',x)$. The probability distribution over classes
-%is defined by $p(y|x) = p(y,x) / p(x)$.
-
-%\section{Structured Classifiers}
-%\begin{itemize}
-%\item The idea of chained stochastic processes.
-%\item Markov chain.
-%\item HMM
-%\item MEMM
-%\item CRF
-%\end{itemize}
-
-%There are tasks in natural language processing that cannot be
-%adequately formulated as supervised classification tasks in the simple
-%way that has been discussed earlier. Examples of tasks that require
-%more sophisticated methods are syntactic parsing and translation
-%between languages. One could think of parsing as a labeling task where
-%the objective is to label a sentence with the appropriate syntactic
-%tree. Likewise, the translation of a sentence could be seen as its
-%label. 
-
-%It is, however, easy to see that these approaches are deeply
-%flawed. Firstly, there is an infinite number of syntactic trees and
-%indeed an infinite number of sentences of finite length. Therefore,
-%the label set would have to be infinite as well. Secondly, the data
-%sparsity problem would be unmanageable. Just in order to see most
-%relatively frequent syntax trees for moderately long English
-%sentences, say twenty words long, we would need an unfathomable amount
-%of training data.
-
-%Instead of a simplistic classification approach, {\it structured}
-%classifiers can be employed. Structured classifiers relate parts of
-%the complex label such as a translation, syntax tree or sequential
-%labeling with the input. They also learn how to piece together complex
-%labels from simple constituents. A very simple (and probably very bad)
-%translation software could learn how to translate isolated English
-%words into French words and then learn how to combine French words
-%into sentence as shown in Figure \ref{fr-tr}. Note that although both
-%``Le'' and ``La'' are perfectly good translations for ``The'', only
-%``Le'' is usually possible before ``chien'', which is a masculine
-%French word.
-
-%In general, structured classifiers rely on two models, the
-%unstructured and structured model. The unstructured model learns to
-%relate simple labels such as words in a translation or nodes in a
-%syntax tree with the input. In contrast, the structured model learns
-%how to combine simple labels into complex labels such as entire
-%translations or syntax trees. In practice, some models make a stricter
-%division then other models.
-
-%Structured models are the main subject matter of this thesis and I
-%will present two structured models, the Hidden Markov model and the
-%Conditional random field in detail in Chapters \ref{hmm} and
-%\ref{crf}.
- 
-%\begin{figure}
-%\caption{A translation from English to French}\label{fr-tr}
-%\begin{center}
-%\includegraphics[scale=0.75]{chien}
-%\end{center}
-%\end{figure}
-
-%\section{The Aim of Research -- Improving the State of the Art}
-%
-%Like most language technological research, the work documented in this
-%thesis aims at improving existing solutions for language
-%processing. Specifically, my work is targeted at improving
-%morphological taggers for morphologically rich languages. It is not
-%entirely easy to define what constitutes an improvement to the field
-%of morphological tagging or indeed any sub-field of language
-%technology. Nevertheless, most researchers would probably agree that
-%the following kinds of changes are improvements compared to existing
-%approaches:
-%
-%\begin{enumerate}
-%\item Improving labeling accuracy.
-%\item Speeding up estimation.
-%\item Speeding up tagging.
-%\item Reducing model size. \label{quant}
-%\item Clarifying the underlying theoretical foundations.
-%\item Simplifying implementation of taggers.
-%\item Uncovering best practices for building taggers.
-%\end{enumerate}
-%
-%Items 1 though \ref{quant} in the list above are {\it quantifiable}
-%improvements. It is possible to perform experiments to measure the
-%labeling accuracy, tagging speed, estimation speed and model size
-%given by different morphological taggers and derive conclusions about
-%the respective merits of the taggers. In contrast, the rest of the
-%items in the list cannot be measured as easily. 
-%
-%Although, most probably would agree that clarifying theoretical
-%foundations of a field is a substantial contribution, it may not be as
-%easy to agree upon what constitutes a clarification. This could for
-%example be dependent on the background of individual
-%researchers. Similarly, one model might be more straight-forward to
-%implement than another model using some programming language, however,
-%this can very well depend on the specific programming language and
-%available libraries to some degree.
-%
-%Because quantifiable improvements are easier to ascertain, this thesis
-%focuses on demonstrating such improvements compared to other state of
-%the art approaches. Nevertheless, I will also aim to show that the
-%model demonstrated in the thesis is conceptually simpler than other
-%state of the art approaches.
-%
-%Although quantifiable improvements are easier to demonstrate than
-%other improvements, there are still caveats. First of all, it is
-%impossible to compare machine learning models directly. One can only
-%compare implementations of the models. Because of differences between
-%platforms even different implementations of the exact same model can
-%have radically different run time on the same data. Moreover, bugs in
-%the implementation of different models can reduce the accuracy or have
-%sporadic effects on run time.
-%
-%Besides practical concerns like dependence on implementation, there
-%are also theoretical issues that interfere with measuring performance
-%of different models. It is easy to say that the accuracy of one system
-%is better than another system on {\it a specific data set}. This does,
-%however, not imply that the accuracy is better on {\it all data
-%  sets}. In formal terms, we can only conduct experiments on samples
-%of the distribution of all texts in a given language. Therefore, our
-%experiments will yield results only in a probabilistic sense: it is
-%likely that the labeling accuracy of one system is better than the
-%accuracy of another, if the accuracy was better on the sample used for
-%testing.
-% 
-%Using large test sets and test sets compared from a variety of
-%different genres will probably give more reliable results. This is,
-%however, also to some extent a debatable matter. Some methods are very
-%accurate on the same genre that they were trained on but perform worse
-%on other genres. Other methods instead perform well on average but, as
-%a trade-off, cannot reach as high accuracy on a specific text
-%domain. It is not easy to say which kind of system is preferable. This
-%trade-off is called the bias variance trade-off \cite{?} and it has
-%bearing on measuring the performance difference of systems. 
-%
-%When using a high variance system, accuracy on different texts varies
-%a lot. When instead using a system with high bias, the accuracy tends
-%to vary much less.
-%
-%When comparing two systems, it is not sufficient to simply look at the
-%performance of the systems on a test set. If we measure the
-%performance of the systems on a particular test, one of them will
-%almost certainly perform better than the other regardless of whether
-%there is an actual difference in the performances of the systems. The
-%probability of exactly equal performance is simply very small. 
-%
-%The larger the test sets are, the more accurately the results of
-%experiments will on average reflect the true performance of the
-%systems. This is easy to see, because ultimately the test set will represent the entire domain. Unfortunately, the amount of test material is usually
-%restricted and producing more test data might not be
-%feasible.\footnote{Especially when using standard data sets, one is
-%  restricted to the given amount of test data}
-%
-%An approach that is often used is splitting the test data into
-%segments and performing several experiments -- one for each
-%segment. If one system outperforms the other system on most segments
-%with a large margin, then we are more confident in saying that there
-%is in fact a difference in the performance of the systems. If on the
-%hand each system outperforms the other on roughly half of the
-%segments, we might be inclined to doubt whether there is any real
-%difference in performance between the systems. The higher the variance
-%between the results, the larger the margins between the systems need
-%to be in order for us to be able to conclude that there is a
-%difference in performance. This argument can be made rigorous using
-%statistical tests which measure the significance of the difference in
-%performance of two systems.
-%
-%The usual set up of statistical significance testing is to make a null
-%hypothesis $H_0$ that the average performance of two systems is the
-%same. After this a test statistic is computed. The test statistic is
-%simply a real number whose value indicates the significance of the
-%difference in performances between the systems. If the statistic is
-%high enough, the null hypothesis can be discarded in favor of the
-%alternative hypothesis that there is a genuine difference in
-%performance between the systems. The test statistic incorporates
-%information about the difference in performance of the systems on test
-%data all segments as well as the variance of the performances.
-%
-%In the work conducted presented in this thesis, I have used the
-%Wilcoxon signed-rank test \cite{?} to ascertain the significance of
-%results. I use it instead of the T-test because it is not dependent on
-%the fact that the distribution of differences in performance are
-%normally distributed.\footnote{In practice it might be a fairly
-%  accurate assumption that the differences are normally
-%  distributed. This often holds for measurements \cite{?}.} In
-%practice it is less sensitive than the T-test.
-%

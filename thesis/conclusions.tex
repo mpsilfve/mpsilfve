@@ -1,17 +1,90 @@
 \chapter{Conclusions and Future Work}
 \label{chapter:conclusions}
-Future Work:
-\begin{itemize}
-\item Including disambiguation rules for Finnish.
-\item Further feature engineering especially in the form of
-  linguistically relevant gazzetteers.
-\item Semi-supervised approach using self-training.
-\item Other possible semi-supervised approaches.
-\item Using morfessor instead of a morphological analyzer.
-\item Using a data-driven morphological analyzer instead of a regular
-  one.
-\end{itemize}
 
-For future work, it would be interesting to compare value based
-pruning and L1 regularization for perceptron taggers and investigate
-the combination of these methods.
+This thesis has presented work on data driven morphological tagging
+for Finnish using both generative and discriminative models.
+
+\paragraph{Generative Taggers} The finite-state implementation of
+generative taggers which is presented in Publications \ref{pub:1} and
+\ref{pub:2} allows for flexible model formulation. Publication
+\ref{pub:2} shows that it compares favorably to the widely used HunPos
+tagger when tagging Finnish text. The implementation does, however,
+not solve the principal problem of HMM taggers: the independence
+assumptions in the model are too harsh. Therefore, complex
+unstructured features such as word context cannot be used. This is
+probably the greatest pitfall of generative models because surrounding
+words are quite useful in morphological tagging.
+
+There are other reasons to prefer discriminative models above the
+generative tagging paradigm. All generative models require some manner
+of smoothing. It is difficult to know what the optimal choice of
+smoothing method. This may even be language specific to some
+extent. For example, Publication \ref{pub:2} indicates that the
+guesser presented in \cite{Brants2000} may not be optimally suited for
+morphologically rich languages such as Finnish. A guesser based on the
+longest common suffix with words in the training data may give better
+results.
+
+\paragraph{Discriminative Taggers} The discriminative model presented
+in this thesis is based on the averaged perceptron model. It
+incorporates sub-label dependencies to improve accuracy in presence of
+large structured label sets and a cascaded model structure and beam
+search in order to speed up estimation. Moreover, I investigated
+different pruning strategies for models and showed that model size can
+be reduced by up to 80\% with negligible reduction in accuracy. The
+FinnPos toolkit implements these optimizations and is freely available
+as an open-source utility.
+
+The experiments in Chapter \ref{chapter:finnpos} show that the
+morphological analyzer is clearly the most influential factor for the
+accuracy of the model. It results in much larger gains in accuracy
+than increasing model order or using sub-label dependencies. Sub-label
+dependencies however are equally or more influential than increased
+model order. This is not entirely surprising because a second order
+model will be very sparse when used in presence of label sets
+exceeding a thousand labels and training data on the order of 200,000
+tokens. In contrast, sub label dependencies are by definition less
+sparse.
+
+\paragraph{Future Work} It would be interesting to try self-training
+as presented by \cite{Sogaard2011}. Other semi-supervised training
+methods such as distributional similarity could also be
+interesting. In the context of morphologically rich languages,
+distributional similarity of word forms might require a large amount
+of training data. Therefore, it could also be interesting to explore
+using lemmatized training material.
+
+All experiments in this thesis have used a full-fledged morphological
+analyzer. It would be interesting to try out a morphological
+segmentation application such as Morfessor \citep{Creutz2002}. The
+segments could be used as features in a similar manner as the
+morphological labels are used in the current system.
+
+Further feature engineering could probably be useful. For example verb
+valency could be useful. It would also be interesting to combine the
+finite-state implementation presented in Publications \ref{pub:5} and
+\ref{pub:6} with the discriminative estimation in the FinnPos
+toolkit. Especially, it would be interesting to explore global tagger
+constraints implemented as features in a discriminative tagger. An
+simple example of such a feature is {\bf the sentence has a finite
+  verb form}. This would be possible using the finite-state
+implementation which is not constrained by a fixed model order unlike
+standard inference using the Viterbi algorithm. However, efficient
+estimation would probably be a challenge.
+
+As further work on model pruning, it would be interesting to compare
+value based pruning and L1 regularization for perceptron taggers and
+investigate the combination of these methods.
+
+%\begin{itemize}
+%\item Including disambiguation rules for Finnish.
+%\item Further feature engineering especially in the form of
+%  linguistically relevant gazzetteers.
+%\item Semi-supervised approach using self-training.
+%\item Other possible semi-supervised approaches.
+%\item Using morfessor instead of a morphological analyzer.
+%\item Using a data-driven morphological analyzer instead of a regular
+%  one.
+%\end{itemize}
+
+

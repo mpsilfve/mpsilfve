@@ -3,7 +3,7 @@
 In this Chapter, I will present an implementation of HMMs using {\it
   weighted finite-state machines}. It is further investigated in
 Publications \ref{pub:1} and \ref{pub:2}. The implementation allows
-for extensions of the HMM model in the spirit of \cite{Halacsy2007}
+for extensions of the HMM model in the spirit of \cite{Halacsy2007},
 who utilize label context in the emission model of an HMM. It also
 allows for applying global grammatical constraints. I will first
 present a short summary of the most important aspects of finite-state
@@ -13,7 +13,7 @@ calculus and then present the finite-state implementation of HMMs.
 
 \paragraph{Automata} Weighted Finite-state automata are a data
 structure for representing algorithms that solve the decision problem
-of some regular language. A string can be either accepted or discarded
+of a regular language. A string can be either accepted or discarded
 by a an automaton with some weight. Typically, weights bear
 resemblance to probabilities and if they are interpreted as
 probabilities, an automaton defines a distribution over the set of
@@ -27,7 +27,7 @@ components of a finite-state automaton $M$
 \item An alphabet $\Sigma_M$ (the POS labels in Penn Treebank in Figure \ref{fig:np-fsm}).
 \item A unique initial state $I_M$ ($0$ in Figure \ref{fig:np-fsm}).\footnote{Some formulations allow for several initial states with initial weights. This does, however, not increase the expressiveness of the formalism.}
 \item A set of final states $F_M = \{r_1, ..., r_m\} \subset Q_M$ with associated final weights ${\rm f}(r_i)$ ($\{2\}$ and $1.0$ in Figure \ref{fig:np-fsm}).\footnote{Alternatively, we could also specify a final weight for every state. Then the actual final states would be the ones wit non-zero weight.}
-\item A transition function $\tau_M$, which specifies a, possibly empty, set $\tau_M(q,x) = \{(q_1,w_1),\ ...,\ (q_n,w_n)\}$ of target states and transition weights for each symbol $x\in \Sigma_M$ in each state $q \in Q_M$ (in Figure \ref{fig:np-fsm} the relation is represented by the arrows in the graph).
+\item A transition function $\tau_M$, which specifies a, possibly empty, set $\tau_M(q,x) = \{(q_1,w_1),\ ...,\ (q_n,w_n)\}$ of target states and transition weights for each symbol $x\in \Sigma_M$ in each state $q \in Q_M$ (in Figure, \ref{fig:np-fsm} the relation is represented by the arrows in the graph).
 \end{enumerate}
 \begin{figure}[!ftb]
 \begin{center}
@@ -35,7 +35,7 @@ components of a finite-state automaton $M$
 \end{center}
 \caption{A finite-state machine accepting a subset of the singular noun phrases in Penn Treebank.}\label{fig:np-fsm}
 \end{figure}
-When $\tau_M(a,q)$ is either empty or a singleton set for all $a$ and $q$, the automaton $M$ is called deterministic and I write $\tau_M(a,q) = (q_1,w_1)$ instead of $\tau_M(a,q) = \{(q_1,w_1)\}$.
+When $\tau_M(a,q)$ is either empty or a singleton set for all $a$ and $q$, the automaton $M$ is called {\it deterministic} and I write $\tau_M(a,q) = (q_1,w_1)$ instead of $\tau_M(a,q) = \{(q_1,w_1)\}$.
 
 \paragraph{Weight Semirings} Transition and final weights should form a
 algebraical structure $\mathbb{K}$ called a semiring which is an abstraction of the
@@ -44,14 +44,14 @@ multiplication $\otimes$, are defined in $\mathbb{K}$. The addition operation sh
 associative, commutative and have an identity element
 $\mathbb{0}$. The multiplication operation should also be associative
 and commutative. If it has an identity element, that element is
-denoted by $\mathbb{1}$. The multiplication should distribute over the
+denoted by $\mathbb{1}$. Multiplication should distribute over
 addition \citep{Allauzen2007}.
 
-As noted above, the prototypical example of a weight semiring is given by the positive real numbers together with the regular addition and multiplication of reals. This weight semiring, called the {\it probability semiring},\footnote{Even though the probability semiring is intended for representing probability distributions, weights cannot be restricted to $[0,1]$ the semiring has to be closed under addition.}  can be used to represent a probability distribution over the set of strings. In practice, this weight semiring is however rarely used. Because of numerical stability concerns, a logarithmic transformation $x \mapsto -log(x)$ is often applied to the weights and operations in the probability semiring. This gives the {\it log semiring}, where weights belong to $\mathbb{R}$, multiplication is given by $x \otimes y = x + y$ and addition by $x \oplus y = -\log(\exp(-x) + \exp(-y))$.
+As noted above, the prototypical example of a weight semiring is given by the positive real numbers with the regular addition and multiplication of reals. This weight semiring, called the {\it probability semiring},\footnote{Even though the probability semiring is intended for representing probability distributions, weights cannot be restricted to $[0,1]$ because the semiring has to be closed under addition.}  can be used to represent a probability distribution over the set of strings. In practice, this weight semiring is however rarely used. Because of numerical stability concerns, a logarithmic transformation $x \mapsto -log(x)$ is often applied to the weights and operations in the probability semiring. This gives the {\it log semiring}, where weights belong to $\mathbb{R}$, multiplication is given by $x \otimes y = x + y$ and addition by $x \oplus y = -\log(\exp(-x) + \exp(-y))$.
 
 The addition operation of the log semiring $-\log(\exp(-x) + \exp(-y))$
-is slow in practice. Moreover, $-\log(\exp(-x) + \exp(-y)) \approx y$
-when $x \gg y$. Therefore, the addition operation in the log semiring
+is slow in practice. Moreover, $-\log(\exp(-x) + \exp(-y)) \approx x$
+when $x \ll y$. Therefore, the addition operation in the log semiring
 is often replaced by $x \oplus y = \min(x,y)$. This gives the {\it
   tropical semiring} which is the semiring used in this thesis.
 
@@ -81,16 +81,26 @@ of weighted finite-state machines is closed under these operations and
 efficient algorithms for computing these operations exist. Table
 \ref{tab:fs-algebra}, summarizes the properties of these algorithms.
 
-\paragraph{N-Best}
-
 \paragraph{Optimization} As stated above, a finite state machine where
 each symbol and state is associated to maximally one transition is
 called deterministic. It is well known that every finite-state machine
 corresponds to a deterministic machine and this holds for weighted
-finite-state machines as well \citep{Mohri2002}. A determinization
-algorithm can be applied to any weighted finite-state machine in order
-to produce a deterministic machine which accepts exactly the same set
-of weighted strings as the original machine.
+finite-state machines as well given light assumptions on the weight
+semiring \citep{Mohri2002}. A determinization algorithm can be applied
+to any weighted finite-state machine in order to produce a
+deterministic machine which accepts exactly the same set of weighted
+strings as the original machine.
+
+\paragraph{N-Best} The finite-state implementation of morphological
+taggers presented in Publications \ref{pub:1} and \ref{pub:2} compiles
+a weighted finite-state machine which represents a sentence and all of
+its alternative label sequences as paths. The path weights correspond
+to the joint probabilities of the sentence and label sequences. An
+n-best algorithm \citep{Mohri2002} can then be used to efficiently
+extract the path that carries the highest probability. The best path
+can be found in time $O(|Q| \log(|Q|) + |\tau|)$, where $Q$ is the state
+set of the sentence machine and $|\tau|$ is the number of transitions
+in the machine.
 
 \begin{table}[!ftb]
 \begin{center}
@@ -110,292 +120,6 @@ Composition & $M_1 \circ M_2$ & $\w_{M_1 \circ M_2}(s{\rm :}t) = \bigoplus_{r} \
 \end{center}
 \end{table}
 
-%\paragraph{Transducers} Weighted finite-state automata solve the
-%decision problem of regular languages with associated weights. In
-%addition to this, a weighted finite-state transducer associates
-%strings with a set of output strings. A WFST represent a {\it rational
-%  relation} of strings. Whereas weighted automata can be seen as
-%language models which weight each string, weighted transducers
-%resemble analyzers or sequence labeling systems which output. Figure
-%\ref{fig:np-fst} demonstrates this. It is a weighted analyzer for a
-%few simple English noun phrases.
-
-%The key difference between automata and transducers is the transition
-%function. Unlike the transition function of an automaton, the
-%transition function $\tau_M$ of a transducer $M$ maps a state $q$, an
-%input symbol $x \in \Sigma_M$ and an output symbol $y \in T_M$ to a
-%set of target states $\tau_M(q,x,y) \subset Q_M \times
-%\mathbb{K}$. The sets $\Sigma_M$ and $T_M$ denote the input and output
-%alphabet of the transducer $M$. Some transitions can lack an input or
-%output symbol. A special empty string symbol $\epsilon$ is used to
-%denote these. The input symbol of a transition therefore belongs to
-%$\Sigma_M \cup \{\epsilon\}$ and the output symbol to $T_M \cup
-%\{\epsilon\}$.
-
-%The definition of the weight assigned by a transducer $M$ to paths and
-%strings is very similar as in the case of automata. Given a path of
-%states $p = (q_1,\ ...,\ q_{n+1})$, where $q_1 = I_M$ and $q_{n+1} \in
-%F_M$, a sequence of pairs $u = ((s_1,t_1), ..., (s_n, t_n))$, where
-%$x_i \in \Sigma_M \cup \{\epsilon\}$ and $y_i \in T_M \cup
-%\{\epsilon\}$, the weight assigned to the path and pair sequence
-%$\w_M(u,p)$ is given by Equation \ref{eq:fst-path-weight}. 
-
-%Next, we will define the weight assigned to a string pair. Let $s \in
-%\Sigma_M^*$ and $t \in T_M^*$, then a correspondence of $s$ and $t$ is
-%a sequence of pairs $u = ((s_1,t_1), ..., (s_n, t_n))$, where $s_i \in
-%\Sigma_M \cup \{\epsilon\}$, $t_i \in T_M \cup \{\epsilon\}$,
-%$s_1...s_n$ equals $s$ except for some interleaved epsilons and the
-%same holds for $t_1...t_n$ with respect to $t$. In this thesis I will
-%assume that none of the pairs $(s_i,t_i)$ consists of two $\epsilon$
-%symbols. This means that two strings $s$ and $t$ have only a finite
-%number of correspondences. This simplifies the definition of the
-%weight of a string pair. Let $c(s,t)$ be the finite set of
-%correspondences of $s$ and $t$. Then the weight assigned to string
-%pair $s{\rm : }t$ by transducer $M$, $\w_M(s{\rm :}t)$ is given by
-%equation \ref{eq:fst-string-pair}.
-
-%\begin{equation}
-%\w_M(u,p) =
-%{\rm f}(q_{n+1})\otimes \bigotimes_{i = 0}^n \w_M(\tau_M(q_i,x_i,y_i), q_{i+1}%)\label{eq:fst-path-weight}
-%\end{equation}
-
-%\begin{equation}
-%\w_M(s{\rm :}t) =
-%\bigoplus_{u \in c(s,t)} \bigoplus_{p \in Q_M^{|u| + 1}} \w_M(u,p) \label{eq:f%st-string-pair}
-%\end{equation}
-
-%\paragraph{Composition} Two transducers $M$ and $N$ represent weighted
-%relations, $R_M$ and $R_N$ repsectively, between strings. It is
-%possible to construct a weighted finite-state transducer which
-%implements the relation $R_M \circ R_N$. The definition of this
-%composition transducer $M \circ N$ is given in Table
-%\ref{tab:fs-algebra}. Composition is a very useful operation because
-%it allows for factorization of string transformations into simpler
-%sub-transformation.
-
-%Automata can be seen as a formalization of the concept of
-%algorithm. They represent a restricted type of algorithm in the sense
-%that they can only operate on symbol strings and they only operation
-%they perform is to accept or reject a string. Although, this might
-%sound quite restrictive, it turns out that most computational problems
-%can be formalized as such {\it decision problems} involving only
-%acceptance or rejection of symbol strings.
-
-%Every automaton is associated with a {\it formal language} which is a
-%(possible infinite) set of finite strings from the set of all strings
-%of some finite alphabet. The automaton solves the decision problem of
-%this language, i.e. accepts exactly those strings that belong to the
-%language. {\it Weighted formal languages} are an extension to the
-%concept of formal language, where each string should be assigned a
-%weight. If the weights can be interpreted as probabilities, a weighted
-%formal language over an alphabet $\Sigma$ can be seen as a probability
-%distribution over the set of strings of the alphabet. However, this is
-%not always possible because all weights cannot be interpreted as
-%probabilities.
-
-%Several well know classes of algorithms exist. The most famous ones
-%are Turing machines which, in a sense, subsume all existing automata
-%\cite{?}. In this thesis I have, however, utilized another class of
-%automata, Finite-state machines. They are more restricted than Turing
-%machines or another well know class, stack automata, because they
-%utilize only a finite amount of memory. All real world implementations
-%of automata of course utilize only a finite amount of memory.
-
-%The restriction on memory limits the set of problems that finite-state
-%machines can solve. However, at the same time it allows for a rich
-%algebra which allows one to combine finite-state machines to produce
-%new finite-state machines.
-
-%The machine in Figure \ref{fig:np-fsm} accepts sequences of Penn
-%Treebank labels which correspond to singular noun phrases that can
-%have an adjective attribute (JJ) with an optional adverb (RB)
-%expressing degree.
-
-%Typically finite-state machines are represented as state transition
-%graphs. An example is given in Figure \ref{fig:np-fsm}. The machine
-%has a set of numbered {\it states} (0, 1, 2, 3 and 4) and {\it
-%  transitions} from one state to another. The transitions are labeled
-%using symbols from a finite alphabet (e.g. NN) and weights from a {\it
-%  weight semiring}, when the machine is weighted. The weight semiring
-%in this example is the {\it probability semiring} \cite{Allauzen2007}
-%where weights are probabilities that can be added and multiplied in
-%the usual fashion.
-
-%Operation starts in the designated {\it start state} (0 in Figure
-%\ref{fig:np-fsm}) and it has to end in a {\it final state} (2 in
-%Figure \ref{fig:np-fsm} marked with a double ring). A string is
-%accepted, if and only if there is a sequence of transitions leading
-%from the start state to a final state where the symbols in the
-%transition labels spell out the input string and the product of the
-%weights along the path is non-zero. For example the machine in Figure
-%\ref{np-fsm} accepts the string ``DT NN'' with weight 0.7 but rejects
-%``DT JJ'' because the string inds when the machine is in state 4 but
-%that is not a finite state.
-
-%There may be several or no {\it accepting paths} for a given
-%string. If there are several paths for some string, the machine is
-%called {\it ambiguous}. More generally, a machine is called {\it
-%  non-deterministic} if some state has several out-going transitions
-%with the same label. Trivially, ambiguous machines are
-%non-deterministic. In the case of ambiguous machines, the weight of a
-%string is the sum of the weights of all of its accepting paths or zero
-%if there are no accepting paths.
-
-
-%\paragraph{Weighted formal languages} Formally, weighted languages are
-%mappings $M : \Sigma^* \rightarrow \mathbb{K}$ from the set of
-%arbitrary strings $\Sigma^*$ of some finite alphabet $\Sigma$ into
-%some {\it weight semiring} $(\mathbb{K}, \oplus, \otimes, \mathbb{0},
-%\mathbb{1})$ where $\mathbb{K}$ is a set of weights, $\oplus$ and
-%$\otimes$ are addition and product operators for weights and
-%$\mathbb{0} \in \mathbb{K}$ and $\mathbb{1} \in \mathbb{K}$ are the
-%additive and multiplicative identity.
-
-%\paragraph{Weight semirings} As mentioned above, the weight semiring
-%in Figure \ref{fig:np-fsm} is the probability semiring, where weights
-%belong to the set of non-negative reals $[0, \infty)$ and addition and
-%product are given by the regular real addition and product
-%operations. Even though probabilities reside in $[0,1]$, the addition
-%of probabilities can result in quantities that are larger than
-%$1$. Because finite-state algebra does include operations that add
-%probabilities, the weight set needs to include all non-negative reals.
-
-%The general weight semiring $(\mathbb{K}, \oplus, \otimes, \mathbb{0}, \mathbb{1})$ is an abstraction of the probability semiring. The set $\mathbb{K}$ is an arbitrary set but the operations $\oplus \rightarrow \mathbb{K} \times \mathbb{K} \rightarrow \mathbb{K}$ and $\oplus \rightarrow \mathbb{K} \times \mathbb{K} \rightarrow \mathbb{K}$ need to satify the following requirements \cite{Allauzen2007}
-%\begin{enumerate}
-%\item $(\mathbb{K}, \oplus, \mathbb{0})$ is a commutative and associative monoid.
-%\item $(\mathbb{K}, \otimes, \mathbb{1})$ is an associative monoid.
-%\item $\otimes$ distributes with respect to $\oplus$.
-%\item $\mathbb{0}$ is the annihilator of $\otimes$.
-%\end{enumerate}
-%If $\oplus$ is a group operation, the semiring is in fact a ring. Many
-%useful weight semirings are, however, not rings. Often the semiring
-%$(\mathbb{K}, \oplus, \otimes, \mathbb{0}, \mathbb{1})$ is denoted
-%simply as $\mathbb{K}$. Paralleling the regular sum notation $\Sigma_{i \in I} x_i$ and product notation $\prod_{i\in I} x_i$, I use the notations $\bigoplus_{i \in I} x_i$ and $\bigotimes_{i \in I} x_i$, where $I$ is a denumerable set.\footnote{Infinite sums and products are not defined in all semi rings, for example the probability semiring. In this case, it is often possible to augment the semirings with an infinity element $\infty$. This problem does not often cause problems in practice and will not be examined further.} Specifically $\oplus_{i \in \emptyset} x_i = \mathbb{0}$ and $\otimes_{i \in \emptyset} x_i = \mathbb{1}$.
-
-%Weights in the probability semiring and the addition and product operations have an intuitive interpretation but from a practical point of view the probability semiring is sub optimal. The biggest drawback is that repeated multiplication of probabilities gives rise to very small quantities and under-flow becomes a problem. Therefore, the so called {\it logarithmic semiring} is more commonly used. It can be derived by applying a logarithmic transformation $x \mapsto -\log(x)$ to the weights and operations in the probability semiring. 
-
-%In the logarithmic semiring, numerical under-flow is not a problem but
-%the addition operation given by $x \oplus y = -\log(\exp(-x) +
-%\exp(-y))$ is resource intensive. Therefore, another semiring, the
-%{\it tropical semiring}, is often used. The addition operation in the
-%tropical semiring is given by $x \oplus y = \min(x,
-%y)$. Computationally, this operation is light. A theoretical
-%motivation is given by the fact that $\min$ preserves the magnitude of
-%the sum although not its exact value. In practice, this is often
-%sufficient \cite{?}. All machines in this thesis use tropical
-%weights.
-
-%\paragraph{Weighted finite-state automata} Formally, a weighted
-%finite-state automaton of weight semiring $\mathbb{K}$ is a structure
-%$M = (\Sigma, Q, q_0, \rho, E)$ where
-%\begin{enumerate}
-%\item $\Sigma$ is a finite symbol set (also called an alphabet).
-%\item $Q$ is a finite set of states.
-%\item $q_0 \in Q$ is the unique start state.
-%\item $\rho: Q \rightarrow \mathbb{K}$ is the final weight map.
-%\item $T \subset Q \times (\Sigma \cup \{\epsilon\}) \times Q \times
-%\mathbb{K} $ is a finite set of transitions.
-%\end{enumerate}
-
-%The final weight map $\rho$ associates each state $q \in Q$ with a final weight. The final states of $M$ are $\{q \in Q\ | \rho(q) \ne \mathbb{0}\}$.
-
-%Each transition $x \in T$ consists of a source state $\s(x)$, an input symbol $\i(x)$, a target state $\t(x)$ and a weight $\w(x)$. The input symbol may be $\epsilon$ which denotes the empty symbol. For the single outgoing transition $x$ in state 4 in Figure \ref{fig:np-fsm}, the source state $\s(x) = 4$, the input symbol $\i(x) = {\rm "NN"}$, the target state $\t(x) = 2$ and the weight $\w(x) = 1.0$.
-
-%A sequence of transitions $x_1, ..., x_n \in T$ is a {\it path}, if
-% $\s(x_1) = q_0$ and $\t(x_{k-1}) = \s(x_k)$ for all $k$. As a special case, the empty
-%sequence is also a path. The weight of path $p = (x_1, ..., x_n)$ is $\w_M(p) = ( \prod_{i = 1}^n \w(x_i) ) \otimes \rho(x_n)$ and the weight of the empty sequence is $\rho(q_0)$. A path $p$ is called successful when $\w_M(p) \ne \mathbb{0}$.
-
-%Each path $p = (x_1, ..., x_n)$ is associated with a unique, possibly
-%empty, string $s \in \Sigma^*$ such that there is a subsequence $j_i,
-%..., j_m$ of $1, ..., n$ for which $i(x_{j_1}), ..., i(x_{j_m}) = s$
-%and $i(x_{l}) = \epsilon$ whenever $l \notin \{j_1, ..., j_m\}$. If
-%the path $p$ is associated with the string $s$, it is called a {\it
-%  path of $s$}.
-
-%The set of paths of a string $s$ is denoted $P_s$ and the weight
-%assigned to $s$ by the automaton $M$ is $\w_M(s) = \bigoplus_{p \in
-%  P_s} \w_M(p)$. When $P_s = \emptyset$, $\w_M(s) = \mathbb{0}$. The
-%string $s$ belongs to the weighted language $L(M)$ accepted by $M$ if
-%$L(M)(s) = \w_M(s) \ne \mathbb{0}$.
-
-%\section{Finite-State Algebra}
-%
-%Finite-state machines use only a finite fixed amount of
-%memory. Therefore, they cannot solve all computational problems. There
-%is, for example, no finite-state machine which accepts only strings of
-%prime number length. This can be proved using the pumping lemma of
-%regular language \citep{Sipser1996} which are the languages whose
-%decision problems finite-state automata can solve.
-%
-%Although the computational power of finite-state machines is limited,
-%they are closed under a number of very useful operations which
-%correspond to set theoretical operations of the languages recognized
-%by the machines. The collection of these operations is called the {\it
-%  finite-state algebra}.
-%
-%Table \ref{tab:fs-algebra} gives an overview of a number of well known
-%finite-state operations.
-%
-%
-%
-%\section{Finite-State Transducers}
-%Language processing frequently requires translation of one signal such
-%as speech or text into another signal, for example text in another
-%language in the case of machine translation or annotated text in the
-%case of part of speech tagging. These do not seem like the kinds of
-%processing tasks that finite-state machines can solve because, as we
-%saw above, finite-state machines solve decision problems.
-%
-%Weighted Finite-state transducers are an extension of weighted
-%finite-state automata. Whereas finite-state automata simply accept or
-%reject a symbol sequence, finite-state transducers simultaneously
-%output another symbol sequence.
-
-%\begin{figure}
-%\begin{center}
-%\includegraphics[scale=.5]{np_a}
-%\end{center}
-%\caption{A finite-state transducer that analyzes a subset of the singular noun% phrases in Penn Treebank.}\label{fig:np-fst}
-%\end{figure}
-%
-%Formally, a weighted finite-state transducer of weight semiring
-%$\mathbb{K}$ is a structure $M = (\Sigma, \Omega, Q, q_0, \rho, E)$ where
-%\begin{enumerate}
-%\item $\Sigma$ is a finite input symbol set (also called an input alphabet).
-%\item $\Omega$ is a finite output symbol set (also called an output alphabet).
-%\item $Q$ is a finite set of states.
-%\item $q_0 \in Q$ is the unique start state.
-%\item $\rho: Q \rightarrow \mathbb{K}$ is the final weight map.
-%\item $T \subset Q \times (\Sigma \cup \{\epsilon\}) \times (\Omega \cup \{\epsilon\}) \times Q \times
-%\mathbb{K} $ is a finite set of transitions.
-%\end{enumerate}
-%
-%Transitions $e \in T$ are similar to transitions in automata but in
-%addition to the input symbol $\i(e)$, they also contain an output
-%symbol $\o(e)$. Paths of transitions are defined in the same way as
-%paths for automata, however, paths of transducer transitions are
-%associated with two strings -- an input and an output string. The
-%input string of path $p = (x_1, ..., x_n)$ is the string $s_i =
-%\i(x_1) ... \i(x_n)$ disregarding epsilons and the output string is
-%$s_o = \o(x_1) ... \o(x_n)$ also disregarding epsilons. Path $p$
-%itself is associated with the string pair $s = s_i \: s_o$. The set of
-%paths associated with the input string of $s$ is $\P_i(s)$ and the set
-%paths associated with of output string is $\P_o(s)$.
-%
-%The weight of path $p$ is defined in exaclty the same way as for
-%automata 
-%$$\w_M(p) = \Big( \prod_{i = 1}^n \w(x_i) \Big) \otimes \rho(x_n).$$
-%
-%A transducer $M$ can be viewed as a machine that maps input strings to
-%sets of output strings with weights. Equivalently, it can be seen as a
-%machine accepting string pairs $s = s_i \: s_o$ with some weight $\w_M(s)$. The
-%weight $\w_M(s)$ given to string pair $s$ by transducer $M$ is defined 
-%$$\w_M(s) = \bigoplus_{p \in \P_i(s) \cap \P_o(s)} \w_M(p)$$
-%The defition takes into account the fact that there may be several
-%alignments of input and output string giving the exact same string
-%pairs. For example, $(\epsilon\:b, a\:b)$ and $(a\:b,\epsilon\:b)$
-%represent the same string pair $a\:bb$.
-
 \section{Finite-State Implementation of Hidden Markov Models} As seen
 in Chapter \ref{chapter:hmm}, a generative HMM can be decomposed into
 an emission model $p(x_i|y_i)$ of emissions $x_i$ given states $y_i$ a
@@ -411,15 +135,15 @@ conditioning them on neighboring word forms and labels.
 
 The main idea of the implementation discussed in Publication
 \ref{pub:1} is to represent a labeled sentence as a string of word
-form/label pairs as in Figure \ref{fig:lab-sent}. The emission and
+form label pairs as in Figure \ref{fig:lab-sent}. The emission and
 transition models are implemented as weighted finite-state machines
 which assign weights to such labeled sentences. Because of this
 representation, both the emission model and transition model can
 access information about the sequence of word forms and their
 labels. Therefore, the emission and transition models can use more
-information than in a regular HMM model. The sentence, emission and
-different models are combined using the operations of finite-state
-algebra.
+information than in a regular HMM model. %The sentence, emission and
+%different models are combined using the operations of finite-state
+%algebra.
 
 In a normal HMM tagger, extension of the emission and transition model
 requires changes to inference algorithms used by the tagger. In
@@ -447,11 +171,11 @@ The & DT & dog & NN & sleeps & VBZ & . & .\\
 
 \paragraph{Emission Model} Let $x = (x_1, ..., x_T)$ be a sentence and
 let $Y_t = \{y_t^1, ..., y_t^n\}$ be the set of possible labels for
-word $x_t$. Then we can construct a very simple finite-state machine
-$X_t$ which recognizes the word $x_t$ and one of its possible labels
-$y_t \in Y_t$ and assigns that combination a log weight corresponding
+word $x_t$. We can construct a very simple finite-state machine
+$X_t$ which recognizes the word $x_t$ followed by one of its possible labels
+$y_t^i \in Y_t$ and assigns that combination a log weight corresponding
 to the probability $p(x_t\cond y_t^i)$. As in the case of a regular HMM tagger,
-$p(x_t\cond y_t)$ can be estimated from the training data. For OOV words,
+$p(x_t\cond y_t^i)$ can be estimated from the training data. For OOV words,
 we can use a guesser, for example the one presented in Chapter
 \ref{chapter:hmm}.
 
@@ -460,7 +184,7 @@ included in the emission model. However, it is completely possible to
 include all labels for each word.
 
 The individual emission machines $X_t$ can be combined into a sentence
-model by concatenation as shown in Figure
+model using concatenation as shown in Figure
 \ref{fig:sentence-model}. The paths through the sentence model
 correspond to the possible label assignments of sentence $x$.
 
@@ -478,8 +202,8 @@ model assigns weight to such sequences. I will explain the
 construction of the transition model in three phases:
 \begin{enumerate}
 \item How to construct a model which assigns weight $-\log(p(y_{n+1}\cond
-y_{1}, ..., y_{n}))$ to label n-gram $y_1, ..., y_{n+1}$.
-\item How to extend the model to assign weight to an n-gram of word form/label pairs.
+y_{1}, ..., y_{n}))$ to plain label n-grams $y_1, ..., y_{n+1}$.
+\item How to extend the model to assign weight to an n-gram of word form label pairs.
 \item How to score an entire labeled sentence.
 \end{enumerate}
 The construction presented below will result in a number of
@@ -488,29 +212,30 @@ intersection of the machines) corresponds to the n-gram model in a
 standard HMM.
 
 \paragraph{Scoring one label n-gram} The transition distributions $p(y_i\cond
-y_{i - 1}, ..., y_{i - n})$ in an n-th HMM encodes the likelihood of
+y_{i - 1}, ..., y_{i - n})$ in an $n$th order HMM encode the likelihood of
 label sequences. I will first consider the problem of constructing a
-machine which represents transitions weights for isolated label
+machine which represents transition weights for isolated label
 n-grams. 
 
 To emulate transitions weights in an HMM using finite-state calculus,
 we can first compile a machine $T$ which accepts any sequence of $n+1$
 labels $y_{1}, ..., y_{n+1}$. The weight assigned by the machine to
-one of these paths can be estimated from a training corpus for the
-sequences occurring in the corpus. Some form of smoothing is required
+one of these paths can be estimated from a training corpus for all
+sequences that occur in the corpus. Some form of smoothing is required
 to score label n-grams missing from the training corpus. In
 Publication \ref{pub:2}, a very simple form of smoothing is used. Each
-n-gram not occurring in the training corpus will receive an identical
+n-gram, not occurring in the training corpus, receives an identical
 penalty weight $-\log(1/(N+1))$, where $N$ is the size of the training
-corpus. Additionally, Publication \ref{pub:2} uses interpolation of
-probability estimates of n-grams of different orders. More
-sophisticated smoothing schemes could also be applied at the cost of
-larger model sizes.
+corpus. %Additionally, Publication \ref{pub:2} uses interpolation of
+%probability estimates of n-grams of different orders. 
+%More
+%sophisticated smoothing schemes could also be applied at the cost of
+%larger model sizes.
 
-[WRITE ABOUT DETERMINIZATION AND MINIMIZATION]
+%[WRITE ABOUT DETERMINIZATION AND MINIMIZATION]
 
-If the machine $T$ is deterministic and has one path corresponding to
-each label n-gram $y_1, ..., y_{n+1}$, where $y \in \mathcal{Y}$, each
+The machine $T$ will be quite large. If it is deterministic and has one path corresponding to
+each label n-gram $y_1, ..., y_{n+1}$, where $y_i \in \mathcal{Y}$, each
 non-terminal state in the machine will have $\mathcal{Y}$
 transitions. Because $T$ encodes the weight $p(y_{n+1}\cond y_{1},
 ..., y_{n})$ for each label n-gram, it will have a large amount of
@@ -523,40 +248,23 @@ typically required.
 For the FinnTreeBank corpus, 8801 non-terminal states are required to
 represent $T$ for $n=2$. As the corpus has $1399$ distinct
 morphological labels, this translates to approximately 12 million
-transitions. When using add one smoothing, most label n-grams will
-have the same weight.
-
-If the machine $T$ is deterministic and has one path
-corresponding to each label n-gram $y_1, ..., y_{n+1}$, where $y \in
-\mathcal{Y}$, each non-terminal state in the machine will have
-$\mathcal{Y}$ transitions. Because $T$ encodes the weight
-$p(y_{n+1}\cond y_{1}, ..., y_{n})$ for each label n-gram, it will
-have a large amount of states when many label n-grams occur in the
-training corpus. It is difficult to present a formal analysis of the
-size of $T$ as a function of the number of distinct label n-grams in
-the corpus. An example can, however, illustrate the number of states
-that are typically required.
-
-For the FinnTreeBank corpus, 8801 non-terminal states are required to
-represent $T$ for $n=2$. As the corpus has $1399$ distinct
-morphological labels, this translates to approximately 12 million
-transitions. When using add one smoothing, most label n-grams will
-have the same weight.
+transitions. When using add one smoothing for label n-grams missing in
+the training corpus, most paths will have the same weight. This fact allows for an optimization which substantially reduces the size of $T$.
 
 In order to, reduce the size of the model, so called {\it failure
   transitions} can be used \citep{someone}. A failure transition in a
 state $q$, will match any symbol which does not have another outgoing
 transition in $q$. The failure transitions will go to sink states,
-which encode the penalty weight for unseen label n-grams.  Using
-failure transitions, most states will not have $|\mathcal{Y}|$
-transitions. Because of data sparsity, most state will in fact have
-only a few outgoing transitions. Figure \ref{fig:fail_t} illustrates a
-bigram model with failure transitions.
+which encode the penalty weight for unseen label n-grams. When failure
+transitions are used to encode label n-grams that are missing from the
+training corpus, most states will only have a few outgoing transitions.
+Figure \ref{fig:fail_t} illustrates a bigram model with failure
+transitions.
 
 \begin{figure}
 \begin{center}
 \includegraphics[scale=0.5]{fail_t}
-\caption{Failure transitions (with symbol F) are added to a bigram model.}\label{fig:fail_t}
+\caption{Failure transitions (with symbol F) are added to a bigram model. With failure transitions, the model will accept previously missing n-grams, such as aa and bb with penalty weight 1.39.}\label{fig:fail_t}
 \end{center}
 \end{figure}
 
@@ -565,7 +273,7 @@ transitions in the general case. We first need an auxiliary
 definition. For a state $q \in Q_T$, let $n(q)$ be the length of the
 shortest symbol string required to reach state $q$ from the initial
 state $q_0$.  Now, given a machine $T$ that recognizes every label
-n-gram occurring in the training corpus, a corresponding machine $T_f$
+n-gram {\it occurring in the training corpus}, a corresponding machine $T_f$
 with failure transitions can be computed.
 
 \begin{enumerate}
@@ -573,14 +281,15 @@ with failure transitions can be computed.
   s_{n+1}\}$. The state $s_{n+1}$ is final and its final weight is the
   penalty weight for unseen n-grams.
 \item A failure symbol is added: $\Sigma_{T_f} = \Sigma_T \cup \{f\}$, where $f \notin \Sigma_T$.
-\item $\tau_{T_f}(q,a) = \tau_T(q,a)$ for all $q \in Q_T$ and $a \in \Sigma_T$. 
-\item $\tau_{T_f}(s_1,f) = \{(s_{i+1}, \mathbb{1}\}$ for $i <= n$.
-\item Failure transitions are added: $\tau_{T_f}(q, f) = \{(s_{n(q)}, \mathbb{1})\}$.
+\item Transitions are copied from $T$: $\tau_{T_f}(q,a) = \tau_T(q,a)$ for all $q \in Q_T$ and $a \in \Sigma_T$. 
+\item $\tau_{T_f}(s_1,f) = \{(s_{i+1}, \mathbb{1})\}$ for $i <= n$.
+\item Failure transitions are added: $\tau_{T_f}(q, f) = \{(s_{n(q)+1}, \mathbb{1})\}$, for all $q \in Q_T$.
+%\item ${\rm f}(s_{n+1}) = w_p$, where $w_p$ is a penalty weight.
 \end{enumerate}
 
 \paragraph{Adding word forms} The current transition model scores
 label n-grams. However, because we represent labeled sentences as
-sequences of word form/label-pairs, we need to include word forms in
+sequences of word form label pairs, we need to include word forms in
 the model. This can be accomplished by adding a number of new states
 and failure transitions to the model. When implementing a standard HMM
 tagger, the added failure transitions will simply skip word
@@ -597,7 +306,7 @@ the transition model in Figure \ref{fig:fail_t}.
 \end{figure}
 
 We construct a new machine $T_w$ which accepts n-grams of word
-form/label-pairs. Let $Q_{T_f} = \{q_0, ..., q_k\}$, then $Q_{T_w} =
+form label pairs. Let $Q_{T_f} = \{q_0, ..., q_k\}$, then $Q_{T_w} =
 Q_{T_f} \cup {r_0, ..., r_k}$, where $r_i \notin Q_{T_f}$. Let $r_0$
 be the start state of $Q_{T_f}$ and let $F_{T_f} = F_{T_w}$. The
 transitions function $\tau_{T_w}$ is defined in the following way.
@@ -649,7 +358,7 @@ only scores some of the trigrams in the sentence, namely, the ones
 starting at positions divisible by $n+1$. Fortunately we can form $n +
 1$ machines $T_0$ ... $T_n$ which will score all remaining
 n-grams. Let $T_0 = T_{w}^*$ and let $T_{i+1} = F.F.T_i$. Intuitively
-each $T_i$ will skip $i$ word form/label-pairs.
+each $T_i$ will skip $i$ word form label pairs.
 
 The final scoring of all possible labeled sentences, corresponding to
 an input sentence $x$, is accomplished by intersecting the sentence
@@ -739,7 +448,7 @@ used because of data sparsity. Nevertheless, \cite{Halacsy2007} show
 that the correct formulation can result in improved tagging accuracy.
 
 \paragraph{Richer local structure} The model presented by
-\cite{Halascy2007} can easily be implemented as a finite-state machine
+\cite{Halacsy2007} can easily be implemented as a finite-state machine
 by a slight modification to the compilation of the sentence model as
 described in Publication \ref{pub:1} and it can be extended to model
 $p(x_t\cond y_{t-1}, y_t, y_{y+1})$. Moreover, it is possible to
@@ -763,47 +472,6 @@ information could be represented as a weighted finite-state
 machine. Similarly to the enriched locally emission and transition
 models, global constraints also violate the independence assumption of
 the generative HMM model.
-
-%\chapter{Generative Taggers using Finite-State Transducers}
-
-%This section presents a finite-state implementation of generative
-%taggers such as HMMs using finite-state algebra. This expands on
-%Publications \ref{pub:1} and \ref{pub:2}.
-
-%\begin{itemize}
-%\item \cite{Halacsy2007} and Publication \ref{pub:2}.
-%\end{itemize}
-
-
-%\paragraph{Emission model}
-%\paragraph{Transitions Model}
-%\paragraph{Global constraints}
-
-%\section{Problems} In the standard first order HMM an observation
-%depends only on the current hidden state. If the hidden state is
-%given, the observation cannot be influenced by the hidden states at
-%other positions in the input or the other observations. This
-%facilitates estimation and makes the system resistant to over-fitting,
-%but at the same time it severely limits the set phenomena that the model
-%can capture.
-
-%An example from POS tagging the Penn Treebank illustrates this
-%problem. The Penn Treebank has two labels for common nouns: {\tt NN}
-%for singular nouns and {\tt NNS} for plural nouns.
-
-%\begin{itemize}
-%\item Local normalization.
-%\item Inability to use word context.
-%\item Label bias.
-%\item The inability to use rich features, causes problems in domains
-%other than POS tagging and in POS tagging for MR languages.
-%\item Smoothing is difficult.
-%\item Differences in performance between generative HMMs and
-%discriminative approaches are even greater for morphologically complex
-%languages and small training sets.
-%\item OOV words may require different mechanisms depending on language
-%again causing problems for MR lanuages.
-%\end{itemize}
 
 \section{Summary of Publications \ref{pub:1}, \ref{pub:2} and \ref{pub:3}}
 

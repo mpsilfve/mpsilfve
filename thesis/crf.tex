@@ -183,30 +183,30 @@ It is common to represent the CRF using linear algebra. Each position
 $t$ in the sentence is represented as a vector $\phi_t$ whose
 dimensions correspond to the entire space of possible features. The
 selection of features is finite because it is limited by the training
-data. There are only finitely many word forms, suffixes, morphological
+data: there are only finitely many word forms, suffixes, morphological
 labels and so on in the training data. The elements of each vector
-$\phi_t$ represent activations of features. In the present work all
+$\phi_t$ represent activations of features. In the present, work all
 elements are either $0$ or $1$ mirroring the truth value of a feature
 at position $t$ in the labeled sentence. Other activations in
 $\mathbb{R}$ can also be used when appropriate.
 
 In order to represent sentence positions as vectors, we need an
-injective index function $I$ which maps features onto consecutive
-integers starting at 1. For each feature $f$, $I(f)$ will correspond
+injective index function ${\rm I}$ which maps features onto consecutive
+integers starting at 1. For each feature $f$, ${\rm I}(f)$ will correspond
 to one dimension in $\phi_t$. In a concrete implementation of a CRF
 tagger, features can be represented as strings and the index function
-$I$ can be implemented as a hash function.
+${\rm I}$ can be implemented as a hash function.
  
 Given a sentence $x$ and label sequence $y$, we can extract the set of features
 $F_t(x)$ for each position $t$ in $x$. Let $\phi_t \in \mathbb{R}^N$ be a vector defined by
 $$\phi_t(i) = 1,\ {\rm\ if}\ i \le N\ {\rm and}\ I(f) = i\ {\rm for\ some\ }f\in F_t$$
 all other entries in $\phi_t$ are $0$. 
 
-Given a parameter vector $\omega \in \mathbb{R}^N$, the probability $p(y|x)$ is
-$$p(y|x) \propto \prod_{t = 1}^T \exp(\omega^\top \phi_t)$$
-Specifically, the same parameter vector $\omega$ is shared by all
+Given a parameter vector $\theta \in \mathbb{R}^N$, the probability $p(y|x)$ is
+$$p(y|x) \propto \prod_{t = 1}^T \exp(\theta^\top \phi_t)$$
+Specifically, the same parameter vector $\theta$ is shared by all
 sentence positions and the probability $p(y|x)$ is a log linear
-combination of parameter values in $\omega$.
+combination of parameter values in $\theta$.
 
 \section{Logistic Regression}
 %\begin{itemize}
@@ -260,12 +260,13 @@ features $f =$ {\bf Tumor diameter $\geq$ 5 cm and class is MALIGNANT}
 and $f' =$ {\bf Tumor diameter $\geq$ 5 cm and class is BENIGN} so
 that the parameter value for $f$ is greater than the parameter value
 for $f'$. In general parameter values, however, also depend on other
-features and feature correlations in the model. Therefore we can say
-that the parameter value of, $f$ will be guaranteed to be greater than
-the parameter value of $f'$ when $f$ is the sole feature template and
-the model accurately reflects the original distribution of class
-labels among examples. In the general case, where there are several
-feature templates, this might fail to hold.
+features and feature correlations in the model. Therefore, we can say
+that the parameter value of $f$ will be guaranteed to be greater than
+the parameter value of $f'$ when {\bf Tumor diameter $\geq$ 5 cm} is
+the sole feature template and the model accurately reflects the
+original distribution of class labels among examples. In the general
+case, where there are several feature templates, this might fail to
+hold.
 
 Formalizing the notation used in Section \ref{crf:basics}, let $\mathcal{F}$ be
 a finite set of feature templates and $\mathcal{Y}$ a finite set of
@@ -278,7 +279,7 @@ y) \leq |\mathcal{F} \times \mathcal{Y}|$.
 
 For each example $x$, let $F_x \subset \mathcal{F}$ be the set of feature templates that $x$ activates and let $y \in \mathcal{Y}$ be a class. Then the feature vector associated with $x$ and $y$ is $\phi(x,y) = \{0, 1\}^{|\mathcal{F} \times \mathcal{Y}|}$ defined by
 \[
-  \phi(x,y)_i = \left\{
+  \phi(x,y)[i] = \left\{
   \begin{array}{ll}
   1 & {\rm iff\ } i = {\mathrm I}(f,y) {\rm\ for\ some\ }f \in F_x{\rm,} \\ 
   0 & {\rm otherwise.}  
@@ -314,7 +315,7 @@ transformation $x \mapsto -\log(x)$.
 From a practical implementation perspective, the minimization in
 Equation \ref{eq:logistic,inference,log} boils down to computing one
 inner product $\theta^\top \phi(x,y)$ for each label $y \in Y$ and
-finding the minimum. Using a suitable sparse approach each of the
+finding the minimum. Using a suitable sparse approach, each of the
 inner products can be computed in $\O(|F_x|)$ time, where $F_x$ is the
 set of feature templates activated by example $x$. Therefore, the
 worst-case complexity of classification is dependent on the size of
@@ -333,12 +334,12 @@ Here $Z(x;\theta) = \sum_{z \in Y}\exp(\theta^\top F_{z}(x))$ is the partition f
 
 Given labeled training data $\data = \{(x_1,\ y_1),\ ...,\ (x_n,\
 y_n)\}$, there exist several options for estimating the parameters
-$\theta$. The most commonly used is {\it empirical risk minimization},
+$\theta$. The most commonly used is {\it maximum likelihood estimation},
 which finds a parameter vector that minimizes the loss $\mathcal{L}$ on the
 training data $\mathcal{D}$ as shown in Equation \eqref{eq:logistic,ml}.
 
 \begin{equation}
-\theta = \argmin_{\theta'} \mathcal{L}(\theta\parcond \mathcal{D}) = \argmin_{\theta'}\sum_{(x,\ y) \in \mathcal{D}} \Z(x\parcond \theta) - {\theta'}^\top F_y(x)\label{eq:logistic,ml}
+\theta = \argmin_{\theta'} \mathcal{L}(\theta\parcond \mathcal{D}) = \argmin_{\theta'}\sum_{(x,\ y) \in \mathcal{D}} \Z(x\parcond \theta') - {\theta'}^\top F_y(x)\label{eq:logistic,ml}
 \end{equation}
 
 The probability $p(y\cond x\parcond \theta)$ has exponential form,
@@ -364,7 +365,7 @@ $p(y\cond x\parcond \theta)$ mean that efficient numerical methods can
 be used for approximating the maximum.
 
 Gradient based methods such as SGD (leading to online estimation) and
-L-BFGS (leading to batch estimatiom) require information about the
+L-BFGS (leading to batch estimation) require information about the
 partial derivatives of the loss function. Therefore the partial
 derivatives $\partial\mathcal{L}(\theta\parcond
 \mathcal{D})/\partial\i$ need to be computed. Examining Equation
@@ -400,16 +401,16 @@ regularized model falls outside of the scope of this thesis.
 \label{sec:perc}
 
 The perceptron algorithm \citep{Rosenblatt1958} is an alternative to
-empirical risk minimization for learning the weights of a
+maximum likelihood estimation for learning the weights of a
 discriminative classifier. As seen above, the logistic classifier
 optimizes the conditional probability of gold standard classes given
 training inputs. In contrast, the perceptron rule directly optimizes
 the classification performance of the discriminative classifier. 
 
-Intuitively, the multi-class perceptron algorithm works by labeling
+Intuitively, the multiclass perceptron algorithm works by labeling
 each training example in order using a current estimate of the
 parameter vector $\theta$ and adjusting the parameter vector whenever
-training examples are incorectly labeled. Consequently, the perceptron
+training examples are incorrectly labeled. Consequently, the perceptron
 algorithm is an online learning algorithm.
 
 \paragraph{Inference} Similarly as in the case of any linear
@@ -553,8 +554,8 @@ model in morphological tagging is superior to the generative HMM tagger.
 Intuitively, the CRF model resembles a sequence of logistic regression classifiers
 with shared parameters. Given a sentence $x = (x_1,\ ...,\ x_T)$,
 label sequence $y = (y_1,\ ...,\ y_T)$ and parameters $\theta$ for the
-logistic regression model, a score for the label $y_i$ in position $t$ $s(x, y_{t-2},
-y_{t-1}, y_t, t\parcond \theta)$ can be computed. Here the logistic regression model
+logistic regression model, a score $s(x, y_{t-2}, y_{t-1}, y_t, t\parcond \theta)$ for label $y_i$ in position $t$ 
+ can be computed. Here the logistic regression model
 utilizes the input sentence $x$ as well as labels $y_{t - 2}$, $y_{t-1}$ and
 $y_t$ to extract unstructured and structured features from the
 sentence and label sequence. The score $s$ takes on a familiar form
@@ -564,7 +565,7 @@ feature associated to the label $y$ corresponds to one element of the
 vector $F_y(x, t, y_{t-2}, y_{t-1})$. Since $F_y$ refers to a context
 spanning three labels, the model is a second order model. All
 discriminative taggers discussed in this Chapter are assumed to be
-second order model. As in the case of the logistic regression model,
+second order models. As in the case of the logistic regression model,
 each entry of the vector can be an arbitrary real number but in this
 thesis they will always be either $0$ or $1$.
 
@@ -626,7 +627,7 @@ estimator is the structured variant of the averaged perceptron
 algorithm described in Section \ref{sec:prec-tagger} and taggers
 trained using the averaged perceptron algorithm are often called
 perceptron taggers (see for example \cite{Collins2002}). Other
-examples mentioned by \cite{Sutton2012} are the pseudlikelihood
+examples mentioned by \cite{Sutton2012} are the pseudolikelihood
 \cite{Besag1975} and piecewise pseudolikelihood estimators
 \cite{Sutton2007}. Publication \ref{pub:4} investigates a
 pseudolikelihood inspired variant of the perceptron estimator.
@@ -842,7 +843,7 @@ the greatest improvement when combined with structured features.
 \cite{Smith2005} also utilize structured sub-labels, however, only in
 a restricted way. They build separate structured chains modeling the
 sequence of main POS classes, cases, numbers, genders and lemmas of
-neighoring words. Due to the lack of cross-dependencies between
+neighboring words. Due to the lack of cross-dependencies between
 different grammatical categories, is doubtful that their system could
 model phenomena like the dependence between a verb and the case of its
 object. 
@@ -873,7 +874,7 @@ over-fitting of the model to the training data. Moreover, large models
 can be problematic when memory foot-print is an issue: e.g. on mobile
 devices.
 
-Different methods have been propsed for pruning of perceptron
+Different methods have been proposed for pruning of perceptron
 models. \cite{Goldberg2011} prune the models based on update
 count. Parameters that receive less than a fixed amount of updates
 during training will be omitted from the final model. Another approach
@@ -882,7 +883,7 @@ out features for words occurring less than a fixed amount of times in
 the training data. More generally, features that are activated less than
 a fixed amount of times may be pruned out. 
 
-Some regularization techiques can also be used to learn sparse
+Some regularization techniques can also be used to learn sparse
 perceptron models. L1-regularization yields sparse models similarly as
 for logistic regression. \cite{Zhang2014} investigate
 L1-regularization for structured perceptron. They gain accuracy but do
@@ -918,7 +919,7 @@ estimation as \cite{Goldberg2011} note.
 \cite{Goldberg2011} do not explore pruning in an early stopping
 scenario. My preliminary experiments showed that it is best to first
 set the number of training passes without parameter pruning and then
-set the pruning threshold $n$ separately using develpment data. If the
+set the pruning threshold $n$ separately using development data. If the
 number of passes and the update count threshold are set at the same
 time, the model parameters converge quite slowly resulting in many
 training epochs and consequently many parameter updates. This has an
@@ -946,14 +947,14 @@ tagger. When the label set is large, this results in inconvenient
 training times even in the case of first order taggers. Publication
 \ref{pub:4} presents two novel variants of the perceptron algorithm
 which are inspired by the pseudo-likelihood and piecewise
-pseudo-likelihood criterions presented in Section \ref{sec:crf}.
+pseudo-likelihood criteria presented in Section \ref{sec:crf}.
 
 The new estimators, pseudo-perceptron and piecewise pseudo-perceptron
 are shown to be competitive with greedy decoding and passive
 aggressive training with regard to accuracy. Moreover, it delivers
 substantially shorter training times in presence of large label
 sets. The training time is, however, still influenced by the label set
-size because the time complexity of pseudo-perceptron and picewise
+size because the time complexity of pseudo-perceptron and piecewise
 pseudo-perceptron is linear with regard to label set size.
 
 \paragraph{Publication \ref{pub:5}} This publication investigates

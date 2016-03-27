@@ -1,7 +1,10 @@
 \chapter{Hidden Markov Models}
 \label{chapter:hmm}
 
-AN INTRO
+This chapter introduces hidden Markov models (HMM), which are a widely
+used model for POS tagging and morphological tagging. Extensions to
+the HMM are further investigated in the next chapter and Publications
+\ref{pub:1}, \ref{pub:2} and \ref{pub:3}.
 
 \section{Example}
 %\begin{itemize}
@@ -16,14 +19,13 @@ AN INTRO
 I will illustrate Hidden Markov Models using an example. Imagine a
 person called Jill who is hospitalized and occupies a windowless
 room. The only way for her to know what is happening in the outside
-world is to observe a nurse who passes her room daily.\footnote{To make things simple, imagine the nurse never gets a day
-  off.}
+world is to observe a nurse who passes her room daily.\footnote{To make things simple, imagine the nurse works every day.}
 
 Suppose, Jill is interested in weather phenomena and she decides to
 pass time by guessing if it is raining outside. She bases her guesses
 on whether or not the nurse is carrying an umbrella. In other words,
-she predicts an unobserved variable, the weather, based on an observed
-variable, the nurse's umbrella.
+she predicts an {\it unobserved variable}, the weather, based on an
+{\it observed variable}, the nurse's umbrella.
 
 There are several probabilistic models Jill might use. The simplest
 useful model assigns probability $1$ to the event of rain, if the
@@ -38,7 +40,7 @@ rainy days, perhaps because they are in a hurry. Moreover, people
 sometimes carry an umbrella even when it is not raining. For example
 the weather might be murky and they might anticipate rain. Therefore,
 Jill decides to reserve some probability, say $0.2$, for the event
-that the nurse is carrying an umbrella when the weather is clear. She
+that the nurse is carrying an umbrella when there is no rain. She
 reserves an equal probability for the event that the nurse arrives at
 work without an umbrella although it is in fact raining.
  
@@ -104,8 +106,8 @@ the nurse forgot to bring an umbrella on Tuesday.
 
 \begin{figure}[!htb]
 \begin{center}
-\caption{Foo}\label{hmm-ex-2}
 \includegraphics[scale=0.8]{hmm-ex-graph}
+\caption{A visual representation of the HMM in Figure \ref{hmm-ex-1}.}\label{hmm-ex-2}
 \end{center}
 \end{figure}
 
@@ -114,7 +116,7 @@ Markov Model. It can be used to make predictions about a series of
 events based on indirect observations. 
 
 The HMM is commonly visualized as a directed graph. Each hidden state,
-for example Rain and Clear, represents a vertex in the
+for example RAIN and CLEAR, represents a vertex in the
 graph. Transitions from one hidden state to another are represented by
 arrows labeled with probabilities. Figure \ref{hmm-ex-2} shows a graph
 representing the transition structure of the HMM outlined in Figure
@@ -279,7 +281,7 @@ p(z, t,\ x\parcond \theta) = \sum_{y' \in Y^{T+1},\ y'_t = z,\ y'_{T+1} = f} p(x
 %\item Determining the beam: fixed, threshold and adaptive beam \citep{pal2006}.
 %\item The forward-backward algorithm and multitagging.
 %\end{itemize}
-Informally, inference in HMMs means finding a maximally
+Informally, inference in HMMs refers to finding a maximally
 probable sequence of hidden states $y$ that might have emitted the
 observation $x$. As \cite{Rabiner1989} points out, this statement is
 not strong enough to suggest an algorithm. 
@@ -298,7 +300,7 @@ Another possible definition would be the
 {\it maximum marginal} (MM) assignment. It chooses the most probable
 hidden state for each word considering all possible assignments of states for the remaining words. The MM assignment $y_{MM}$ is defined by Equation
 \eqref{hmm-mm}. Figure \ref{hmm-ex-trellis-marginal} shows the
-marginal for one position and state.
+paths whose probabilities are summed in order to compute the marginal for one position and state.
 
 
 \begin{equation}
@@ -310,12 +312,12 @@ assignments maximize different objectives. The MM assignment maximizes
 the accuracy of correct states per observations whereas the MAP
 assignment maximizes the number of completely correct state
 sequences. Both objectives are important from the point of view of POS
-tagging. However, they are often quite correlated and, at least in POS
-tagging, it does not matter in practice which of the criteria is used
-\citep{Merialdo1994}. Most systems, for example
-\cite{Church1988,Brants2000,Halacsy2007}, have chosen to use MAP
-inference, possibly because it is easier to implement and faster in
-practice.
+tagging in a theoretical sense. However, they are often quite
+correlated and, at least in POS tagging, it does not matter in
+practice which of the criteria is used \citep{Merialdo1994}. Most
+systems, for example \cite{Church1988,Brants2000,Halacsy2007}, have
+chosen to use MAP inference, possibly because it is easier to
+implement and faster in practice.
 
 Although, MM inference is more rarely used with HMMs, computing the
 marginals is important both in unsupervised estimation of HMMs and
@@ -440,7 +442,7 @@ frequently reach lengths of $100$, a more efficient approach is required.
 
 \begin{figure}[!ftb]
 \begin{center}
-\caption{foo}\label{fw-naive-prob}
+\caption{A naive approach to computing forward probabilities.}\label{fw-naive-prob}
 \begin{tabular}{lllr}
 $y_1$ & $y_2$ & $y_3$ & $p$ \\
 \hline
@@ -531,7 +533,7 @@ def forward(x, i_prob, e_prob, tr_prob):
     x_1 = x[0]
     T   = len(x) + 1
 
-    # Set final state F. States are consequtive integers 
+    # Set final state F. States are consecutive integers 
     # in the range [0, F]. 
     F = len(i_prob) - 1 
 
@@ -597,7 +599,12 @@ p(x,\ y_{t+1,z'}\parcond \theta) & = & p(x,\ y_{t+1,z'}[1:t]\parcond \theta) \cd
 \end{eqnarray*}
 This contradicts the definition in Equation \eqref{map_prefix}.\footnote{As long as we suppose that there is exactly one MAP prefix.}
 
-We now get Equation \eqref{map-rec}, which gives us a recursion.
+We now get Equation \eqref{map-rec}, which gives us a recursion. The
+implementation of the Viterbi algorithm is identical to the
+implementation of the forward algorithm except that sums are replaced
+by maximization. Consequently, the time complexity of the algorithm is the
+same. It is linear with regard to sentence length and quadratic with
+regard to the size of the state set.
 \begin{equation}
 y_{t+1, z} = \argmax_{z \in Y}\left\{
 \begin{aligned}
@@ -613,17 +620,17 @@ y_{t+1, z} = \argmax_{z \in Y}\left\{
 As seen in the previous section, the complexity of the Viterbi
 algorithm depends on the square of the size of the hidden state
 set. This can be problematic when the set of hidden states is large,
-for example when the states represent POS tags in a very large label
-set or when they represent combinations of POS tags. When tagging, a
+for example when the states represent morphological labels in a very large label
+set or when they represent combinations of labels. When tagging, a
 morphologically complex language, the state set may easily encompass
 hundreds or even thousands of states.
 
 {\it Beam search} is is a heuristic which prunes the search space
 explored by the Viterbi algorithm based on the following observation:
-in many practical applications, the number of hidden states which emit
-a given observation with appreciable probability is small. This is
+in many practical applications, the number of hidden states, which emit
+a given observation with appreciable probability, is small. This is
 true even when the total number of hidden states is very large. For
-example, when the states represent POS labels, a given word such as
+example, when the states represent morphological labels, a given word such as
 ``dog'' can usually only be emitted by a couple of states (maybe Noun
 and Verb in this case).
 
@@ -632,9 +639,8 @@ a large number of histories $y_{t,z}$ can, therefore, be ignored.
 
 Often a constant number, the {\it beam width}, of potential histories
 are considered in the maximization. The complexity of the Viterbi
-algorithm with beam search is $o(|Y|\cdot \log|Y|)$. The log factor
-stems from the fact that the histories need to be sorted before
-maximization.\footnote{Sequential decoding, an approximate inference
+algorithm with beam search is $o(|x||b||\mathcal{Y}|)$, where $|x|$ is the input length, $|b|$ the beam width and $|\mathcal{Y}|$ the size of the state set.
+\footnote{Sequential decoding, an approximate inference
   algorithm, which was used for decoding before the Viterbi algorithm
   was in common use \citep{Forney2005} is very similar to beam
   search. Indeed, it could be said that Viterbi invented an exact
@@ -654,7 +660,7 @@ for a every state and position (see Figure
 required.
 
 Intuitively, the probability that a state sequence $y$ has state $z \in Y$
-at position $t$, that is the probability that $y_t = z$ is the product
+at position $t$, that is the probability that $y_t = z$, is the product
 of the probabilities that the prefix $y[1:t]$ ends up at state $z$ and
 the probability that the suffix $y[t:T]$ originates at $z$. 
 
@@ -665,7 +671,7 @@ algorithm starting at the end of the sentence and moving towards the
 beginning which computes suffix probabilities. Finally, the forward
 and suffix probabilities are combined to give the marginal probability
 of all paths where the state at position $t$ is $z$. These passes are
-called the forward and backward pass.
+called the forward and backward pass, respectively.
 
 Formally, the suffix probabilities computed by the backward pass are
 defined by equation \eqref{bw-rec}.
@@ -686,8 +692,8 @@ b_{t, z} = \left\{
 \label{bw-rec}
 \end{equation}
 
-\paragraph{Sparse Forward-Backward Algorithms}
-FIXME \citep{Pal2006}.
+%\paragraph{Sparse Forward-Backward Algorithms}
+%FIXME \citep{Pal2006}.
 
 \section{Estimation}
 %\begin{itemize}
@@ -723,10 +729,10 @@ HMMs is the {\it Baum-Welch algorithm} \citep{Rabiner1989}, which is
 an instance of the {\it expectation maximization algorithm} (EM)
 \citep{Dempster1977} for HMMs.
 
-In POS tagging and morphological disambiguation, the supervised
-training scenario is normally used. Supervised training consists of
-annotating a text corpus with POS labels and estimating the emission
-and transition probabilities from the annotated data. 
+In morphological tagging, the supervised training scenario is normally
+used. Supervised training consists of annotating a text corpus with
+POS labels and estimating the emission and transition probabilities
+from the annotated data.
 
 Straight-forward counting is sufficient to get the ML estimates for
 the transition and emission distributions. For example, one can simply
@@ -767,7 +773,7 @@ group           NN
 .               .
 \end{BVerbatim}
 \end{center}
-\caption{foo}\label{penn-figure}
+\caption{Tagged text from the Penn Treebank.}\label{penn-figure}
 \end{figure}
 
 Figure \ref{penn-figure} shows one sentence from the Penn Treebank \citep{Marcus1993}. The sentence is labeled with POS tags which are taken to be the hidden states of an HMM. When estimating an HMM tagger for the corpus, transitions probabilities, for example $t_{{\tt NNP}, {\tt VBZ}}$, and emission probabilities, for example $e_{{\tt NNP}}({\tt Dutch})$ can in principle be computed directly from the corpus. For example the transition probability $t_{{\tt NNP}, {\tt VBZ}}$ and the emission probability $e_{{\tt NNP}}({\tt Dutch})$ in the Penn Treebank are simply:
@@ -777,7 +783,7 @@ $$e_{{\tt NNP}}({\tt Dutch}) = \frac{{\rm Number\ of\ times\ {\tt Dutch}\ was\ t
 
 Simple computation of co-occurrences is insufficient because of
 data-sparsity. Words do not occur with all POS tags in the training
-corpus and all compbinations of POS tags are never observed. Sometimes
+corpus and all combinations of POS tags are never observed. Sometimes
 this is not a problem. For example, ``Dutch'' could never be a
 preposition. We know that the probability that a preposition state
 emits ``Dutch'' is $0$. However, there are at least three analyses
@@ -792,28 +798,28 @@ never analyze ``Dutch'' as a noun.
 
 It is tempting to think that missing analyses are a minor problem
 because they only occur for relatively rare words such as
-``Dutch''. Unfortunately, a large portion of text is made up from rare
+``Dutch''. Unfortunately, a large portion of text consists of rare
 words. The problem therefore has very real consequences.
 
 The usual approach is to use a family of techniques called {\it
-  smoothing}. In smoohing, zero counts and all other counts are
-modified slightly to counter-act aprsity.
+  smoothing}. In smoothing, zero counts and all other counts are
+modified slightly to counter-act sparsity.
 
-Smoothing of emission proabilities and transition probabilities differ
+Smoothing of emission probabilities and transition probabilities differ
 slightly. For transition probabilities it is common practice to use
 counts of both tag pairs and single tags to estimate tag probabilities
-either in a back-off scheme \citep{foo} or using interpolation
-\citep{Brants2000}. Many sophisticated interpolation schemes can be
-used for example Kneser-Ney \citep{foo}.
+either in a back-off scheme or using interpolation
+\citep{Brants2000}. %Many sophisticated interpolation schemes can be
+%used for example Kneser-Ney \citep{foo}.
 
 Many systems such as the HMM tagger by \cite{Brants2000} do not smooth
 emission probabilities for words seen in the training corpus. However,
 words {\it not} seen in the training corpus, or out-of-vocabulary
 (OOV) words still require special processing. The simplest method is
-to estimate combined statistics for all words occurring one time in
-the training corpus and use these statistics for OOV words
-\citep{foo}. Lidstone smoothing is another similar approach
-\citep{foo}. Another approach would be to build models to guess the
+to estimate combined statistics for words occurring one time in the
+training corpus and use these statistics for OOV words. However, word
+forms contain valuable information which this approach
+disregards. Another approach would be to build models to guess the
 analysis of OOV words using the longest suffix of the word shared with
 a word in the training data.
 
@@ -863,8 +869,8 @@ utilized in Publication \ref{pub:2} and \cite{Linden2009}. This may
 happen because productive compounding. For languages with writing
 systems that radically differ from English, such as Mandarin Chinese,
 suffix based methods work poorly. Other methods, such as basing the
-guess on all symbols in the word, may work better. \cite{Huang2007}
-smooth symbol emission probabilities using geometric mean.
+guess on all symbols in the word, may work better. %\cite{Huang2007}
+%smooth symbol emission probabilities using geometric mean.
  
 \paragraph{The EM algorithm for Unsupervised ML Estimation}
 The Baum-Welch, or Expectation Maximization, algorithm for HMMs is an
@@ -911,7 +917,7 @@ be 8\%, however it is lower, around 5\%.
 \begin{figure}[!htb]
 \begin{center}
 \includegraphics[scale=.7]{snd_order_path}
-\caption{foo}\label{second-order-fig}
+\caption{A second order HMM for a sentence.}\label{second-order-fig}
 \end{center}
 \end{figure}
 
@@ -919,10 +925,10 @@ The example with adverbs is poor at best, but it illustrates the kind
 of effect {\it second order} information can have. Second order HMMs
 are models where transitions are conditioned on two preceding hidden
 states. Equivalently, in POS tagging, the hidden states can be taken
-to be pairs of POS tags, e.g. {\tt DT, NN}. In such a model
+to be pairs of POS tags, e.g. {\tt (DT, NN)}. In such a model
 transitions can only occur to a subset of the hidden state set. For
-example a transition from {\tt DT, NN} to {\tt NN, VBZ} is possible,
-but a transition to {\tt JJ, NN} is impossible. Figure
+example a transition from {\tt (DT, NN)} to {\tt (NN, VBZ)} is possible,
+but a transition to {\tt (JJ, NN)} is impossible. Figure
 \ref{second-order-fig} illustrates a path with legal transitions. 
 
 Figure \ref{second-order-fig} implies that emissions in a second order
@@ -932,7 +938,7 @@ condition emissions only on one label, that is use $e_{t_i, t_{i -
     1}}(w_i) = p(w_i \cond t_i)$ instead of $e_{t_i, t_{i - 1}}(w_i) =
 p(w_i \cond t_{i - 1},\ t_{i})$. The reason is probably
 data-sparsity. Therefore, these systems cannot be called HMMs in the
-strictest sense of the word. They are instead called trigram
+strictest sense of the word. They should instead be called trigram
 taggers. 
 
 \cite{Halacsy2007}, show that it is possible to maintain the correct
@@ -944,12 +950,12 @@ the chief contributions of Publication \ref{pub:2} was to investigate
 the effect of different ways of estimating the emission parameters in
 a generative trigram tagger paying attention to smoothing.
  
-Increasing model order unfortunately leads to increased data sparsity,
+Increasing model order unfortunately leads to increased data sparsity
 because the number of hidden states increases. Therefore, smoothing
 transition probabilities is even more important than in the first
-order case. Even using smoothing, third and higher order models tend
-to generalize to unseen data more poorly than lower order models
-because of over-fitting \citep{foo}.
+order case. %Even using smoothing, third and higher order models tend
+%to generalize to unseen data more poorly than lower order models
+%because of over-fitting \citep{foo}.
 
 An alternative to increasing model order, is to use so called latent
 annotations \citep{Huang2009} in an otherwise regular first order
@@ -958,7 +964,7 @@ number of sub-states {\tt NN1}, {\tt NN2} and so on. Expectation
 maximization is used to train the model in a partly supervised
 fashion. Splitting labels, and indeed any increase in order, is
 probably works better for label sets with quite few labels. Otherwise,
-it will simply contribute data sparsity.
+it will simply contribute to data sparsity.
 
 %\section{HMMs for POS Tagging}
 
