@@ -28,6 +28,29 @@ void getstring(const HfstOneLevelPath &p, std::string &s)
     }
 }
 
+void getstring(const HfstTwoLevelPath &p, std::string &s)
+{
+  s.clear();
+  
+  const StringPairVector &v = p.second;
+
+  for (const StringPair & symbp: v)
+    {
+      if (not is_special_char(symbp.second))
+	{ s += symbp.second; }
+    }
+}
+
+HfstOneLevelPath two_level_to_one_level_path(const HfstTwoLevelPath &p)
+{
+  StringVector r;
+  for (const StringPair & sp : p.second)
+    {
+      r.push_back(sp.second);
+    }
+  return HfstOneLevelPath(p.first, r);
+}
+
 bool get_first_match(HfstOneLevelPaths &paths, 
 		     const std::string &string, 
 		     HfstOneLevelPath &match)
@@ -40,6 +63,24 @@ bool get_first_match(HfstOneLevelPaths &paths,
       if (str == string)
 	{ 
 	  match = p;
+	  return 1;
+	}
+    }
+  return 0;
+}
+
+bool get_first_match(HfstTwoLevelPaths &paths, 
+		     const std::string &string, 
+		     HfstOneLevelPath &match)
+{
+  for (const HfstTwoLevelPath &p : paths)
+    {
+      std::string str;
+      getstring(p, str);
+
+      if (str == string)
+	{ 
+	  match = two_level_to_one_level_path(p);
 	  return 1;
 	}
     }
@@ -122,52 +163,71 @@ bool align_paths(const HfstOneLevelPath &in,
 
 bool incr_path_weight(StringPairVector::const_iterator it,
 		      StringPairVector::const_iterator end,
-		      HfstState s, HfstBasicTransducer &bfst)
+		      HfstState s, HfstBasicTransducer &bfst,
+		      float increment)
 { 
   if (it == end)
     { 
       if (bfst.is_final_state(s))
 	{
-	  bfst.set_final_weight(s, bfst.get_final_weight(s) + 1);
+	  bfst.set_final_weight(s, bfst.get_final_weight(s) + increment);
 	  return 1; 
 	}
       else
 	{ return 0; }
     }
 
-  const HfstBasicTransition * trans = 0;
-  for (const HfstBasicTransition &t : bfst.transitions(s))
-    {
+  for (HfstBasicTransition &t : bfst.transitions(s))
+    {      
       if (t.get_input_symbol() == it->first and 
 	  t.get_output_symbol() == it->second)
 	{ 
-	  if (incr_path_weight(it + 1, end, t.get_target_state(), bfst))
+	  if (incr_path_weight(it + 1, end, t.get_target_state(), 
+			       bfst, increment))
 	    {
-	      trans = &t;
-	      break;
+	      t.set_weight(t.get_weight() + increment);
+
+	      return 1;
 	    }
 	}
     }
-  if (!trans)
-    { return 0; }
-
-  HfstState target = trans->get_target_state();
-  float weight = trans->get_weight() + 1;
-  bfst.remove_transition(s, *trans);
-  bfst.add_transition(s, HfstBasicTransition(target,
-					     it->first,
-					     it->second,
-					     weight));
-
-  return 1;
+  
+  // Didn't find a suitable transition.
+  return 0;
 }
 
 bool incr_path_weight(HfstTwoLevelPath &aligned_path, 
-		      HfstBasicTransducer &bfst)
+		      HfstBasicTransducer &bfst,
+		      float increment)
 { 
   return incr_path_weight(aligned_path.second.begin(),
 			  aligned_path.second.end(),
-			  0, bfst); 
+			  0, bfst, increment); 
+}
+
+void get_heaviest_path(const HfstOneLevelPaths &paths, 
+		       HfstOneLevelPath &best_path)
+{
+  best_path.first = -INFINITY;
+
+  for (const HfstOneLevelPath &p : paths)
+    {
+      if (p.first > best_path.first)
+	{ best_path  = p; }
+    }
+}
+
+void get_heaviest_path(const HfstTwoLevelPaths &paths, 
+		       HfstOneLevelPath &best_path)
+{
+  best_path.first = -INFINITY;
+
+  for (const HfstTwoLevelPath &tp : paths)
+    {
+      HfstOneLevelPath p = two_level_to_one_level_path(tp);
+      if (p.first > best_path.first)
+	{ best_path  = p; }
+    }
 }
 
 #else // TEST_path_utils_cc
@@ -284,22 +344,36 @@ int main(void)
   assert(aligned.second[1] == StringPair("a", "b"));
   assert(aligned.second[2] == StringPair("a", "b"));
   assert(aligned.second[3] == StringPair(epsilon, "@U.NeedNoun.ON@"));
-
-  incr_path_weight(aligned, bb);
+  assert(incr_path_weight(aligned, bb, 2));
 
   HfstBasicTransducer::HfstTransitions tr = bb[0];
-  
+
   for (const HfstBasicTransition &trans : tr)
     {
       if (trans.get_input_symbol() == "a")
 	{ 
-	  assert(trans.get_weight() == 3.0); 
+	  assert(trans.get_weight() == 6.0); 
 	}
       if (trans.get_input_symbol() == "@U.NeedNoun.ON@")
-	{ assert(trans.get_weight() == 1.0); }
+	{ assert(trans.get_weight() == 2.0); }
     }
   
-  assert(bb.get_final_weight(f) == 1);
+  assert(bb.get_final_weight(f) == 2);
+
+  HfstOneLevelPath p1(1, StringVector(1, "a"));
+  HfstOneLevelPath p2(2, StringVector(1, "b"));
+  HfstOneLevelPath p3(3, StringVector(1, "c"));
+  HfstOneLevelPaths paths;
+  paths.insert(p1);
+  paths.insert(p2);
+  paths.insert(p3);
+
+  HfstOneLevelPath best_path;
+
+  get_heaviest_path(paths, best_path);
+
+  assert(best_path.first == 3);
+  assert(best_path.second == StringVector(1, "c"));
 }
 
 #endif // TEST_path_utils_cc

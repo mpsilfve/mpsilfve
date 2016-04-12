@@ -24,13 +24,11 @@ int main(int argc, char * argv[])
 
   hfst::HfstInputStream in(argv[1]);
   hfst::HfstTransducer t(in);
-  hfst::HfstBasicTransducer b(t);
 
-  laplace_smooth(ADD_ALPHA, b);
-  normalize_locally(b);
-  prob2tropical(b);
+  laplace_smooth(ADD_ALPHA, t);
+  normalize_locally(t);
+  prob2tropical(t);
 
-  HfstTransducer tt(b, TROPICAL_OPENFST_TYPE);
   hfst::HfstOutputStream out(argv[2], TROPICAL_OPENFST_TYPE);
-  out << tt;
+  out << t;
 }

@@ -4,9 +4,13 @@
 #include <hfst/HfstTransducer.h>
 
 using hfst::implementations::HfstBasicTransducer;
+using hfst::HfstTransducer;
+using hfst::HfstOneLevelPath;
+using hfst::HfstOneLevelPaths;
 
-void laplace_smooth(float alpha, HfstBasicTransducer &b);
-void normalize_locally(HfstBasicTransducer &b);
-void prob2tropical(HfstBasicTransducer &b);
+void laplace_smooth(float alpha, HfstTransducer &t);
+void normalize_locally(HfstTransducer &t);
+void prob2tropical(HfstTransducer &t);
+void logarithmize(HfstTransducer &t);
 
 #endif // HEADER_weight_utils_hh

@@ -3,93 +3,68 @@
 #ifndef TEST_weight_utils_cc
 
 #include <cmath>
+#include <limits>
+
+#include "path_utils.hh"
 
 using hfst::HfstBasicTransition;
 using hfst::implementations::HfstState;
 
+// This is VERY ugly...
+float add_alpha = 1;
+float smooth(float f)
+{ return f + add_alpha; }
+
 void laplace_smooth(float alpha, 
-		    HfstBasicTransducer &b) 
-{
-  HfstBasicTransducer res;
-
-  for (HfstState s = 0; s <= b.get_max_state(); ++s)
-    { static_cast<void>(res.add_state()); }
-
-  for (HfstState s = 0; s <= b.get_max_state(); ++s)
-    {
-      for (const HfstBasicTransition &t : b[s])
-	{ 
-	  res.add_transition(s, HfstBasicTransition(t.get_target_state(),
-						    t.get_input_symbol(),
-						    t.get_output_symbol(),
-						    t.get_weight() + alpha)); 
-	}
-
-      if (b.is_final_state(s))
-	{ res.set_final_weight(s, b.get_final_weight(s) + alpha); }
-    }
-
-  b = res;
+		    HfstTransducer &t) 
+{ 
+  add_alpha = alpha;
+  t.transform_weights(smooth); 
 }
 
-void normalize_locally(HfstBasicTransducer &b)
+void normalize_locally(HfstTransducer &t)
 {
-  HfstBasicTransducer res;
+  HfstBasicTransducer res(t);
 
-  for (HfstState s = 0; s <= b.get_max_state(); ++s)
-    { static_cast<void>(res.add_state()); }
-
-  for (HfstState s = 0; s <= b.get_max_state(); ++s)
+  for (HfstState s = 0; s <= res.get_max_state(); ++s)
     {
-      float total_weight = (b.is_final_state(s) ? b.get_final_weight(s) : 0);
+      float total_weight = (res.is_final_state(s) ? res.get_final_weight(s) : 0);
 
-      for (const HfstBasicTransition &t : b[s])
-	{ total_weight += t.get_weight(); }
-
-      for (const HfstBasicTransition &t : b[s])
+      for (const HfstBasicTransition &t : res[s])
 	{ 
-	  float weight = (total_weight==0 ? 0 : t.get_weight()/total_weight);
-
-	  res.add_transition(s, HfstBasicTransition(t.get_target_state(),
-						    t.get_input_symbol(),
-						    t.get_output_symbol(),
-						    weight)); 
+	  total_weight += t.get_weight();
 	}
 
-      if (b.is_final_state(s))
+      for (HfstBasicTransition &t : res.transitions(s))
+	{ 
+	  float weight = (total_weight == 0 ? 
+			  0 : 
+			  t.get_weight()/total_weight);
+
+	  t.set_weight(weight);
+	}
+
+      if (res.is_final_state(s))
 	{ res.set_final_weight(s, (total_weight == 0 ?
 				   0 :
-				   b.get_final_weight(s) / total_weight)); }
+				   res.get_final_weight(s) / total_weight)); }
     }
 
-  b = res;
+  t = HfstTransducer(res, t.get_type());
 }
 
-void prob2tropical(HfstBasicTransducer &b)
-{
-  HfstBasicTransducer res;
+float p2t(float f)
+{ return -log(f); }
 
-  for (HfstState s = 0; s <= b.get_max_state(); ++s)
-    { static_cast<void>(res.add_state()); }
+void prob2tropical(HfstTransducer &t)
+{ t.transform_weights(p2t); }
 
-  for (HfstState s = 0; s <= b.get_max_state(); ++s)
-    {
-      for (const HfstBasicTransition &t : b[s])
-	{ 
-	  float weight = -log(t.get_weight());
-	  
-	  res.add_transition(s, HfstBasicTransition(t.get_target_state(),
-						    t.get_input_symbol(),
-						    t.get_output_symbol(),
-						    weight)); 
-	}
+// Required because cmath log is double log(double).
+float float_log(float f)
+{ return log(f); }
 
-      if (b.is_final_state(s))
-	{ res.set_final_weight(s, -log(b.get_final_weight(s))); }
-    }
-  
-  b = res;
-}
+void logarithmize(HfstTransducer &t)
+{ t.transform_weights(float_log); }
 
 #else // TEST_weight_utils_cc
 
@@ -99,6 +74,10 @@ void prob2tropical(HfstBasicTransducer &b)
 using hfst::implementations::HfstBasicTransducer;
 using hfst::implementations::HfstState;
 using hfst::implementations::HfstBasicTransition;
+using hfst::StringVector;
+using hfst::HfstOneLevelPaths;
+using hfst::HfstOneLevelPath;
+using hfst::TROPICAL_OPENFST_TYPE;
 
 int main(void)
 {
@@ -106,8 +85,10 @@ int main(void)
   HfstState s = b.add_state();
   b.set_final_weight(s, 2);
   b.add_transition(0, HfstBasicTransition(s, "a", "a", 0));
-  
-  laplace_smooth(0.5, b);
+
+  HfstTransducer t(b, TROPICAL_OPENFST_TYPE);
+  laplace_smooth(0.5, t);
+  b = HfstBasicTransducer(t);
 
   assert(b[0].size() == 1);
   assert(b[0][0].get_input_symbol() == "a");
@@ -127,7 +108,9 @@ int main(void)
   bb.add_transition(s, HfstBasicTransition(s, "a", "a", 1));
   bb.set_final_weight(s, 0);
 
-  normalize_locally(bb);
+  HfstTransducer tt(bb, TROPICAL_OPENFST_TYPE);
+  normalize_locally(tt);
+  bb = HfstBasicTransducer(tt);
   assert(bb[0].size() == 2);
   assert(bb[0][0].get_weight() == 0.25);
   assert(bb[0][1].get_weight() == 0.25);
