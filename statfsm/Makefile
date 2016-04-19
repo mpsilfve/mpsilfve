@@ -2,7 +2,7 @@
 	phonetisaurus-align --input=$^ --ofile=$@
 
 %.aligned:%.psa
-	cat $^ | python randomize.py | python transform-alignment.py > $@
+	cat $^ | python randomize.py | python transform-alignment.py | python split_inputs.py > $@
 
 %.train+dev.0:%
 	python make_splits.py $^
