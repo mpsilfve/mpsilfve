@@ -1,31 +1,125 @@
-t : t
-h : h
-a : e
+k : k
+w : n
+o : o
+w : w
+
+v : 0
+a : a
 
 a : a
-n : n
-e : d
+l : n
 
-s : s
 h : h
-o : o
-t : t
-t : 0
+a : a
+z : d
 
+j : j
+u : u
 s : s
-w : w
-i : i
-n : n
-w : 0
+y : t
+
+y : 0
+u : u
+p : p
+
+t : th
 e : e
 
-n : n
-a : o
-w : w
+p : p
+r : r
+i : i
+c : c
+s : e
+
+c : c
+h : h
+e : e
+a : 0
+k : ck
+
+m : m
+e : 0
+y : y
 
 a : a
 p : p
 i : p
+
+o : o
+w : u
+t : t
+
+i : i
+s : s
+a : 0
+
+k : k
+n : n
+o : o
+e : w
+
+a : 0
+h : h
+v : av
+e : e
+
+t : th
+e : e
+
+t : th
+e : e
+h : 0
+
+n : an
+d : d
+
+h : h
+a : a
+c : v
+e : e
+
+t : th
+e : e
+h : 0
+
+i : i
+m : 0
+
+t : t
+h : h
+a : e
+
+i : i
+v : n
+0 : v
+i : i
+t : t
+e : e
+
+s : s
+t : t
+i : i
+l : l
+l : l
+l : 0
+
+e : ge
+t : t
+
+g : 0
+w : w
+a : a
+v : v
+e : e
+
+s : s
+w : w
+i : i
+m : n
+e : e
+
+e : o
+s : s
 
 s : s
 u : w
@@ -33,840 +127,175 @@ i : i
 n : n
 e : e
 
-f : of
-o : 0
-
-t : t
-y : ry
-r : 0
-i : i
-n : n
-g : g
-
-n : an
-d : d
-
+f : t
 o : o
-m : n
 
-w : w
-r : or
-o : 0
-l : l
-d : d
-
-g : g
-e : e
-t : t
-a : 0
-
-f : f
-r : r
-m : om
-
-y : 0
-a : a
-
-c : c
-h : h
-e : e
-k : ck
-
-a : s
-w : w
-i : i
-n : n
-e : e
-
-w : w
-a : a
-n : n
-t : t
-d : 0
-
-m : m
-y : y
-y : 0
-
-t : t
-h : h
-a : e
-
-i : i
 i : 0
-
-a : a
-r : n
-
-g : g
-o : o
-p : 0
-t : t
-
-t : t
-h : h
-a : e
-
-a : a
-l : l
-l : l
-l : 0
-
-f : f
-i : 0
-l : li
-p : p
-
-s : s
-w : w
-i : i
-n : n
-w : e
-
-a : ar
-e : e
-
-a : a
-v : v
-a : a
-l : 0
-i : i
-a : l
-b : ab
-l : l
-e : e
-
-t : t
-h : h
-a : e
-
-v : 0
-a : a
-
-g : g
-o : o
-t : t
-n : 0
-
-t : t
-h : h
-h : 0
-e : e
-
-f : f
-u : lu
-
-j : j
-u : us
-t : t
-
-b : b
-e : e
-n : e
-n : n
-
-i : i
-n : n
-t : 0
-
-y : t
-o : o
-
-g : 0
-t : t
-o : o
-
-g : g
-o : o
-i : i
-j : 0
-n : n
-g : g
-
-s : s
-w : w
-o : i
-n : n
-e : e
-
-w : w
-s : a
-n : n
-t : t
-
-s : s
-w : w
-i : i
-n : n
-d : e
-
-a : a
-p : pp
-l : 0
-l : l
-e : e
-
-t : t
-h : h
-s : e
-
-o : o
-g : r
-
-s : s
-w : w
-a : 0
-i : i
-n : n
-e : e
-
-t : t
-h : h
-i : 0
-e : e
-
-i : i
-n : n
-t : v
-i : i
-t : t
-a : a
-t : t
-i : i
-o : o
-n : n
-
-s : s
-e : e
-a : a
-0 : s
-o : o
-n : n
-a : a
-l : l
-
-h : h
-a : av
-e : e
-
-t : t
-h : h
-s : e
-
-s : b
-y : y
-
-t : t
-p : o
-
-b : l
-o : o
-t : t
-
-a : a
-v : v
-0 : a
-i : i
-l : l
-a : a
-b : b
-l : l
-e : e
-
-t : t
-h : h
-a : e
-
-o : o
-v : f
-
-t : th
-e : e
-
-w : w
-v : av
-a : 0
-e : e
-
-f : of
-o : 0
-
-g : g
-e : e
-t : t
-t : t
-i : i
-n : n
-b : g
-
-g : ge
-t : t
-
 a : a
 p : p
-i : p
-
-b : b
-a : a
-n : n
-c : d
-
-t : t
-h : h
-a : e
-
-d : 0
-a : a
-
-t : th
-e : e
-h : 0
-
-o : o
-b : n
-
-e : o
-s : s
-
-j : j
-a : u
-s : s
-t : t
-
-f : f
-r : or
-
-f : f
-o : o
-r : r
-d : 0
-w : w
-a : a
-r : r
-d : d
-
-w : w
-h : 0
-a : a
-n : n
-t : t
-
-b : b
-e : e
-l : l
-i : i
-v : ev
-e : e
-
-a : a
-l : l
-l : l
-l : 0
-
-y : y
-o : o
-u : u
-t : 0
-
-g : g
-o : o
-t : t
-z : 0
-
-t : t
-w : w
-i : i
-t : t
-t : t
-t : 0
-e : e
-r : r
-
-i : i
-i : 0
-s : s
-
-g : g
-o : o
-i : i
-g : ng
-
-o : o
-u : f
-
-r : t
-o : o
-
-m : o
-r : r
-
-g : g
-o : 0
-o : o
-o : o
-g : g
-l : l
-e : e
-
-i : l
-i : i
-k : k
-e : e
-
-a : a
-p : pp
-
-n : w
-i : i
-i : i
-
-a : a
-a : 0
-
-e : e
-l : l
-s : s
-e : 0
-e : e
-
-t : t
-h : h
-a : e
-
-h : h
-a : a
-d : v
-e : e
-
-n : n
-e : e
-m : w
+p : p
 
 w : w
 a : a
 n : n
 a : t
 
-f : f
-o : o
-u : u
-i : 0
-n : n
-d : d
-
-q : g
-o : o
-
-i : i
-z : s
-
-s : s
-u : w
-i : i
-n : n
+t : t
+h : h
+w : 0
 e : e
 
-i : i
-m : t
+g : ge
+t : t
 
+d : d
 i : i
-n : n
-c : 0
-
+a : a
 g : g
-o : o
-o : o
-l : gl
-e : e
-
-c : 0
-c : c
-h : h
-r : r
-o : o
-m : m
-e : e
-
-f : f
-i : 0
-i : i
-n : n
-a : a
-l : l
-l : l
-y : y
-
-i : wi
-s : s
-h : h
-
-y : y
-o : o
-u : u
-u : 0
-
-h : h
-a : a
-v : s
-
-w : w
-h : 0
-i : i
-t : t
-h : h
-
-d : d
-o : o
-i : 0
-
-i : i
-v : 0
-n : n
-0 : v
-i : i
-t : t
-e : e
-
-f : f
-l : l
-u : u
-i : 0
-
-f : f
-i : i
-n : 0
-n : n
-a : a
-l : l
-l : l
-y : y
-
-g : go
-t : t
-
-i : i
-i : 0
-
-g : b
-e : e
-
-t : t
-h : h
-t : e
-
-l : 0
-t : t
-h : h
-e : e
-
-h : h
-0 : a
-v : v
 a : 0
-e : e
-
-g : g
-o : o
-o : o
-l : 0
-g : g
-l : l
-e : e
-
-i : i
-b : 0
-m : m
-
-t : t
-h : h
-t : e
-
-t : t
-h : h
-a : e
-
-d : 0
-a : a
-
-e : 0
-m : me
-
-g : g
-p : 0
-o : o
-t : t
-
-k : k
-a : a
-r : r
-y : t
-
 n : n
+o : o
+s : s
 e : e
-x : w
-
-t : th
-e : e
-
-t : th
-e : e
-
-t : t
-h : h
-a : a
-n : n
-g : 0
-
-a : a
-c : 0
+d : d
 
 h : h
 v : av
 e : e
 
-n : n
-e : e
-w : w
-b : 0
-
-a : a
-p : pp
-
-a : s
-0 : a
-m : m
-e : e
-
-w : w
-h : ha
-t : t
-
-h : h
-a : a
-d : v
-e : e
-
-j : ju
-s : s
-t : t
-
-s : s
-w : w
-i : i
-t : t
-h : ch
-
-a : a
-b : b
-l : l
-l : 0
-e : e
-
-a : a
-b : bl
-e : e
-l : 0
-
-n : n
-t : ot
-
-b : b
-e : e
-s : s
-t : t
-t : 0
-
-h : h
-a : 0
-a : a
-v : v
-e : e
-
-i : i
-n : n
-v : v
-i : i
-t : t
-a : a
-c : t
-i : i
-o : o
-n : n
-
-i : i
-i : 0
-
-i : i
-k : 0
-
-p : p
-h : h
-o : o
-t : t
-s : os
-h : h
-o : o
-p : p
-
-a : a
-n : 0
-n : n
-y : y
-o : o
-n : n
-e : e
-
-a : a
-n : n
-n : 0
-
 f : f
-l : l
-u : u
-i : 0
-
-l : l
 o : o
-o : o
-k : k
-z : s
-
-t : t
-o : o
-d : d
-0 : a
-y : y
-a : 0
-
-g : g
-o : o
-t : t
-t : 0
-
-h : 0
-t : t
-h : h
-e : e
-
-y : 0
-a : a
-
-a : 0
-h : h
-v : av
-e : e
-
-t : t
-h : h
-a : e
-
-h : h
-g : a
-d : d
-
-t : t
-h : h
-s : e
-
-y : t
 r : r
-y : y
+r : 0
+
 i : i
-n : n
-g : g
-
-h : h
-a : 0
-a : a
-v : v
-e : e
-
 m : m
-i : i
-s : ss
-
-v : t
-o : o
-
-d : d
-o : o
-a : 0
-
-a : a
-p : p
-p : p
-l : 0
-
-i : i
 m : 0
 
 w : w
-a : a
-v : v
-e : e
-y : 0
-
-a : ha
-v : v
-e : e
-
+o : o
+r : r
+k : k
 i : i
-v : s
-
-i : i
-m : n
-v : v
-i : i
-t : t
-e : e
+g : ng
 
 t : t
 h : h
-o : 0
+n : in
+k : k
+
+t : t
+v : o
+
+m : m
+t : 0
 e : e
+
+f : f
+l : l
+u : u
+v : 0
 
 g : g
 o : o
-o : o
-l : gl
-g : 0
-e : e
+e : 0
+t : t
 
-o : o
-f : f
-c : 0
-
-r : i
-s : s
+c : o
+n : n
 
 t : t
 h : h
 s : e
 
-j : i
-s : s
+i : 0
+a : a
+n : n
 
-f : t
-o : o
+t : t
+t : o
+
+b : b
+e : 0
+e : e
+e : e
+n : n
+
+s : s
+w : w
+i : i
+n : n
+c : 0
+e : e
+
+e : e
+m : m
+e : e
+r : r
+g : g
+a : e
+n : n
+c : c
+y : y
+
+f : of
+o : 0
+
+a : a
+z : 0
+
+q : g
+e : e
+t : t
+
+i : i
+t : t
+i : 0
+
+h : h
+a : a
+v : v
+w : e
 
 t : t
 h : h
-e : e
-r : 0
+s : e
 
+p : n
 o : o
-s : n
+w : w
 
-i : i
-i : 0
-
-l : l
-o : o
-k : o
-k : k
-i : i
 n : n
+e : e
+u : w
+
+i : 0
+h : h
+a : a
+v : v
+e : e
+
+o : o
+o : s
+
+i : i
+d : 0
+s : s
+
+s : s
+h : h
+o : o
+t : t
+t : 0
+
 g : g
+o : o
+t : t
+t : 0
+
+t : t
+h : h
+a : e
 
 i : i
 n : n
@@ -879,418 +308,81 @@ i : i
 o : o
 n : n
 
-a : a
-z : n
-
-h : th
-t : 0
-e : e
-
-i : 0
-t : t
-h : h
-e : e
-
-d : d
-o : o
-w : 0
-
-f : f
-r : r
-p : o
-m : m
-
-m : m
-e : 0
-e : e
-
-t : t
-h : h
-a : e
-
-f : f
-r : or
-
-b : b
-r : r
-e : 0
-a : a
-n : n
-d : d
-
-a : 0
-m : m
-y : y
-
-s : s
-e : e
-0 : a
-r : r
-c : c
-h : h
-e : e
-s : s
-
-w : w
-a : ha
-t : t
-
-t : t
-h : h
-r : e
-
-g : i
-s : s
-
-s : s
-w : w
-i : i
-n : n
-n : 0
-e : e
-
-i : 0
-w : w
-a : a
-n : n
-t : t
-
-w : w
-a : a
-v : v
-e : e
-z : 0
-
-w : w
-i : i
-l : ll
-
-h : h
-a : 0
-a : a
-v : v
-e : e
-
-i : i
-i : 0
-
-n : n
-e : i
-n : n
-t : t
-e : e
-n : n
-d : d
-o : o
-
-f : of
-o : 0
-
-k : k
-n : n
-o : o
-w : w
-w : 0
-
-f : f
-o : o
-f : r
-
-a : a
-b : n
-
-s : s
-w : w
-y : i
 n : n
 e : e
+c : w
 
-t : t
-h : h
-a : e
-
-y : y
-u : ou
-o : 0
-
-s : 0
-s : s
-w : w
-i : i
-n : n
-e : e
-
-b : b
-e : e
-s : s
-t : t
-r : 0
-
-q : g
-o : o
-t : t
-
-n : in
-v : v
-i : i
-t : t
-e : e
-
-f : f
-e : o
-r : r
-
-t : t
-h : h
-r : e
-
-u : u
-s : s
-a : e
-
-t : th
-e : e
-h : 0
-
-h : h
-a : a
-v : v
-e : e
-t : 0
-
-e : 0
-b : be
-s : s
-t : t
-
-i : i
-n : n
-v : v
-i : i
-t : t
-r : e
-
-n : b
-e : e
-
-o : ho
 p : p
+k : l
+a : a
+y : y
+i : i
+n : n
+g : g
+
+t : t
+h : h
+a : e
+
+f : m
+m : m
+s : s
+
+a : a
+v : v
+a : a
+i : i
+l : l
+b : ab
+l : l
 e : e
 
 i : i
 v : 0
-
-s : s
-w : w
-u : i
 n : n
-e : e
-
-s : s
-w : w
+0 : v
 i : i
-n : n
-w : e
-
-l : l
-o : o
-y : 0
 t : t
-
-s : s
 e : e
-a : a
-s : s
-n : on
-a : a
-l : l
-
-c : c
-o : o
-l : l
-f : d
-
-i : i
-b : n
-
-a : ha
-v : v
-e : e
-
-a : a
-b : b
-l : l
-t : e
-
-a : ha
-v : v
-e : e
-
-i : wi
-i : i
-
-f : f
-o : o
-r : r
-y : 0
-
-f : f
-l : l
-u : u
-u : 0
-
-m : m
-r : y
-
-e : e
-n : n
-i : 0
-g : g
-n : in
-e : e
-
-t : t
-c : o
 
 y : t
 o : o
 
-k : k
-n : n
-w : ow
-
-s : s
-e : e
-o : e
-
-n : n
-e : e
-s : w
-
-h : h
-w : ow
-
-k : w
-o : o
 u : u
+n : n
 l : l
-d : d
-
-d : d
 o : o
-r : 0
+c : ck
 e : e
+d : d
+
 s : s
-
-g : g
-o : o
-t : t
-y : 0
-
-o : i
-s : s
-
+w : w
 i : i
 n : n
-0 : v
-i : i
-v : 0
-t : t
+f : 0
 e : e
+
+i : i
 s : s
-
-f : f
-i : i
-g : g
-u : ur
-e : e
-
-n : a
-b : b
-c : c
+t : 0
 
 h : h
-s : a
-v : v
-e : e
-
-m : m
-i : i
-d : dd
-l : l
-e : e
-
-g : g
 o : o
-t : t
+w : w
 z : 0
 
-c : c
+e : se
+a : a
+s : s
 o : o
-u : u
+n : n
+a : a
 l : l
-l : 0
-d : d
 
-t : t
-h : h
-a : e
-
-g : g
-o : o
-t : t
-s : 0
-
-t : t
-h : 0
-o : o
-
-t : t
-h : h
-r : 0
-o : o
-u : u
-g : g
-h : h
-t : t
-
-t : t
-h : h
-a : a
-n : n
-k : k
-s : s
-s : 0
-
-n : n
-e : e
-e : e
-d : d
-a : 0
-
+m : m
+u : 0
 y : y
-u : ou
-
-w : w
-i : i
-f : n
-
-e : 0
-a : a
-
-a : a
-b : 0
-t : t
-
-f : f
-r : or
-
-s : s
-w : w
-a : 0
-i : i
-n : n
-e : e
 
 s : s
 w : w
@@ -1298,82 +390,142 @@ i : i
 b : n
 e : e
 
-i : i
-t : t
-z : s
-
-s : w
-i : i
-t : t
-h : h
-
-j : ju
-s : s
-u : 0
-t : t
-
-c : ch
-r : r
-h : 0
-o : o
-m : m
-e : e
-
-v : w
-o : o
+w : w
+a : a
 n : n
-d : d
-e : e
-r : r
+t : t
+d : 0
 
+y : t
+o : o
+
+g : g
+i : e
+t : t
+
+m : m
 i : i
-r : s
+g : g
+f : 0
+h : h
+t : t
+
+n : n
+n : e
+w : w
+
+s : s
+n : en
+d : d
 
 t : t
 h : h
 a : e
 
-g : g
-i : i
-v : v
-n : in
-g : g
+n : n
+n : e
+w : w
 
-a : a
-p : p
-s : p
-
-p : p
+r : r
+a : e
+0 : a
 l : l
-a : a
-i : yi
-n : n
-g : g
-
 i : i
-n : n
+t : t
+y : y
+
+d : w
+a : a
 v : v
-i : i
-a : ta
-t : t
-i : i
-o : o
-n : n
+e : e
 
+m : m
 i : i
+q : g
+h : h
 t : t
-t : 0
+
 s : s
-
-a : a
-r : n
-
 w : w
 i : i
-z : i
+m : n
+e : e
+
+l : 0
+t : t
+h : h
+e : e
+
+n : n
+e : e
+e : e
+d : d
+z : 0
+
+f : f
+r : r
+e : 0
+e : e
+e : e
+
+t : t
+h : h
+e : e
+a : 0
+
+f : f
+i : i
+y : t
+
+a : 0
+m : m
+y : y
+
+o : o
+i : 0
+n : n
+
+f : f
+o : o
+l : ll
+o : o
+w : w
+
+i : i
+n : n
+v : v
+o : i
+t : t
+e : e
+
+a : a
+n : n
+y : y
+o : o
+n : n
+r : e
+
+n : n
+e : e
+w : w
+b : 0
 
 f : f
 r : or
+
+a : ha
+v : v
+e : e
+
+c : t
+o : o
+
+i : i
+n : n
+v : v
+i : i
+d : t
+e : e
 
 g : g
 o : o
@@ -1382,67 +534,91 @@ l : gl
 g : 0
 e : e
 
-y : y
-u : ou
-
-w : w
-h : h
-a : a
-y : t
-
-s : s
-w : w
-i : i
-n : n
-r : e
-
-t : t
-k : ak
-e : e
-
-n : n
-x : ex
-t : t
-
-s : a
-p : p
-p : p
-
-b : b
-c : e
-
-h : 0
-t : t
-h : h
-e : e
-
-w : w
-n : an
+d : d
 a : 0
-t : t
+i : i
+0 : a
+g : g
+n : n
+o : o
 s : s
+e : e
+d : d
 
-a : s
+w : w
+a : a
+v : v
+v : 0
+e : e
+
+u : o
+n : n
+
+a : a
+r : r
+e : e
+h : 0
+
+a : a
+v : v
+a : a
+i : i
+l : 0
+l : l
+a : a
+b : b
+l : l
+e : e
+
+o : o
+v : 0
+r : r
+
+t : t
+h : h
+t : e
+
+b : a
+t : t
+
+i : i
+m : 0
+
+s : s
+i : i
+k : ck
+
+w : w
+o : o
+i : 0
+u : u
+l : l
+d : d
+
+t : t
 w : w
 i : i
+t : tt
+e : e
+r : r
+
+s : s
+w : w
+o : i
 n : n
 e : e
 
+t : t
+g : h
+e : e
+
+a : 0
 i : i
 n : n
 v : v
 i : i
-i : 0
 t : t
 e : e
-
-i : i
-m : m
-o : 0
-
-j : j
-u : us
-t : t
 
 g : g
 o : o
@@ -1451,648 +627,516 @@ g : gl
 e : e
 l : 0
 
-m : a
+h : h
+0 : a
+v : v
+i : i
 n : n
-
-p : p
-l : l
-a : a
-y : y
-n : in
 g : g
 
-c : c
-o : o
-m : m
-n : 0
-i : i
-g : ng
-
 a : a
-l : l
-l : l
-l : 0
-
-w : w
-i : i
-l : n
-
-w : w
-l : il
-l : l
-
-w : w
-i : i
-i : n
-
-n : n
-t : ot
-
-p : i
-s : s
-
-t : th
-i : i
-n : n
-k : k
-
-e : a
-n : n
-
-n : n
+u : u
+g : g
+e : 0
+m : m
 e : e
-e : e
-s : d
-
-w : w
-a : ha
-h : 0
+n : n
 t : t
-
-u : a
-n : n
+e : e
 d : d
 
-a : a
-p : pp
-s : s
-
-t : t
-h : h
-o : o
-g : ug
-h : h
-t : t
-
-s : s
-e : e
-a : a
-0 : s
+d : d
 o : o
 n : n
-a : a
-l : l
-
-w : w
-a : a
-n : n
-n : 0
+o : 0
 t : t
 
-r : r
-e : e
-t : t
-w : w
-e : e
-t : e
-i : ti
-n : n
-g : g
-
-j : ju
-s : s
-t : t
-
-t : t
-h : h
-s : e
-
-j : j
-u : u
-s : s
-s : t
-
-w : w
-i : i
-c : s
-h : h
-
-n : n
-i : i
-n : n
-t : t
-e : e
-d : nd
+f : f
 o : o
-
-t : t
-h : h
-a : e
-
-a : a
-j : 0
-
-c : c
-h : h
-n : 0
-a : a
-c : nc
-e : e
-
-e : w
-a : a
-v : v
-e : e
-
-g : g
-e : e
-t : t
-i : t
-i : i
-n : n
-g : g
-
-i : i
-m : 0
-
-w : w
-e : e
-l : ll
-
-y : y
-u : 0
-o : o
-u : u
-
-n : n
-i : i
-n : n
-t : t
-e : e
-n : n
-t : d
-o : o
-
-i : i
-s : s
-h : 0
-
-y : t
-o : o
-
-i : i
-n : n
-v : v
-i : i
-t : t
 i : 0
-a : a
+r : r
+
 t : t
-i : i
-o : o
+h : h
+t : e
+
+t : t
+h : h
+r : e
+
+s : a
 n : n
 
-g : g
-o : oo
-g : g
+t : t
+h : h
+n : in
+i : 0
+k : k
+
+a : s
+0 : a
+m : m
+e : e
+
+g : go
+t : t
+
+d : d
+e : e
+f : m
+o : o
+
 l : l
+o : o
+o : o
+c : 0
+k : k
+i : i
+n : n
+g : g
+
+w : w
+a : a
+z : s
+
+w : w
+i : i
+h : th
+
+u : u
+k : p
+
+a : wa
+v : v
 e : e
 
 i : i
 z : s
 
-t : t
-h : h
-a : e
+y : 0
+a : a
 
 t : t
-h : o
+a : s
+u : u
+n : n
+a : a
+m : m
+i : i
+
+f : f
+i : i
+n : n
+0 : a
+l : l
+l : l
+y : y
+
+t : t
+k : o
+
+s : s
+t : t
+r : r
+n : on
+g : g
 
 a : a
-n : n
-n : 0
+b : 0
+
+k : a
+o : o
+l : l
 
 w : w
-h : i
+a : ha
+t : t
+
+e : ne
+w : w
+
+w : w
+i : i
+f : 0
+i : i
+
+t : t
+w : w
+i : i
+t : t
+t : t
+t : 0
+e : e
+r : r
+
+a : a
+p : p
+p : p
+t : 0
+s : s
+
+m : m
+i : i
+q : g
+h : h
+t : t
+
+h : h
+w : ow
+
+a : a
+p : p
+p : p
+l : 0
+
+n : n
+e : e
+w : w
+y : 0
+
 t : t
 h : h
+t : e
+
+a : a
+p : p
+i : p
 
 t : th
 e : e
 h : 0
+
+f : f
+a : a
+c : c
+b : eb
+o : o
+o : o
+k : k
+
+i : i
+n : n
+v : v
+a : i
+t : t
+e : e
+
+a : a
+p : p
+p : p
+l : 0
+
+a : 0
+h : h
+v : av
+e : e
+
+a : a
+n : n
+d : 0
+y : y
+
+g : g
+p : o
+t : t
+
+h : h
+a : a
+v : s
+
+w : w
+i : i
+v : n
+
+i : i
+z : s
+
+i : i
+v : 0
+
+t : t
+h : h
+i : in
+k : k
+
+d : 0
+i : i
+s : s
+
+y : t
+h : h
+e : e
+
+w : w
+o : o
+r : r
+r : 0
+l : l
+d : d
+
+a : a
+n : n
+e : d
+
+t : t
+h : 0
+o : o
+
+i : i
+a : s
+
+y : y
+o : o
+u : u
+z : 0
+
+i : i
+z : s
+
+g : i
+p : p
+h : h
+o : o
+n : n
+e : e
+
+m : 0
+a : a
+n : n
+d : d
+
+v : 0
+w : w
+p : p
+w : w
+e : e
+b : b
+h : h
+o : o
+s : s
+t : t
+
+w : w
+a : a
+t : it
+i : i
+n : n
+g : g
+
+w : w
+i : i
+h : th
+
+w : w
+a : a
+t : nt
+
+t : t
+h : h
+w : e
 
 s : s
 w : w
 i : in
 e : e
 
-w : w
-a : ha
-h : 0
-t : t
+n : n
+t : o
 
-g : g
-o : o
+s : s
+o : to
+t : 0
+r : r
+e : e
+
+n : n
+e : e
+a : w
+
+r : r
 e : 0
 i : i
-n : n
-g : g
+d : d
 
-i : i
-z : n
-
-c : c
-u : o
-m : m
-i : i
-n : n
-g : g
-
-a : ta
-k : k
-i : i
-n : n
-g : g
-
-b : b
-r : r
+d : d
 o : o
+o : 0
+
+w : w
+u : ou
+l : l
+d : d
+
+i : i
+n : n
+v : v
+i : i
+r : t
+e : e
 s : s
+
+d : d
+c : o
+
+y : y
+p : o
+u : u
+r : r
+
+b : i
+s : s
+
+w : w
+a : a
+v : v
+e : e
+v : 0
+
+i : i
+n : n
+c : 0
+
+w : w
+i : i
+r : t
+h : h
+
+i : i
+p : p
+p : o
+d : d
+
+t : t
+h : h
 s : 0
+e : e
+
+u : u
+i : p
+
+g : g
+o : o
+p : 0
+t : t
+
+l : l
+o : o
+o : o
+k : k
+z : s
 
 w : w
 a : a
 t : nt
 
-i : i
-m : s
-
-w : w
-s : as
-
-s : m
-m : m
-s : s
-
-s : s
-w : w
-i : i
-n : n
-e : e
-y : 0
-
-l : l
-i : i
-k : k
-e : e
-i : 0
-
-a : a
-p : pp
-n : 0
-
-h : h
-a : a
-v : v
-s : e
-
-w : w
-a : a
-v : v
-w : e
-
-n : in
-i : 0
-
-t : t
-h : h
-a : e
-
-o : f
-o : o
-r : r
-
-i : 0
-d : d
-o : o
-
-t : t
-h : h
-i : 0
-i : i
-n : n
-g : g
-s : s
-
-i : i
-m : m
-m : 0
-
-s : s
-t : t
-i : i
-l : l
-l : l
-l : 0
-
-l : l
-o : o
-v : v
-e : e
-z : 0
-
-t : th
-e : e
-h : 0
-
-h : h
-l : el
-p : p
-
-s : s
-w : w
-n : in
-e : e
-
-c : c
-a : 0
-a : a
-n : n
-
-t : t
-h : h
-r : e
-
-m : m
-e : e
-h : 0
-
-w : w
-a : a
-v : v
-v : 0
-e : e
-
-f : f
-r : r
-o : o
-n : n
-y : t
-
-i : i
-n : n
-v : v
-i : i
-t : t
-e : e
-r : 0
-s : s
-
-w : w
-r : or
-k : k
-e : e
-r : r
-s : s
-
-m : 0
-i : i
-s : s
-
-y : t
-o : o
-
-o : o
-m : n
-
-t : th
-e : e
-
-i : i
-n : n
-v : v
-i : i
-t : t
-i : 0
-e : e
-s : s
-
-w : w
-a : a
-s : s
-n : 0
-
-i : i
-i : 0
-
-a : a
-b : b
-o : o
-t : 0
+j : 0
 u : u
-: : 0
-0 : 0
-t : 0
-0 : 0
-0 : 0
-
-m : m
-u : 0
-y : y
-
 s : s
-w : w
-i : i
-m : n
-e : e
-
-n : en
-t : t
-e : e
-r : r
-
-c : c
-h : h
-e : e
-k : ck
-
-h : h
-a : av
-e : e
-
-v : v
-a : a
-c : cc
-i : i
-n : n
-e : e
-
-f : f
-r : r
-m : om
-
-a : a
-p : p
-s : p
-
-w : w
-a : a
-v : v
-e : e
-v : 0
-
-a : a
-n : n
-y : y
-w : 0
-o : o
-n : n
-e : e
-
-t : t
-j : h
-a : a
-t : t
-
-l : l
-i : i
-e : 0
-k : ke
 
 g : g
-i : 0
 o : o
-n : in
-g : g
-
-s : s
-t : t
-i : i
-l : ll
-
-y : w
 o : o
-r : r
-k : k
-
-e : ge
-t : t
-
-t : t
-h : h
+g : gl
 e : e
-r : 0
-
-m : m
-0 : a
-k : k
-a : 0
-e : e
-
-h : h
-a : 0
-a : a
-v : v
-e : e
-
-f : f
-l : l
-o : u
-
-a : ha
-v : v
-e : e
-
-g : g
-e : 0
-e : e
-t : t
-
-t : t
-h : h
-c : e
 
 t : t
 h : h
 a : e
 
-g : g
-o : o
-v : 0
-t : t
-
-f : 0
-o : o
-n : n
+c : c
+k : h
 e : e
-
-i : i
-i : 0
-
-i : i
-e : s
-
-s : s
-w : w
-n : in
-e : e
-
-t : t
-g : h
-i : i
-n : n
+c : c
 k : k
 
-i : i
-p : p
+j : j
+u : u
+d : d
+g : ge
+d : d
+
+t : t
 h : h
 o : o
-n : n
-e : e
-l : 0
-
-e : 0
-n : n
-w : ew
-
-u : i
+g : ug
+u : 0
+h : h
 t : t
 
-a : a
-b : b
-l : l
+g : g
+o : o
+t : t
+s : 0
+
+h : th
+t : 0
+e : e
+
+r : i
+t : t
+
+f : f
+o : o
+w : r
+
+o : i
+t : t
+
+w : w
+n : an
+t : t
+
+t : t
+h : h
 t : e
 
 s : s
-p : p
-o : o
-o : 0
-r : r
-t : t
+w : w
+i : i
+m : n
+e : e
+
 s : s
+w : w
+n : 0
+i : i
+n : n
+e : e
+
+n : an
+d : d
 
 f : f
-l : l
-r : u
-
-d : t
-h : h
+a : ac
 e : e
-
-u : u
-s : s
-u : 0
-
-m : m
-s : y
-
-w : w
-i : i
-h : th
-
-y : t
+b : b
 o : o
+o : o
+k : k
 
-s : s
-w : w
 i : i
-t : t
-h : ch
+z : s
 
-l : l
-u : o
-v : v
-e : e
+d : 0
+i : i
+s : s
+
+n : 0
+a : a
+m : m
+
+f : f
+o : o
+t : r
+
+r : 0
+d : d
+r : r
+o : o
+p : p
+b : b
+o : o
+x : x
 
 s : s
 w : w
@@ -2101,129 +1145,1089 @@ n : n
 c : 0
 e : e
 
-s : s
-w : w
+f : f
 i : i
-n : n
 i : 0
-e : e
-
-a : a
-c : c
-o : 0
-c : c
-u : ou
-n : n
 t : t
 
-u : o
-r : r
-
-a : a
-b : b
-p : o
-u : u
-t : t
-
-j : 0
-a : a
-
-t : t
+f : f
 o : o
-d : 0
-d : d
-a : a
-y : y
-
-t : t
-h : h
-n : in
-i : 0
-k : k
-
-s : s
-w : w
-i : i
-n : n
+r : r
 n : 0
-e : e
 
-g : g
-i : i
-v : v
-n : in
-g : g
-
-b : b
-o : 0
-r : r
-s : os
-
-i : i
-p : p
-p : o
-d : d
-
-i : i
-m : 0
-
-k : k
-n : n
-o : o
-e : w
+g : ge
+t : t
 
 o : to
 t : 0
 
+s : s
+w : w
+u : i
+n : n
+e : e
+
+i : i
+e : f
+
+i : 0
+i : i
+n : n
+
+b : b
+e : e
+x : s
+t : t
+
+m : m
+a : a
+r : r
+y : i
+l : l
+y : y
+n : n
+
+i : i
+a : 0
+
+w : w
+a : a
+v : y
+
+a : a
+b : n
+d : d
+
+n : n
+i : i
+t : nt
+e : e
+n : n
+d : d
+o : o
+
+i : i
+s : s
+s : 0
+
+d : 0
+a : a
+
+p : p
+e : 0
+l : l
+a : e
+0 : a
+s : s
+e : e
+
+y : 0
+a : a
+
+m : m
+a : a
+p : p
+p : 0
+s : s
+
 t : th
+e : e
+h : 0
+
+y : y
+o : o
+u : u
+h : 0
+
+a : s
+w : w
+i : i
+n : n
+e : e
+
+t : th
+e : e
+h : 0
+
+i : 0
+r : r
+o : o
+c : c
+k : k
+
+s : s
+w : w
+i : in
 e : e
 
 t : t
 h : h
-c : e
+a : e
+
+n : m
+y : y
 
 n : n
-e : 0
+r : 0
 e : e
+w : w
+s : s
+
+a : a
+g : g
+a : a
+i : i
+s : 0
+n : n
+0 : s
+t : t
+
+f : f
+i : 0
+i : i
+n : n
+a : a
+l : l
+l : l
+y : y
+
+s : s
+w : w
+i : i
+t : t
+h : ch
+
+n : n
+t : ot
+
+m : m
+i : i
+g : g
+h : h
+t : t
+a : 0
+
+t : th
+i : i
+n : n
+k : k
+
+a : a
+c : 0
+
+o : ho
+m : m
+e : e
+
+s : s
+w : w
+i : in
+e : e
+n : 0
+
+n : n
+m : o
+
+y : y
+u : ou
+r : r
+
+y : 0
+a : a
+
+f : f
+o : o
+r : r
+f : 0
+
+b : b
+e : e
+s : s
+s : 0
+t : t
+
+a : ha
+v : v
+e : e
+
+a : ha
+v : v
+e : e
+
+s : s
+w : w
+i : i
+n : n
+d : e
+
+k : k
+n : n
+w : ow
+
+q : g
+e : e
+t : t
+
+e : i
+n : n
+
+a : 0
+s : s
+w : w
+i : i
+n : n
+e : e
+
+d : d
+o : o
+w : 0
+
+g : g
+o : o
+t : t
+z : 0
+
+a : a
+l : l
+l : l
+l : 0
+
+n : n
+n : 0
+o : o
+t : t
+
+t : t
+h : h
+m : e
+
+t : 0
+i : i
+s : ts
+
+i : i
+n : n
+f : 0
+
+g : 0
+t : t
+o : o
+
+t : 0
+n : in
+
+l : l
+o : oo
+o : o
+o : o
+n : n
+g : g
+
+a : a
+c : p
+p : p
+
+h : h
+w : ow
+
+o : o
+n : n
+n : 0
+
+p : p
+l : l
+a : a
+y : y
+i : i
+n : n
+n : 0
+g : g
+
+a : a
+p : p
+s : p
+
+m : m
+i : i
+d : 0
+d : d
+d : d
+l : l
+e : e
+
+o : o
+d : f
+
+a : 0
+h : h
+v : av
+e : e
+
+b : bu
+t : t
+
+i : i
+n : n
+c : 0
+
+w : w
+i : i
+i : 0
+t : t
+h : h
+
+p : p
+l : l
+a : a
+y : y
+n : in
+g : g
+
+i : i
+v : n
+0 : v
+i : i
+t : t
+e : e
+
+k : j
+u : u
+s : s
+t : t
+
+f : f
+l : l
+u : u
+u : 0
+
+n : 0
+n : n
+w : ow
+
+t : t
+w : w
+e : e
+t : e
+: : 0
+t : 0
+
+y : j
+u : u
+s : s
+t : t
+
+w : w
+t : 0
+i : i
+h : th
+
+e : e
+x : x
+p : p
+l : l
+a : a
+i : in
 e : e
 d : d
+
+n : n
+o : o
+o : 0
+
+h : 0
+h : h
+a : a
+v : v
+e : e
+
+i : i
+n : n
+i : 0
+v : v
+i : i
+t : t
+e : e
+s : s
+
+t : t
+h : h
+s : e
+
+t : t
+t : 0
+h : h
+e : e
+r : r
+e : e
+
+h : h
+v : av
+e : e
+
+o : o
+g : n
+
+g : g
+o : 0
+o : o
+i : i
+n : n
+g : g
+
+t : t
+k : ak
+e : e
+
+s : se
+e : e
+
+k : k
+o : no
+w : w
+
+i : i
+n : n
+v : v
+i : i
+t : t
+a : a
+t : 0
+t : t
+i : i
+o : o
+n : n
+
+p : p
+l : l
+a : 0
+e : e
+0 : a
+s : s
+e : e
+
+f : 0
+f : f
+i : i
+n : n
+d : d
+
+c : c
+o : o
+l : l
+f : d
+
+b : o
+f : f
+
+i : i
+s : s
+z : 0
+
+m : m
+s : os
+t : t
+
+s : s
+w : w
+i : 0
+i : i
+n : n
+e : e
+
+e : g
+m : m
+a : a
+i : i
+l : l
+
+q : g
+o : o
+
+u : 0
+i : i
+
+s : 0
+s : is
+
+g : g
+o : o
+e : 0
+i : i
+n : n
+g : g
+
+a : a
+p : pp
+s : s
+
+j : j
+u : u
+s : s
+r : 0
+t : t
+
+i : i
+l : 0
+
+t : t
+g : h
+e : e
+
+t : t
+h : o
+
+s : 0
+s : s
+w : w
+i : i
+n : n
+e : e
+
+c : c
+o : o
+n : l
+d : d
+
+i : i
+s : s
+h : 0
+
+n : n
+e : e
+m : w
+
+i : i
+s : s
+h : 0
+
+a : ha
+v : v
+e : e
+
+i : i
+n : n
+v : v
+i : i
+t : t
+e : e
+r : 0
+s : s
+
+t : t
+g : h
+e : e
+
+i : i
+i : 0
+
+c : c
+h : h
+a : a
+n : n
+c : c
+h : 0
+e : e
+
+g : g
+o : o
+o : i
+n : n
+g : g
+
+u : u
+p : p
+t : d
+a : a
+t : t
+e : e
+
+g : ge
+t : t
+
+w : w
+n : an
+t : t
+
+o : o
+g : r
+
+o : to
+t : 0
+
+a : a
+p : pp
+l : 0
+l : l
+e : e
+
+u : u
+i : p
+
+i : i
+m : n
+v : v
+i : i
+t : t
+e : e
+
+a : a
+p : pp
+n : 0
+
+m : m
+e : e
+d : 0
+
+w : w
+a : a
+t : nt
+
+f : f
+o : o
+t : r
+
+j : j
+u : u
+s : s
+r : t
+
+w : w
+a : 0
+a : a
+v : v
+e : e
+
+i : i
+n : n
+v : v
+u : i
+t : t
+e : e
+s : s
+
+i : i
+m : 0
+
+t : t
+h : h
+a : e
+
+w : w
+i : i
+s : s
+i : h
+
+d : 0
+a : a
 
 t : t
 h : h
 a : e
 
 o : o
-v : v
-r : er
+k : n
 
-c : c
-a : a
-n : n
-n : 0
+t : t
+h : h
+y : 0
+e : e
+
+w : i
+s : s
 
 w : w
 a : a
-i : i
-n : 0
+n : n
+e : te
+t : 0
+d : d
+
+w : w
+o : i
 t : t
+h : h
+
+y : t
+o : o
+
+h : h
+v : av
+e : e
+
+i : i
+q : s
+
+a : a
+p : p
+p : p
+l : 0
+
+s : 0
+s : s
+w : w
 i : i
 n : n
+e : e
+
+v : v
+e : 0
+i : i
+w : ew
+
+s : s
+w : w
+e : 0
+i : i
+n : n
+e : e
+
+h : h
+o : o
+p : 0
+w : w
+
+t : t
+h : h
+i : i
+i : s
+
+p : o
+u : u
+r : r
+
+d : 0
+i : i
+
+j : ju
+s : s
+t : t
+
+a : a
+n : n
+n : n
+i : i
+v : v
+e : e
+r : r
+0 : s
+a : a
+r : r
+y : y
+
+b : b
+c : e
+
+w : w
+o : o
+r : r
+c : k
+
+s : s
+w : w
+i : i
+b : n
+e : e
+
+f : f
+r : or
+
+r : r
+e : e
+a : a
+a : 0
+d : d
+e : e
+r : r
+
+t : t
+e : o
+
+w : w
+a : a
+w : v
+e : e
+
+i : i
+i : 0
+s : s
+
+t : t
+w : w
+e : e
+e : e
+n : t
+
+g : g
+o : o
+i : i
+g : ng
+
+n : 0
+o : o
+n : n
+
+g : f
+i : i
+t : t
+
+f : f
+o : o
+r : r
+w : w
+a : ar
+d : d
+
+s : s
+a : e
+0 : a
+s : s
+o : o
+n : n
+a : a
+l : l
+
+i : 0
+g : g
+o : o
+o : o
+g : g
+l : l
+e : e
+
+f : f
+r : or
+
+k : k
+a : a
+t : r
+: : 0
+t : 0
+
+i : i
+e : 0
+
+y : y
+u : ou
+
+w : w
+a : av
+e : e
+
+t : t
+h : h
+a : e
+
+m : m
+p : m
+s : s
+
+a : a
+n : n
+f : d
+
+t : t
+n : h
+e : e
+
+t : t
+h : h
+a : a
+n : n
+x : 0
+
+t : t
+h : h
+t : e
+
+m : a
+n : n
+
+t : t
+h : h
+i : i
+b : n
+k : k
+
+w : w
+i : i
+z : i
+
+m : m
+s : y
+
+m : m
+y : y
+t : 0
+
+t : t
+h : h
+a : e
+
+f : fe
+e : e
+l : l
+
+m : m
+a : a
+r : r
+a : i
+l : l
+y : y
+n : n
+
+t : t
+h : h
+a : e
+
+g : g
+i : 0
+o : o
+n : in
 g : g
 
-j : h
+w : w
+o : o
+u : ul
+d : d
+
+w : w
+v : av
+a : 0
+e : e
+
+i : i
+n : n
+0 : v
+i : i
+t : t
+e : e
+
+w : w
+h : 0
+i : i
+t : t
+h : h
+
+l : 0
+j : j
+u : u
+s : s
+t : t
+
+t : t
+y : 0
+h : h
+e : e
+
+o : o
+v : 0
+r : r
+
+t : t
+h : h
+i : i
+s : s
+b : 0
+
+h : 0
+h : h
 a : a
 v : v
 e : e
 
-h : h
-a : a
-0 : v
+i : i
+i : 0
+
+g : w
 e : e
-v : 0
+e : e
+k : k
+
+i : i
+i : 0
 
 p : p
 l : l
+e : e
 0 : a
-y : y
+s : s
+e : e
+
+f : f
+r : or
+
+g : 0
+t : t
+h : h
+e : e
+
+t : t
+h : h
+a : a
 a : 0
+t : t
+
+g : 0
+t : t
+h : h
+e : e
+
+i : 0
+g : g
+o : o
+o : o
+g : g
+l : l
+e : e
+
+l : l
+i : i
+e : 0
+k : ke
+
+t : t
+h : h
+a : a
+t : t
+z : 0
+
+g : 0
+a : a
+
+i : i
+i : 0
+
+i : i
+i : 0
+
+t : th
+e : e
+h : 0
+
+w : w
+l : il
+l : l
+
+t : th
+e : e
+h : 0
+
+r : a
+t : t
+
+i : i
+n : n
+v : v
+i : i
+t : t
+i : 0
+e : e
+s : s
+
+t : th
+e : e
+
+a : a
+p : p
+s : p
 
