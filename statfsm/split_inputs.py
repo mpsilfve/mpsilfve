@@ -19,7 +19,9 @@ for line in imap(lambda x: x.strip(), stdin):
         if i == ' ' or i == '':
             i = '0'
 
-        pairs = [[c, '0'] for c in unicode(i)]
+        pairs = [[c, '0'] for c in unicode(i)]        
+        if i == '"0"':
+            pairs = [[i, '0']]
         pairs[-1][1] = o
 
         for p in pairs:

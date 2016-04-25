@@ -2,7 +2,7 @@
 	phonetisaurus-align --input=$^ --ofile=$@
 
 %.aligned:%.psa
-	cat $^ | python randomize.py | python transform-alignment.py | python split_inputs.py > $@
+	cat $^ | python randomize.py | python transform-alignment.py | python split_inputs.py | grep -v "0 : 0" > $@
 
 %.train+dev.0:%
 	python make_splits.py $^
@@ -13,3 +13,11 @@
 %.feats:%
 	cat $^ | python extract_features.py > $@
 
+twitter.%.model:twitter.%.config twitter.train+dev.%.aligned.feats twitter.dev.%.aligned.feats
+	finnpos-train $^ $@
+
+twitter.test.%.sys:twitter.test.% twitter.%.model
+	cat $< | ./pre_test_data.sh | finnpos-label twitter.$*.model | ./post_test_data.sh > $@
+
+twitter.test.%.gold:twitter.test.%
+	cat $^ | sed 's/.*	//' | tr -d ' ' > $@
