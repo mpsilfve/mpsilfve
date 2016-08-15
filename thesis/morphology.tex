@@ -27,8 +27,8 @@ morphology has traditionally been concerned with charting the {\it
   morpheme inventory} of language. That is, finding the minimal
 semantic units of language and grouping them into classes according to
 behavior and meaning. For example, the English word form ``dogs''
-consists of two morphemes ``dog'' and ``-s''. The first one being a
-{\it word stem} and the second one being an {\it inflectional affix}
+consists of two morphemes ``dog'' and ``-s''. The first one is a
+{\it word stem} and the second one is an {\it inflectional affix}
 marking plural number.
 
 \paragraph{(Non-)Concatenative Morphology} In many languages, such as
@@ -62,13 +62,15 @@ pronounced as ``m'' and ``n'', respectively.
 
 Languages differ with regard to the amount of non-concatenative
 morphology. Some, like Turkish, employ almost exclusively
-concatenation.  Others, such as English, employ a mix of concatenation
-and non-concatenative phenomena. Still, concatenative morphology is
-probably found to some degree in all languages. It is especially
-prevalent in languages with rich morphology, such as Finnish or
-Turkish. From the point of view of language technology for
-morphologically rich languages, it is therefore of paramount
-importance to be able to handle concatenative morphology.
+concatenation.  Such languages are called {\it agglutinative}. Others,
+such as English, employ a mix of concatenation and non-concatenative
+phenomena. These languages are usually called {\it fusional}. Still,
+concatenative morphology is probably found to some degree in all
+languages. It is especially prevalent in languages with complex
+morphology, such as Finnish or Turkish. From the point of view of
+language technology for morphologically complex languages, it is
+therefore of paramount importance to be able to handle concatenative
+morphology.
 
 \paragraph{Morphotax} Stems in English can often occur on their own as
 words and are therefore called {\it free morphemes}. Inflectional
@@ -178,7 +180,7 @@ In total, the Penn Treebank contains some 49,000 distinct word forms
 whereas the FinnTreeBank contains about 46,000 word forms even though
 it is only 20\% of the size of the English corpus. These
 considerations illustrate the need for morphological processing for
-morphologically rich languages like Finnish which make extensive use
+morphologically complex languages like Finnish which make extensive use
 of inflective morphology. Methods which rely purely on word forms will
 simply suffer too badly from data sparsity. The experiments presented
 in Chapter \ref{chapter:finnpos} show that a morphological tagger is
@@ -204,7 +206,7 @@ Turkish.\footnote{However, they may suffice in some
 
 {\it Morphological segmentation software}, such as Morfessor
 \citep{Creutz2002}, are another type of morphological analyzers often
-utilized in speech recognition for languages with rich morphology. The
+utilized in speech recognition for languages with complex morphology. The
 Morfessor system splits word forms into a sequence of morpheme-like
 sub-strings. For example, the word form ``dogs'' could be split into
 ``dog'' and ``-s''.  This type of morphological segmentation is useful
@@ -233,15 +235,15 @@ Although, full-scale morphological analyzers require a lot of manual
 work, the information they produce is very reliable. Coverage is a
 slight problem because lemmas typically need to be manually added to
 the system before word forms of that lemma can be analyzed. However,
-morphological guessers can constructed from morphological analyzers
-\cite{Linden2009}. These extend the analyzer to previously unseen
+morphological guessers can be constructed from morphological analyzers
+\citep{Linden2009}. These extend the analyzer to previously unseen
 words based on similar words that are known to the analyzer.
 
 The morphological analyzer employed by the work presented in this
 thesis is the Finnish Open-Source Morphology (OMorFi)
 \citep{Pirinen2011}. It is a morphological analyzer of Finnish
-implemented using the open-source finite-state toolkit HFST
-\cite{Linden2009hfst} and is utilized for the experiments presented in
+implemented using the open-source finite-state toolkit HFST\footnote{\url{http://hfst.github.io/}}
+\citep{Linden2009hfst} and is utilized for the experiments presented in
 Chapter \ref{chapter:finnpos}.
  
 \section{Morphological Tagging and Disambiguation}

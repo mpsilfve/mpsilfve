@@ -1,3 +1,41 @@
 \begin{abstract}
-Here be abstract.
+  A morphological tagger is a piece of computer software that provides
+  complete morphological descriptions of sentences. Morphological
+  taggers find applications in many NLP fields. For example, they can
+  be used as a pre-processing step for syntactic parsers, in
+  information retrieval and machine translation. The task of
+  morphological tagging is closely related to POS tagging but
+  morphological taggers provide more fine-grained morphological
+  information than POS taggers. Therefore, they are often applied to
+  morphologically complex languages, which extensively utilize
+  inflection, derivation and compounding for encoding structural and
+  semantic information. This thesis presents work on data-driven
+  morphological tagging for Finnish and other morphologically complex
+  languages.
+
+  Previous work on data-driven morphological tagging for Finnish is
+  scarce because of the lack of freely available manually prepared
+  morphologically tagged corpora. The work presented in this thesis is
+  made possible by the recently published Finnish dependency treebanks
+  FinnTreeBank and Turku Dependency Treebank. Additionally, the
+  Finnish open-source morphological analyzer OMorFi is extensively
+  utilized in the experiments presented in the thesis.
+
+  The thesis presents methods for improving tagging accuracy,
+  estimation speed and tagging speed in presence of large structured
+  morphological label sets that are typical for morphologically
+  complex languages. More specifically, it presents a novel
+  formulation of generative morphological taggers using weighted
+  finite-state machines and applies finite-state taggers to context
+  sensitive spelling correction of Finnish. The thesis also explores
+  discriminative morphological tagging. It presents structured
+  sub-label dependencies that can be used for improving tagging
+  accuracy. Additionally, the thesis presents a cascaded variant of the
+  averaged perceptron tagger. In presence of large label sets, a
+  cascaded design results in substantial reduction of estimation speed
+  compared to a standard perceptron tagger. Moreover, the thesis
+  explores pruning strategies for perceptron taggers. Finally, the
+  thesis presents the FinnPos toolkit for morphological
+  tagging. FinnPos is an open-source state-of-the-art averaged
+  perceptron tagger implemented by the author.
 \end{abstract}

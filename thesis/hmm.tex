@@ -751,9 +751,11 @@ both emission and transition counts need to be smoothed.
 \paragraph{Counting for Supervised ML Estimation}\label{sec:hmm-counting}
 When HMMs are used in linguistic labeling tasks, such as
 part-of-speech tagging, they are usually estimated in a supervised
-manner. Each label is thought to represent a hidden variable, and the
-HMM models the transitions from one label type to another and the
-emission of words from each label type. 
+manner.\footnote{Such taggers are sometimes called {\it
+    visible} Markov models \citep{Manning1999}.} Each label is thought
+to represent a hidden variable, and the HMM models the transitions
+from one label type to another and the emission of words from each
+label type.
 
 \begin{figure}[!htb]
 \begin{center}

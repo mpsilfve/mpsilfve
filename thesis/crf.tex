@@ -216,11 +216,11 @@ combination of parameter values in $\theta$.
 %\item Label and observation bias.
 %\end{itemize}
 
-The simplest Conditional Random Field is the {\it Logistic Regression
-  Model}. It is an unstructured probabilistic discriminative
-model. In this section, I will present a formal treatment of the
-logistic regression model because it aids in understanding more general
-CRFs.
+The {\it Logistic Regression Model} can be said to be the simplest
+instance of the conditional random field. It is an unstructured
+probabilistic discriminative model. In this section, I will present a
+formal treatment of the logistic regression model because it aids in
+understanding more general CRFs.
 
 Regular linear regression models a {\it real valued quantity} $y$ as a
 function of an input $x = (x_1, ..., x_n)$. In contrast, the logistic
@@ -940,7 +940,7 @@ settings, the difference is substantial.
 \section{Summary of Publications \ref{pub:4}, \ref{pub:5} and \ref{pub:6}}
 
 \paragraph{Publication \ref{pub:4}} A central problem training
-perceptron and CRF taggers for morphologically rich languages is that
+perceptron and CRF taggers for morphologically complex languages is that
 the time complexity of the Viterbi algorithm is dependent on the
 $n+1$st order of the label set size, when training an $n$th order
 tagger. When the label set is large, this results in inconvenient

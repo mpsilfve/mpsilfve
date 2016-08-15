@@ -94,23 +94,26 @@
 %\include{title}
 \frontmatter
 \maketitle
-\vspace*{\fill}
-\thispagestyle{empty} 
-\begin{quotation}
-\em % optional -- to switch to emphasis (italics) mode
-Nobody is going to read your PhD thesis
-
-\medskip
-\raggedleft
-Folklore
-\end{quotation}
-\vspace*{\fill}
-\onehalfspacing
-
 \pagenumbering{roman}
-%\include{abstract}
-\pagenumbering{arabic}
+\include{abstract}
+\thispagestyle{empty} 
 
+\pagenumbering{arabic}
+%\vspace*{\fill}
+%\thispagestyle{empty} 
+%\begin{quotation}
+%\em % optional -- to switch to emphasis (italics) mode
+%Nobody is going to read your PhD thesis
+
+%\medskip
+%\raggedleft
+%Folklore
+%\end{quotation}
+%\vspace*{\fill}
+%\clearpage
+%\thispagestyle{empty} 
+\onehalfspacing
+\linespread{2}
 \mainmatter
 
 \tableofcontents
@@ -136,6 +139,9 @@ PGM  & Probabilistic Graphical Model                     \\
 POS  & Part-of-Speech                                    \\
 MAP  & Maximum a posteriori                              \\
      & \\
+\end{tabular*}
+
+\begin{tabular*}{\columnwidth}{@{\extracolsep{\stretch{1}}}*{2}{l}@{}}
 \multicolumn{2}{c}{{\bf Mathematical Notation}}\\
 $x[i]$ & The element at index $i$ in vector (or sequence) $x$.\\
 $\R^m_n$ & The space of $m \times n$ real valued matrices.\\

@@ -16,11 +16,16 @@ coarse morphological labels such as noun and verb. These typically
 correspond to main word classes. POS taggers are sufficient for
 processing languages where the scope of productive morphology is
 restricted, for example English. Morphological taggers are, however,
-necessary when processing {\it morphologically rich languages}, which
+necessary when processing {\it morphologically complex languages}, which
 extensively utilize inflection, derivation and compounding for
 encoding structural and semantic information. For these languages, a
 coarse POS tag simply does not provide enough information to enable
-accurate downstream processing such as syntactic parsing.
+accurate downstream processing such as syntactic parsing.\footnote{For
+  example in Finnish, the subject and object of a sentence are
+  distinguished by case and different verbs can require different
+  cases for their arguments \cite{Hakulinen2004}. Coarse POS tags do
+  not capture such distinctions. Therefore, accurate parsing of
+  Finnish cannot rely solely on coarse POS tags.}
 
 \begin{figure}[!htb]
 \begin{center}
@@ -47,7 +52,7 @@ fails because of the following reasons.
 \item A single word form can get several morphological labels
   depending on context. For example ``dog'' and ``man'' can be both
   nouns and verbs in English.
-\item For morphologically rich languages, it is impossible to form a
+\item For morphologically complex languages, it is impossible to form a
   list of common word forms which would have sufficient coverage (say,
   higher than 95\%) on unseen text.
 \end{enumerate}
@@ -60,14 +65,14 @@ morphological labels for previously unseen word forms based on similar
 known words.
 
 This thesis presents work on building morphological taggers for
-morphologically rich languages, in particular Finnish, which is the
+morphologically complex languages, in particular Finnish, which is the
 native language of the author. The thesis focuses on data-driven
 methods which utilize manually prepared training corpora and machine
 learning techniques for learning tagger models.
 
 \section{Motivation}
 Data-driven methods have dominated the field of natural language
-processing (NLP) since the nineties. Although these methods have been
+processing (NLP) since the 1990's. Although these methods have been
 applied to virtually all language processing tasks, research has
 predominantly focused on a few languages, English in particular. For
 many languages with fewer speakers, such as Finnish, statistical
@@ -87,16 +92,18 @@ This thesis presents work that focuses on data-driven methods for
 morphological tagging of Finnish. Finnish and English share many
 characteristics but also differ in many respects. Both are written in
 Latin script using similar character inventories, although Finnish
-orthography uses three characters usually not found in English text ``å'',
-``ä'' and ``ö''. Moreover, there are similarities in the lexical inventories
-of the languages because, like all modern languages, Finnish has
-borrowed a lot of words from English and because both languages are
-historically associated with Germanic and Nordic languages. In some
-respects, however, Finnish and English are vastly different. Whereas
-English has fixed SVO word order, the word order in Finnish is quite
-flexible. Another major difference is the amount of inflectional
-morphology. For example, English nouns usually only occur in three inflected forms: singular ``cat'', plural ``cats'' and possessed ``cat's''. In contrast,
-thousands of inflected forms can be coined from a single Finnish noun.
+orthography uses three characters usually not found in English text
+``å'', ``ä'' and ``ö''. Moreover, there are similarities in the
+lexical inventories of the languages because, like many modern
+languages, Finnish has been influenced by English and because both
+languages are historically associated with Germanic and Nordic
+languages. In some respects, however, Finnish and English are vastly
+different. Whereas English has fixed SVO word order, the word order in
+Finnish is quite flexible. Another major difference is the amount of
+inflectional morphology. For example, English nouns usually only occur
+in three inflected forms: singular ``cat'', plural ``cats'' and
+possessed ``cat's''. In contrast, thousands of inflected forms can be
+coined from a single Finnish noun.
 
 Although data driven methods have dominated the field of POS tagging
 and, to a lesser extent, morphological tagging for the last twenty
@@ -108,7 +115,7 @@ derivative functional dependency grammar \citep{Tapanainen1997} have
 been successfully applied for joint morphological tagging and
 shallow parsing.\footnote{For example, the Finnish constraint grammar
   tagger FinCG is available online through the GiellaTekno Project
-  \citep{gt}
+  %\citep{gt}
   \url{https://victorio.uit.no/langtech/trunk/kt/fin/src/fin-dis.cg1}
   (fetched on February 24, 2016).}
 
@@ -122,7 +129,7 @@ open-source Finnish morphological analyzer OMorFi \citep{Pirinen2011}
 is a valuable resource for improving the performance of a tagging
 system.
 
-The rich morphology present in the Finnish language leads to problems
+The complex morphology present in the Finnish language leads to problems
 when existing tagging algorithms are used. The shear amount of
 possible morphological analyses for a word slows down both model
 estimation and application of the tagger on input text. Moreover, the
@@ -136,7 +143,7 @@ are missing from the training corpus, than on words seen during
 training. In English, this is usually not detrimental to the
 performance of the tagger, because the amount of OOV words is
 typically rather low. In contrast, this becomes a substantial problem
-for purely data driven systems processing morphologically rich
+for purely data driven systems processing morphologically complex
 languages because productive compounding and extensive inflection lead
 to a large amount of OOV words even within the same domain.
 
@@ -161,7 +168,7 @@ to a large amount of OOV words even within the same domain.
 This thesis presents an investigation into data-driven morphological
 tagging of Finnish both using generative and discriminative
 models. The aim of my work has been creation of practicable taggers
-for morphologically rich languages. Therefore, the main contributions
+for morphologically complex languages. Therefore, the main contributions
 of this thesis are practical in nature. I present methods for
 improving tagging accuracy, estimation speed, tagging speed and reducing
 model size. More specifically, the main contributions of the thesis
@@ -181,12 +188,12 @@ are as follows.
 \item {\bf Morphological taggers and POS taggers are applied to context
   sensitive spelling correction} Typically, context sensitive spelling
   correctors rely on neighboring words when estimating the probability
-  of correction candidates. For morphologically rich languages, this
+  of correction candidates. For morphologically complex languages, this
   approach fails because of data sparsity. Instead, a generative
   morphological tagger can be used score suggestions based on
   morphological context as shown in Publication \ref{pub:3}.
 \item {\bf Feature extraction specifically aimed at morphologically
-    rich languages} As mentioned above, the large inventory of
+    complex languages} As mentioned above, the large inventory of
   morphological labels causes data sparsity problems for morphological
   tagging models such as the averaged perceptron and conditional
   random field. Using sub-label dependencies presented in Publication \ref{pub:5},
@@ -195,21 +202,23 @@ are as follows.
   syntactic phenomena.
 \item {\bf Faster estimation for perceptron taggers} Exact estimation
   and inference is infeasible in discriminative taggers for
-  morphologically rich languages because the time requirement of exact
+  morphologically complex languages because the time requirement of exact
   estimation and inference algorithms depends on the size of the
   morphological label inventory which can be quite large. Some design
   choices (like higher model order) can even be impossible for
-  morphologically rich languages using standard tagging
+  morphologically complex languages using standard tagging
   techniques. Although the speed of tagging systems is not always seen
-  as a major concern, I believe that both estimation and tagging speed
-  is important. A faster and less accurate tagger can often be
+  as a major concern, %I believe that both estimation and tagging speed
+  %is important. 
+  it can be important in practice.
+A faster and less accurate tagger can often be
   preferable compared to more accurate but slower taggers in real world
   applications where high throughput is vital. Estimation speed, in
   turn, is important because it affects the development process of the
   tagger. For these reasons, Publications \ref{pub:4} and \ref{pub:5}
   explore known and novel approximate inference and estimation
-  techniques. I show that these lead to substantial reduction in
-  training times and faster tagging times compared to available
+  techniques. It is shown that these lead to substantial reduction in
+  training time and faster tagging time compared to available
   state-of-the-art tagging toolkits.
 \item {\bf Pruning strategies for perceptron taggers} Model size can
   be a factor in some applications. For example, when using a tagger
@@ -219,7 +228,7 @@ are as follows.
   \ref{chapter:finnpos}.
 \item {\bf FinnPos toolkit.} Publication \ref{pub:6} presents FinnPos,
   an efficient open source morphological tagging toolkit for Finnish
-  and other morphologically rich languages. Chapter
+  and other morphologically complex languages. Chapter
   \ref{chapter:finnpos} presents a number of experiments on
   morphological tagging of Finnish using the FTB and TDT
   corpora. These experiments augment the results presented in
@@ -261,7 +270,7 @@ algebra. It also shows how finite-state algebra can be used to
 formulate generative taggers in a generalized manner encompassing
 both traditional HMM taggers and other kinds of models.  Chapter
 \ref{chapter:crf} deals with discriminative morphological taggers and
-introduces the contributions of the author to the field of
+introduces contributions to the field of
 discriminative morphological tagging.  Chapter
 \ref{chapter:lemmatization} deals with the topic of data-driven
 lemmatization. Experiments on morphological tagging using the FinnPos

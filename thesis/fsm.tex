@@ -442,10 +442,11 @@ which conditions each word on its morphological label,
 where the emission is conditioned on preceding label context. As
 stated in Chapter \ref{chapter:hmm}, this is in fact not an extension
 to the standard second order HMM. Instead, it is the faithful
-implementation of the second order HMM model. The usual definition
-$p(x_t\cond y_t)$ is incorrect in a second order HMM. It is probably
-used because of data sparsity. Nevertheless, \cite{Halacsy2007} show
-that the correct formulation can result in improved tagging accuracy.
+implementation of the second order HMM model. The definition
+$p(x_t\cond y_t)$, used by for example \cite{Brants2000}, is incorrect
+in a second order HMM. It is probably used because of data
+sparsity. Nevertheless, \cite{Halacsy2007} show that the correct
+formulation can result in improved tagging accuracy.
 
 \paragraph{Richer local structure} The model presented by
 \cite{Halacsy2007} can easily be implemented as a finite-state machine
