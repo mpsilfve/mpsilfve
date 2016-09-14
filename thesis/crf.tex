@@ -124,6 +124,25 @@ template $f$ and label $y$. For example, the feature {\bf The current
 it is unlikely that this feature would ever be observed in actual
 training data.
 
+\begin{table}[!htb]
+\begin{tabularx}{\textwidth}{l|l}  
+\hline
+Feature template & Example\\
+\hline
+\parbox{0.5\textwidth}{The current token is $w \in W$} & \parbox{0.5\textwidth}{The current token is ``dog''}\\
+The current token has prefix $p\in P$ & The current token has prefix ``d-''\\
+The current token has suffix $s\in S$ & The current token has suffix ``-og''\\
+The current token contains a digit & \\
+The current token contains a hyphen & \\
+The current token contains an upper case letter & \\
+The previous token is $w \in W$ & The previous token is ``The''. \\
+The next token is $w\in W$ & The next token is ``eats''. \\
+The token before the previous token is $w$ & \\
+The token after the next token is $w$ & \\
+\end{tabularx}
+\caption{The set of unstructured feature templates introduced by \cite{Ratnaparkhi1996}}\label{tab:uratna}
+\end{table}
+
 \cite{Ratnaparkhi1996} introduced a rather rudimentary feature set and
 variations of this feature set are commonly used in the literature
 (for example \cite{Collins2002}, \cite{Lafferty2001}, and Publications \ref{pub:5} and \ref{pub:6}). Let $W$ be
@@ -134,31 +153,14 @@ unstructured feature templates in Table \ref{tab:uratna} and the
 structured feature templates in Table \ref{tab:sratna}.
 
 \begin{table}[!htb]
-\begin{tabular}{ll}  
+\begin{tabularx}{\textwidth}{l|l}
+\hline
 Feature template & Example\\
 \hline
-The current word is $w \in W$ & The current word is ``dog''\\
-The current word has prefix $p\in P$ & The current word has prefix ``d-''\\
-The current word has suffix $s\in S$ & The current word has suffix ``-og''\\
-The current word contains a digit & \\
-The current word contains a hyphen & \\
-The current word contains an upper case letter & \\
-The previous word is $w \in W$ & The previous word is ``The''. \\
-The next word is $w\in W$ & The next word is ``eats''. \\
-The word before the previous word is $w$ & \\
-The word after the next word is $w$ & \\
-\end{tabular}
-\caption{The set of unstructured feature templates introduced by \cite{Ratnaparkhi1996}}\label{tab:uratna}
-\end{table}
-
-\begin{table}[!htb]
-\begin{tabular}{ll}
-Feature template & Example\\
-\hline
-The label of the previous word is $y$ & The label of the previous word is ``NN''. \\
+\parbox{0.5\textwidth}{The label of the previous word is $y$} & \parbox{0.5\textwidth}{The label of the previous word is ``NN''.} \\
 The label of the previous two words are $y'$ and $y$ & The labels of the two previous words are\\
  & ``DT'' and ``NN''. 
-\end{tabular}
+\end{tabularx}
 \caption{The set of structured feature templates introduced by \cite{Ratnaparkhi1996}}\label{tab:sratna}
 \end{table}
 
@@ -351,13 +353,11 @@ $p$ is a parameter. This has three important consequences:
 \item The function $\theta \mapsto p(y\cond x\parcond \theta)$ is smooth.
 \item The function $\theta \mapsto p(y\cond x\parcond \theta)$ is convex.
 \item There exists a {\it unique} $\theta$ maximizing the likelihood of the training data $\mathcal{D}$.\footnote{Technically this requires that the possible values of $\theta$ are limited into a compact subset of the parameter space.}
-\item The model $p(y\cond x\parcond \theta)$ is maximally unbiased. 
 \end{enumerate}
 
 Smoothness follows from the fact that each factor $a \mapsto e^{ap}$
 is smooth and products and sums of smooth functions are
-smooth. Convexity of the likelihood follows by a straightforward application of the Hölder inequality \cite{}. Property 3 is a consequence of properties 1 and 2.
-Property 4 is discussed in \cite{foo}.
+smooth. Convexity of the likelihood follows by a straightforward application of the Hölder inequality. Property 3 is a consequence of properties 1 and 2.
 
 Although the maximization in Equation \ref{eq:logistic} cannot be
 solved exactly in general, the convexity and smoothness of
@@ -426,20 +426,22 @@ $\theta^\top\phi(x,y)$. Example $x$ is labeled by the $y \in \mathcal{Y}$ which 
 %class and decreases the score for the highest scoring class $y$.
 
 \paragraph{Estimation} The perceptron algorithm is an error-driven
-online learning algorithm. When a classification error is encountered
-during estimation, that is $\theta^\top\phi(x,y) >
-\theta^\top\phi(x,y_{gold})$ for some $y \ne y_{gold}$, the parameter vector $\theta$ is
-adjusted for relevant features. For every feature template $f$ which
-is activated by the example $x$, the weights $\theta[I(f, y_{gold})]$
-and $\theta[I(f, y)]$ are adjusted. Here $I(f, y_{gold})$ and $I(f,
-y)$ are the features corresponding to the template $f$ and classes
-$y_{gold}$ and $y$, respectively. The perceptron rule for weight
-adjustment is the following:
+online learning algorithm (see Algorithm \ref{perceptron-algorithm} for an
+implementation in Python 3). When a classification error is encountered
+during estimation, that is 
+$$\theta^\top\phi(x,y) >
+\theta^\top\phi(x,y_{gold})$$ for some $y \ne y_{gold}$, the parameter
+vector $\theta$ is adjusted for relevant features. For every feature
+template $f$ which is activated by the example $x$, the weights
+$\theta[I(f, y_{gold})]$ and $\theta[I(f, y)]$ are adjusted. Here
+$I(f, y_{gold})$ and $I(f, y)$ are the features corresponding to the
+template $f$ and classes $y_{gold}$ and $y$, respectively. The
+perceptron rule for weight adjustment is the following:
 $$\theta[I(f, y_{gold})] = \theta[I(f, y_{gold})] + 1 {\rm\ and\ }\theta[I(f, y)] = \theta[I(f, y)] - 1$$
 
 \begin{algorithm}[!p]
 \begin{center}
-\caption{The pass of the perceptron algorithm in Python 3.}\label{forward-algorithm}
+\caption{One pass of the perceptron algorithm in Python 3.}\label{perceptron-algorithm}
 \begin{lstlisting}[linewidth=\textwidth]
 def infer(x, fextractor, theta, label_set)
     """
@@ -600,11 +602,10 @@ training. Estimation is instead very similar to estimation of the
 logistic regression model parameters. However, the structured nature
 of the CRF model complicates matters slightly.
 
-Let $(x, y)$ be a labeled sentence. The observed count of feature $i$ in position $t$ is $F_{y}(x, t, y_{t-2},y_{t-1},y_t)[i]$ and its expected count is
-%$$\frac{\sum_{y' \in \mathcal{Y}^T}F_y(x, t, y_{t - 2}', y_{t-1}', y_t')[i] 
-%%\exp(\theta^\top F_y(x, t, y_{t - 2}', y_{t-1}', y_t'))
-%s(x, t, y_{t-2}', y_{t-1}', y_t')}{\Z(x\parcond\theta)}$$
-$$\sum_{y' \in \mathcal{Y}^T} F_y(x, t, y_{t - 2}', y_{t-1}', y_t')[i] p(y'\cond x \parcond \theta)$$
+Let $(x, y)$ be a labeled sentence. The observed count of feature $i$ in position $t$ is 
+$$F_{y}(x, t, y_{t-2},y_{t-1},y_t)[i]$$ 
+and its expected count is
+$$\sum_{y' \in \mathcal{Y}^T} F_y(x, t, y_{t - 2}', y_{t-1}', y_t')[i] p(y'\cond x \parcond \theta).$$
 The partial derivative w.r.t. to the loss $\mathcal{L}$ is the difference between the expected and observed counts as in the case of logistic regression.
 $$\frac{\partial\mathcal{L}}{\partial i} = \sum_{t=1}^T \Big( \sum_{y' \in \mathcal{Y}^T} F_y(x, t, y_{t - 2}', y_{t-1}', y_t')[i] p(y'\cond x \parcond \theta)\Big) - F_{y}(x, t, y_{t-2},y_{t-1},y_t)[i]$$ 
 The quantities $\sum_{y' \in \mathcal{Y}^T} F_y(x_l, t, y_{t - 2}',

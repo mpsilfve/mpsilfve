@@ -124,7 +124,7 @@ share a particular class of bound morphemes. For example, both
 adjectives and nouns take a number in English.
 
 \paragraph{Morphological analysis} In many applications such as
-information retrieval systems and syntactic parsers, it is useful to
+information retrieval systems and syntactic par\-sers, it is useful to
 be able to provide an exhaustive description of the morphological
 information associated with a word form. Such a description is called
 a {\it morphological analysis} or {\it morphological label} of the word
@@ -445,6 +445,15 @@ support for the superiority of the HMM model, is however provided by
 the MEMM is inferior to the HMM on simulated data when using the same
 set of features.
 
+\cite{Berg-Kirkpatrick2010} propose a model for part-of-speech
+induction which is an unsupervised task related to POS tagging. The
+model can be seen as a hybrid of the HMM and MEMM models. Like an HMM,
+it has emission distributions and transition distributions (the
+traditional HMM model is described in Chapter
+\ref{chapter:hmm}). However, these distributions are modeled as local
+logistic regression models. It would be interesting to apply this
+model to morphological tagging in a supervised setting.
+
 \cite{Lafferty2001} proposed Conditional Random Fields (CRF) as a
 solution to the label bias problem. The CRF is trained in a structured
 manner (it is a so called globally normalized model) and does not
@@ -557,8 +566,8 @@ morphological analyzer in feature extraction. In discriminative
 taggers, the labels and label sets given by the morphological analyzer
 can be directly used as features.
 
-This thesis will mainly be concerned with a data-driven supervised
-learning setting but semi-supervised systems and hybrid systems that
+This thesis will mainly be con\-cer\-ned with a data-dri\-ven super\-vised
+learning setting but semi-super\-vised systems and hybrid systems that
 combine data-driven and linguist driven methods have also been
 investigated in the field. \cite{Spoustova2009} and \cite{Sogaard2011}
 apply self-training where a large amount of unlabeled text is first

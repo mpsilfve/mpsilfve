@@ -62,29 +62,19 @@ probabilities.\footnote{Since the author of this thesis has very
 
 \begin{figure}[!htb]
 \begin{center}
-\begin{tabular}{|l|c|}
-\hline
-   $\iota$   &       \\
-\hline
-CLEAR  & $0.75$ \\
-RAIN  & $0.25$ \\
-\hline
-\end{tabular}~~~
-\begin{tabular}{|l|cc|}
-\hline
-   $T$   & CLEAR & RAIN  \\
-\hline
-CLEAR  & $0.9$ & $0.1$ \\
-RAIN   & $0.3$ & $0.7$ \\
-\hline
-\end{tabular}~~~
-\begin{tabular}{|l|cc|}
-\hline
-   $E$   & \includegraphics[width=0.5cm]{no_umbrella} & \includegraphics[width=0.5cm]{umbrella} \\
-\hline
-CLEAR   & $0.8$ &  $0.2$         \\
-RAIN    & $0.2$ &  $0.8$         \\
-\hline
+\begin{tabular}{c|ccc|c|ccc|c|c}
+\cline{1-2}
+\cline{4-6}
+\cline{8-10}
+   $\iota$   &       & \phantom{0000} &  $T$   & CLEAR & RAIN  & \phantom{0000} &    $E$   & \parbox[c][0.7cm]{0.47cm}{\includegraphics[width=0.47cm]{no_umbrella}} & \parbox[c][0.7cm]{0.47cm}{\includegraphics[width=0.47cm]{umbrella}}\\
+\cline{1-2}
+\cline{4-6}
+\cline{8-10}
+CLEAR  & $0.75$  & & CLEAR  & $0.9$ & $0.1$  & & CLEAR   & $0.8$ &  $0.2$       \\
+RAIN  & $0.25$ & & RAIN   & $0.3$ & $0.7$ & & RAIN    & $0.2$ &  $0.8$ \\
+\cline{1-2}
+\cline{4-6}
+\cline{8-10}
 \end{tabular}
 \end{center}
 \caption{The probability distributions which define the HMM in the
@@ -443,7 +433,8 @@ frequently reach lengths of $100$, a more efficient approach is required.
 \begin{figure}[!ftb]
 \begin{center}
 \caption{A naive approach to computing forward probabilities.}\label{fw-naive-prob}
-\begin{tabular}{lllr}
+\begin{tabular}{c|c|c|c}
+\hline
 $y_1$ & $y_2$ & $y_3$ & $p$ \\
 \hline
 {\sc CLEAR} & {\sc CLEAR} & {\sc CLEAR} & $(0.75\cdot0.8\cdot0.9\cdot0.2)\cdot0.9\cdot0.8\approx0.078$\\
@@ -455,7 +446,7 @@ $y_1$ & $y_2$ & $y_3$ & $p$ \\
 %\vspace{0.1cm}
 ~~\includegraphics[width=0.5cm]{umbrella} & ~~\includegraphics[width=0.5cm]{umbrella} & ~~\includegraphics[width=0.5cm]{no_umbrella} & \\
 \hline
-        &       & & $\approx0.098$
+\multicolumn{1}{l}{}        & \multicolumn{1}{l}{}      & \multicolumn{1}{l}{} & \multicolumn{1}{r}{$\approx0.098$}
 \end{tabular}
 \end{center}
 \end{figure}
@@ -708,8 +699,7 @@ available data, but also on the task at hand. The classical setting
 presented by \cite{Rabiner1989} is nearly completely unsupervised: the
 HMM is trained exclusively from observations. Some supervision is
 nevertheless usually required to determine the number of hidden
-states.\footnote{Although methods for determining the number of states
-  from the data exist \citep{foo}.} Additionally priors on the
+states. Additionally priors on the
 emission and transitions distributions may be required to avoid
 undesirably even distributions
 \citep{Cutting1992,Johnson2007}.
@@ -826,7 +816,7 @@ analysis of OOV words using the longest suffix of the word shared with
 a word in the training data.
 
 \cite{Brants2000} employs a specialized emission model for OOV words,
-which combines both approaches. It assigns a probability $p(y|x)$ for
+which combines both appro\-aches. It assigns a probability $p(y|x)$ for
 any label $y \in \mathcal{Y}$ and an arbitrary word $x$ based on
 suffixes $s_i$ of the word different lengths. The subscript $i$
 indicates suffix length.

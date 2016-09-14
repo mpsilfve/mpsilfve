@@ -276,14 +276,16 @@ can give fast convergence. Moreover, re-training is relatively
 efficient when new training examples become available.
 
 {\it Stochastic gradient descent} is a well known online estimation
-algorithm. In practice, it converges faster than regular gradient
-descent \cite{someone} but is identical in all other respects except
-that it is an online estimation algorithm instead of a batch
 algorithm. The algorithm processes one random training example at a
 time. It uses the gradient $\nabla L_{\mathcal{D}[i]}(\theta)$ of the
-loss over the single training example $\mathcal{D}[i]$ to approximate
-the gradient $\nabla L_{\mathcal{D}}(\theta)$ for the entire training
-data $\mathcal{D}$. 
+loss for this training example $\mathcal{D}[i]$ to approximate the
+gradient $\nabla L_{\mathcal{D}}(\theta)$ over the entire training
+data $\mathcal{D}$. It is identical to the ordinary batch gradient
+descent except that it is an online estimation algorithm. In practice,
+SGD converges substantially faster than regular gradient descent
+\citep{Vishwanathan2006} because the evaluation of the appoximate
+gradient is very fast compared to evaluation of the gradient over the
+entire training data.
 
 %She also needs to
 %decide upon an {\it estimator}, that is, a method for setting the

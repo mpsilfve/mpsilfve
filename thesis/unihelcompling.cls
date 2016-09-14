@@ -22,7 +22,7 @@ A Report for the University of Helsinki Department of Modern Languages]
 \DeclareOption{fleqn}{\PassOptionsToClass{\CurrentOption}{book}}
 \DeclareOption{openbib}{\PassOptionsToClass{\CurrentOption}{book}}
 \ProcessOptions\relax
-\LoadClass[a4paper,12pt]{book}
+\LoadClass[a4paper,10pt]{book}
 \ifx\tktla@afour\@undefined\special{papersize=210mm,297mm}\else\relax\fi
 \RequirePackage[nottoc]{tocbibind}
 \RequirePackage{fancyhdr}
@@ -158,7 +158,7 @@ A Report for the University of Helsinki Department of Modern Languages]
 
       {\bf Supervisors} \par
       \quad \hangindent=1em Krister Lindén, University of Helsinki, Finland\par
-\quad \hangindent=1em Anssi Yli-Jyrä, Helsingin yliopisto, Finland\par
+\quad \hangindent=1em Anssi Yli-Jyrä, University of Helsinki, Finland\par
       \quad\par
 %      \quad \hangindent=1em \tktla@supervisorlist\par
 %      \quad\par

@@ -8,10 +8,28 @@
     publisher = {IEEE}
 }
 
+@inproceedings{Berg-Kirkpatrick2010,
+    author = {Taylor Berg-Kirkpatrick and Alexandre Bouchard-côté and John Denero and Dan Klein},
+    title = {Painless Unsupervised Learning with Features},
+    booktitle = {Proceedings of the 2010 Annual Conference of the North American Chapter of the Association for Computational Linguistics},
+    series={NAACL2010},
+    year = {2010},
+    publisher={Association for Computational Linguistics}
+}
+
+
+@article{Mohri1997,
+author={Mohri, Mehryar}, 
+title={String Matching With Automata},
+journal={Nordic Journal of Computing},
+year={1997},
+publisher={Publishing Association Nordic Journal of Computing}
+}
+
 @article{Tsochantaridis2005,
  author = {Tsochantaridis, Ioannis and Joachims, Thorsten and Hofmann, Thomas and Altun, Yasemin},
  title = {Large Margin Methods for Structured and Interdependent Output Variables},
- journal = {J. Mach. Learn. Res.},
+ journal = {Journal of Machine Learning Research},
  issue_date = {12/1/2005},
  volume = {6},
  month = dec,
@@ -27,17 +45,17 @@
 @inproceedings{Taskar2003,
   author = "B. Taskar and  C. Guestrin and  D. Koller",
   title = "Max-Margin Markov Networks",
-  booktitle = "Advances in Neural Information Processing Systems (NIPS 2003)",
+  booktitle = "Advances in Neural Information Processing Systems",
+  series={NIPS2003},
   year = "2004",
-  Note = {Winner of the Best Student Paper Award},
-  address = {Vancouver, Canada},
+  publisher={The MIT Press}
 }
 
 @inproceedings{Nguyen2007,
  author = {Nguyen, Nam and Guo, Yunsong},
  title = {Comparisons of Sequence Labeling Algorithms and Extensions},
  booktitle = {Proceedings of the 24th International Conference on Machine Learning},
- series = {ICML '07},
+ series = {ICML2007},
  year = {2007},
  isbn = {978-1-59593-793-3},
  location = {Corvalis, Oregon, USA},
@@ -46,20 +64,18 @@
  url = {http://doi.acm.org/10.1145/1273496.1273582},
  doi = {10.1145/1273496.1273582},
  acmid = {1273582},
- publisher = {ACM},
- address = {New York, NY, USA},
+ publisher = {Association for Computing Machinery},
 } 
 
 @book{Bybee85,
   author={J. L. Bybee},
   title={Morphology: A study of the relation between meaning and form},
   year={1985},
-  address={Philadelphia},
   publisher={Benjamins},
   url={http://groups.lis.illinois.edu/amag/langev/paper/bybee85morphologyA.html}
 }
 
-@article{Church2005,
+@inproceedings{Church2005,
 title={The {DDI} approach to morphology},
 author={Kenneth Church},
 year={2005},
@@ -69,23 +85,31 @@ publisher={CSLI Publications},
 pages={25--34}
 }
 
-@article{Bohnet2013, 
-author = {Bohnet, Bernd and Nivre, Joakim and Boguslavsky, Igor and Farkas, Richárd and Ginter, Filip and Hajič, Jan }, 
-title = {Joint Morphological and Syntactic Analysis for Richly Inflected Languages}, 
-journal = {Transactions of the Association for Computational Linguistics}, 
-volume = {1}, 
-year = {2013}, 
-issn = {2307-387X}, 
-url = {https://tacl2013.cs.columbia.edu/ojs/index.php/tacl/article/view/158}, 
-pages = {415--428} 
+@article{Bohnet2013,
+  author    = {Bernd Bohnet and
+               Joakim Nivre and
+               Igor Boguslavsky and
+               Rich{\'{a}}rd Farkas and
+               Filip Ginter and
+               Jan Hajic},
+  title     = {Joint Morphological and Syntactic Analysis for Richly Inflected Languages},
+  journal   = {Transactions of the Association for Computational Linguistics},
+  publisher = {Association of Computational Linguistics},
+  volume    = {1},
+  pages     = {415--428},
+  year      = {2013},
+  url       = {https://tacl2013.cs.columbia.edu/ojs/index.php/tacl/article/view/158},
+  timestamp = {Thu, 28 May 2015 17:23:25 +0200},
+  biburl    = {http://dblp2.uni-trier.de/rec/bib/journals/tacl/BohnetNBFGH13},
+  bibsource = {dblp computer science bibliography, http://dblp.org}
 }
 
-@article{Goldberg2011,
+
+@misc{Goldberg2011,
 author = {Yoav Goldberg and Michael Elhadad},
 year = {2011},
 title = {Learning sparser perceptron models},
-journal = {Technical report}, 
-publisher = {Ben Gurion University of the Negev}
+note = {Technical report. Ben Gurion University of the Negev}
 }
 
 @book{Sipser1996,
@@ -108,16 +132,18 @@ pages={173--179}
 @inproceedings{Tufis1999,
  author = {Tufis, Dan},
  title = {Tiered Tagging and Combined Language Models Classifiers},
+ series = {TSD1999},
  booktitle = {Proceedings of the Second International Workshop on Text, Speech and Dialogue},
  year = {1999},
- pages = {28--33}
+ pages = {28--33},
+publisher="Springer Berlin Heidelberg"
 } 
 
 @inproceedings{Smith2005,
  author = {Smith, Noah A. and Smith, David A. and Tromble, Roy W.},
  title = {Context-based Morphological Disambiguation with Random Fields},
  booktitle = {Proceedings of the Conference on Human Language Technology and Empirical Methods in Natural Language Processing},
- series = {HLT '05},
+ series = {HLT2005},
  year = {2005},
  location = {Vancouver, British Columbia, Canada},
  pages = {475--482},
@@ -126,16 +152,24 @@ pages={173--179}
  doi = {10.3115/1220575.1220635},
  acmid = {1220635},
  publisher = {Association for Computational Linguistics},
- address = {Stroudsburg, PA, USA},
 } 
-[download]
- 
 
-@MISC{Allauzen2007,
-    author = {Cyril Allauzen and Michael Riley and Johan Schalkwyk and Wojciech Skut and Mehryar Mohri},
-    title = {OpenFst: A general and efficient weighted finite-state transducer library},
-    year = {2007},
-    booktitle = {Conference on Implementation and Application of Automata}
+
+ 
+@inproceedings{Allauzen2007,
+author="Allauzen, Cyril
+and Riley, Michael
+and Schalkwyk, Johan
+and Skut, Wojciech
+and Mohri, Mehryar",
+title="{OpenFst}: {A} General and Efficient Weighted Finite-State Transducer Library",
+booktitle="Implementation and Application of Automata: 12th International Conference, Revised Selected Papers",
+year="2007",
+publisher="Springer Berlin Heidelberg",
+pages="11--23",
+isbn="978-3-540-76336-9",
+doi="10.1007/978-3-540-76336-9_3",
+url="http://dx.doi.org/10.1007/978-3-540-76336-9_3"
 }
 
 @INPROCEEDINGS{Pal2006,
@@ -152,8 +186,8 @@ ISSN={1520-6149}}
 
 @article{Marcus1993,
  author = {Marcus, Mitchell P. and Marcinkiewicz, Mary Ann and Santorini, Beatrice},
- title = {Building a Large Annotated Corpus of English: The Penn Treebank},
- journal = {Comput. Linguist.},
+ title = {Building a Large Annotated Corpus of {English}: {The} {Penn} {Treebank}},
+ journal = {Computational Linguistics},
  issue_date = {June 1993},
  volume = {19},
  number = {2},
@@ -165,7 +199,6 @@ ISSN={1520-6149}}
  url = {http://dl.acm.org/citation.cfm?id=972470.972475},
  acmid = {972475},
  publisher = {MIT Press},
- address = {Cambridge, MA, USA},
 }
 
 @misc{Blimes1997,
@@ -175,15 +208,16 @@ ISSN={1520-6149}}
     keywords = {markov, probability},
     posted-at = {2009-01-07 10:19:09},
     priority = {2},
-    title = {{A Gentle Tutorial on the EM Algorithm and its Application to Parameter Estimation for Gaussian Mixture and Hidden Markov Models}},
+    title = {A Gentle Tutorial on the {EM} Algorithm and its Application to Parameter Estimation for Gaussian Mixture and Hidden {Markov} Models. {Technical Report ICSI-TR-97-021, University of Berkeley}},
     url = {http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.28.613},
-    year = {1997}
+    year = {1997},
+    publisher={University of Berkeley}
 }
 
 @article{Weiss2000,
  author = {Weiss, Yair},
  title = {Correctness of Local Probability Propagation in Graphical Models with Loops},
- journal = {Neural Comput.},
+ journal = {Neural Computing},
  issue_date = {January 2000},
  volume = {12},
  number = {1},
@@ -196,31 +230,29 @@ ISSN={1520-6149}}
  doi = {10.1162/089976600300015880},
  acmid = {1121939},
  publisher = {MIT Press},
- address = {Cambridge, MA, USA},
 } 
 
 @inproceedings{Boyen1998,
  author = {Boyen, Xavier and Koller, Daphne},
  title = {Tractable Inference for Complex Stochastic Processes},
- booktitle = {Proceedings of the Fourteenth Conference on Uncertainty in Artificial Intelligence},
- series = {UAI'98},
+ booktitle = {Proceedings of the 14th Conference on Uncertainty in Artificial Intelligence},
+ series = {UAI1998},
  year = {1998},
  isbn = {1-55860-555-X},
- location = {Madison, Wisconsin},
  pages = {33--42},
  numpages = {10},
  url = {http://dl.acm.org/citation.cfm?id=2074094.2074099},
  acmid = {2074099},
  publisher = {Morgan Kaufmann Publishers Inc.},
- address = {San Francisco, CA, USA},
 } 
 
 @INPROCEEDINGS{Pearl1982,
     author = {Judea Pearl},
     title = {Reverend Bayes on inference engines: a distributed hierarchical approach},
-    booktitle = {in Proceedings of the National Conference on Artificial Intelligence},
+    booktitle = {Proceedings of the National Conference on Artificial Intelligence},
     year = {1982},
-    pages = {133--136}
+    pages = {133--136},
+    publisher = {American Association of Artificial Intelligence}
 }
 
 @TechReport{Bilmes1997,
@@ -234,10 +266,10 @@ ISSN={1520-6149}}
 @InProceedings{Koskenniemi1984,
   author = {Kimmo Koskenniemi},
   title = {A General Computational Model for Word-Form Recognition and Production},
-  booktitle = {COLING-84},
+  booktitle = {Proceedings of the 10th International Conference on Computational Linguistics and 22nd Annual
+Meeting of the Association for Computational Linguistics},
   year = 1984,
   organization = {Association for Computational Linguistics},
-  address = {Stanford University, California, USA},
   pages = {178--181}
 }
 
@@ -245,7 +277,7 @@ ISSN={1520-6149}}
  author = {Sutton, Charles and McCallum, Andrew},
  title = {Piecewise Pseudolikelihood for Efficient Training of Conditional Random Fields},
  booktitle = {Proceedings of the 24th International Conference on Machine Learning},
- series = {ICML '07},
+ series = {ICML2007},
  year = {2007},
  isbn = {978-1-59593-793-3},
  location = {Corvalis, Oregon},
@@ -254,8 +286,7 @@ ISSN={1520-6149}}
  url = {http://doi.acm.org/10.1145/1273496.1273605},
  doi = {10.1145/1273496.1273605},
  acmid = {1273605},
- publisher = {ACM},
- address = {New York, NY, USA},
+ publisher = {Association for Computing Machinery},
 } 
 
 @inProceedings{Ahlberg2014, 
@@ -263,8 +294,10 @@ title = "Semi-supervised learning of morphological paradigms and lexicons",
 booktitle = "Proceedings of the 14th Conference of the European Chapter of the Association for Computational Linguistics", 
 author = "Ahlberg, Malin and Forsberg, Markus and Hulden, Mans", 
 year = "2014", 
+series = "EACL2014",
 isbn = "978-1-937284-78-7", url = "http://aclweb.org/anthology//E/E14/E14-1060.pdf", 
-pages = "569--578"
+pages = "569--578",
+publisher = {Association for Computational Linguistics}
 }
 
 @article{Sutton2012,
@@ -288,11 +321,27 @@ pages = "569--578"
   pages = {331--378}
 }
 
+@article{Crammer2006,
+ author = {Crammer, Koby and Dekel, Ofer and Keshet, Joseph and Shalev-Shwartz, Shai and Singer, Yoram},
+ title = {Online Passive-Aggressive Algorithms},
+ journal = {J. Mach. Learn. Res.},
+ issue_date = {12/1/2006},
+ volume = {7},
+ month = dec,
+ year = {2006},
+ issn = {1532-4435},
+ pages = {551--585},
+ numpages = {35},
+ url = {http://dl.acm.org/citation.cfm?id=1248547.1248566},
+ acmid = {1248566},
+ publisher = {JMLR.org},
+} 
+
 @inproceedings{Tapanainen1997,
  author = {Tapanainen, Pasi and J\"{a}rvinen, Timo},
  title = {A Non-projective Dependency Parser},
  booktitle = {Proceedings of the Fifth Conference on Applied Natural Language Processing},
- series = {ANLC '97},
+ series = {ANLC1997},
  year = {1997},
  location = {Washington, DC},
  pages = {64--71},
@@ -301,14 +350,13 @@ pages = "569--578"
  doi = {10.3115/974557.974568},
  acmid = {974568},
  publisher = {Association for Computational Linguistics},
- address = {Stroudsburg, PA, USA},
 } 
 
 @inproceedings{Voutilainen1995,
  author = {Voutilainen, Atro},
  title = {A Syntax-based Part-of-speech Analyser},
  booktitle = {Proceedings of the Seventh Conference on European Chapter of the Association for Computational Linguistics},
- series = {EACL '95},
+ series = {EACL1995},
  year = {1995},
  location = {Dublin, Ireland},
  pages = {157--164},
@@ -317,28 +365,26 @@ pages = "569--578"
  doi = {10.3115/976973.976996},
  acmid = {976996},
  publisher = {Morgan Kaufmann Publishers Inc.},
- address = {San Francisco, CA, USA},
 } 
 
 @book{Karlsson1995,
   author = {Fred Karlsson and Atro Voutilainen and Juha Heikkilä and  Arto Anttila},
   title = {Constraint Grammar: A Language-Independent Framework for Parsing Unrestricted Text.},
   publisher = {Mouton de Gruyter}, 
-  address = {Berlin / New York}, 
   year = {1995}
 }
  
 @inproceedings{Voutilainen2011,
 title={{F}inn{T}ree{B}ank: {C}reating a research resource and service for language researchers with {C}onstraint {G}rammar},
 author={Voutilainen, Atro},
-booktitle={Proceedings of the NODALIDA 2011 Workshop Constraint Grammar Applications},
+booktitle={Proceedings of the NODALIDA 2011 Workshop on Constraint Grammar Applications},
 year={2011},
-address = {Riga, Latvia},
-pages = {41-49}
+pages = {41-49},
+publisher={Northern European  Association for Language Technology}
 }
 
 @article{Haverinen2013,
-  title={{Building the essential resources for Finnish: the Turku Dependency Treebank}},
+  title={Building the essential resources for {Finnish}: {The Turku Dependency Treebank}},
   author={Haverinen, Katri and Nyblom, Jenna and Viljanen, Timo and Laippala, Veronika and Kohonen, Samuel and Missil{\"a}, Anna and Ojala, Stina and Salakoski, Tapio and Ginter, Filip},
   journal={Language Resources and Evaluation},
   volume={48},
@@ -351,7 +397,7 @@ pages = {41-49}
  author = {Samuelsson, Christer and Voutilainen, Atro},
  title = {Comparing a Linguistic and a Stochastic Tagger},
  booktitle = {Proceedings of the 35th Annual Meeting of the Association for Computational Linguistics and Eighth Conference of the European Chapter of the Association for Computational Linguistics},
- series = {ACL '98},
+ series = {ACL1998},
  year = {1997},
  location = {Madrid, Spain},
  pages = {246--253},
@@ -360,22 +406,26 @@ pages = {41-49}
  doi = {10.3115/976909.979649},
  acmid = {979649},
  publisher = {Association for Computational Linguistics},
- address = {Stroudsburg, PA, USA},
 } 
 
-@INPROCEEDINGS{Rabiner1989,
-    author = {Lawrence R. Rabiner},
-    title = {A tutorial on hidden Markov models and selected applications in speech recognition},
-    booktitle = {Proceedings of the IEEE},
-    year = {1989},
-    pages = {257--286},
-    publisher = {IEEE}
-}
+@incollection{Rabiner1989,
+ author = {Rabiner, Lawrence R.},
+ title = {A Tutorial on Hidden Markov Models and Selected Applications in Speech Recognition},
+ booktitle = {Readings in Speech Recognition},
+ editor = {Waibel, Alex and Lee, Kai-Fu},
+ year = {1990},
+ isbn = {1-55860-124-4},
+ pages = {267--296},
+ numpages = {30},
+ url = {http://dl.acm.org/citation.cfm?id=108235.108253},
+ acmid = {108253},
+ publisher = {Morgan Kaufmann Publishers Inc.},
+} 
 
 @article{Cortes1995,
  author = {Cortes, Corinna and Vapnik, Vladimir},
  title = {Support-Vector Networks},
- journal = {Mach. Learn.},
+ journal = {Machine Learning},
  issue_date = {Sept. 1995},
  volume = {20},
  number = {3},
@@ -388,7 +438,6 @@ pages = {41-49}
  doi = {10.1023/A:1022627411411},
  acmid = {218929},
  publisher = {Kluwer Academic Publishers},
- address = {Hingham, MA, USA},
  keywords = {efficient learning algorithms, neural networks, pattern recognition, polynomial classifiers, radial basis function classifiers},
 } 
 
@@ -426,7 +475,8 @@ pages = {41-49}
     priority = {0},
     title = {{Why Doesn't EM Find Good HMM POS-Taggers?}},
     url = {http://www.aclweb.org/anthology/D/D07/D07-1031},
-    year = {2007}
+    year = {2007},
+    publisher = {Association for Computational Linguistics}
 }
 
 @book{Manning1999,
@@ -435,22 +485,25 @@ pages = {41-49}
  year = {1999},
  isbn = {0-262-13360-1},
  publisher = {MIT Press},
- address = {Cambridge, MA, USA},
 } 
 
-@Article{Forney2005,
-author    = "G. David Jr Forney",
-year = {2005},
-title     = "The Viterbi Algorithm: A Personal History",
-archivePrefix = "arXiv",
-eprint = "0504020v2",
-primaryClass={cs}
+@article{Forney2005,
+  author    = {Forney, G. D.},
+  title     = {The {Viterbi} Algorithm: {A} Personal History},
+  journal   = {arXiv},
+  note   = {http://arxiv.org/abs/cs/0504020},
+  year      = {2005},
+  timestamp = {Mon, 05 Dec 2011 18:03:41 +0100},
+  biburl    = {http://dblp.uni-trier.de/rec/bib/journals/corr/abs-cs-0504020},
+  bibsource = {dblp computer science bibliography, http://dblp.org}
 }
+
+
 @inproceedings{Halacsy2007,
  author = {Hal\'{a}csy, P{\'e}ter and Kornai, Andr\'{a}s and Oravecz, Csaba},
- title = {HunPos: An Open Source Trigram Tagger},
- booktitle = {Proceedings of the 45th Annual Meeting of the ACL on Interactive Poster and Demonstration Sessions},
- series = {ACL '07},
+ title = {{HunPos}: An Open Source Trigram Tagger},
+ booktitle = {Proceedings of the 45th Annual Meeting of the ACL},
+ series = {ACL2007},
  year = {2007},
  location = {Prague, Czech Republic},
  pages = {209--212},
@@ -458,7 +511,6 @@ primaryClass={cs}
  url = {http://dl.acm.org/citation.cfm?id=1557769.1557830},
  acmid = {1557830},
  publisher = {Association for Computational Linguistics},
- address = {Stroudsburg, PA, USA},
 } 
 
 
@@ -476,7 +528,7 @@ primaryClass={cs}
  author = {Schmid, Helmut},
  title = {Part-of-speech Tagging with Neural Networks},
  booktitle = {Proceedings of the 15th Conference on Computational Linguistics - Volume 1},
- series = {COLING '94},
+ series = {COLING1994},
  year = {1994},
  location = {Kyoto, Japan},
  pages = {172--176},
@@ -485,14 +537,13 @@ primaryClass={cs}
  doi = {10.3115/991886.991915},
  acmid = {991915},
  publisher = {Association for Computational Linguistics},
- address = {Stroudsburg, PA, USA},
 } 
 
 @inproceedings{Collins2004,
  author = {Collins, Michael and Roark, Brian},
  title = {Incremental Parsing with the Perceptron Algorithm},
- booktitle = {Proceedings of the 42Nd Annual Meeting on Association for Computational Linguistics},
- series = {ACL '04},
+ booktitle = {Proceedings of the 42nd Annual Meeting on Association for Computational Linguistics},
+ series = {ACL2004},
  year = {2004},
  location = {Barcelona, Spain},
  articleno = {111},
@@ -500,14 +551,13 @@ primaryClass={cs}
  doi = {10.3115/1218955.1218970},
  acmid = {1218970},
  publisher = {Association for Computational Linguistics},
- address = {Stroudsburg, PA, USA},
 } 
 
 @inproceedings{Toutanova2000,
  author = {Toutanova, Kristina and Manning, Christopher D.},
  title = {Enriching the Knowledge Sources Used in a Maximum Entropy Part-of-speech Tagger},
  booktitle = {Proceedings of the 2000 Joint SIGDAT Conference on Empirical Methods in Natural Language Processing and Very Large Corpora: Held in Conjunction with the 38th Annual Meeting of the Association for Computational Linguistics - Volume 13},
- series = {EMNLP '00},
+ series = {EMNLP2000},
  year = {2000},
  location = {Hong Kong},
  pages = {63--70},
@@ -516,12 +566,11 @@ primaryClass={cs}
  doi = {10.3115/1117794.1117802},
  acmid = {1117802},
  publisher = {Association for Computational Linguistics},
- address = {Stroudsburg, PA, USA},
 } 
 
 @article{Merialdo1994,
  author = {Merialdo, Bernard},
- title = {Tagging English Text with a Probabilistic Model},
+ title = {Tagging {English} Text with a Probabilistic Model},
  journal = {Comput. Linguist.},
  issue_date = {June 1994},
  volume = {20},
@@ -534,7 +583,6 @@ primaryClass={cs}
  url = {http://dl.acm.org/citation.cfm?id=972525.972526},
  acmid = {972526},
  publisher = {MIT Press},
- address = {Cambridge, MA, USA},
 } 
 
 @phdthesis{Ratnaparkhi1998,
@@ -542,9 +590,7 @@ primaryClass={cs}
  title = {Maximum Entropy Models for Natural Language Ambiguity Resolution},
  year = {1998},
  isbn = {0-591-94112-0},
- note = {AAI9840230},
- publisher = {University of Pennsylvania},
- address = {Philadelphia, PA, USA},
+ school = {University of Pennsylvania},
 } 
 
 @InProceedings{Huang2007,
@@ -553,7 +599,6 @@ primaryClass={cs}
   booktitle = {Proceedings of the 2007 Joint Conference on Empirical Methods in Natural Language Processing and Computational Natural Language Learning (EMNLP-CoNLL)},
   month     = {June},
   year      = {2007},
-  address   = {Prague, Czech Republic},
   publisher = {Association for Computational Linguistics},
   pages     = {1093--1102},
   url       = {http://www.aclweb.org/anthology/D/D07/D07-1117}
@@ -561,9 +606,9 @@ primaryClass={cs}
 
 @inproceedings{Huang2009,
  author = {Huang, Zhongqiang and Eidelman, Vladimir and Harper, Mary},
- title = {Improving a Simple Bigram HMM Part-of-speech Tagger by Latent Annotation and Self-training},
+ title = {Improving a Simple Bigram {HMM} Part-of-speech Tagger by Latent Annotation and Self-training},
  booktitle = {Proceedings of Human Language Technologies: The 2009 Annual Conference of the North American Chapter of the Association for Computational Linguistics, Companion Volume: Short Papers},
- series = {NAACL-Short '09},
+ series = {NAACL2009},
  year = {2009},
  location = {Boulder, Colorado},
  pages = {213--216},
@@ -571,12 +616,11 @@ primaryClass={cs}
  url = {http://dl.acm.org/citation.cfm?id=1620853.1620911},
  acmid = {1620911},
  publisher = {Association for Computational Linguistics},
- address = {Stroudsburg, PA, USA},
 }
 
 @article{Linden2009,
 author={Krister Lind\'{e}n},
-title={Entry Generation by Analogy – Encoding New Words for Morphological Lexicons},
+title={Entry Generation by Analogy – {Encoding} New Words for Morphological Lexicons},
 journal={Northern European Journal of Language Technology},
 year={2009},
 volume={1},
@@ -599,7 +643,6 @@ publisher={Northern European Association for Language Technology}
  url = {http://dl.acm.org/citation.cfm?id=972470.972477},
  acmid = {972477},
  publisher = {MIT Press},
- address = {Cambridge, MA, USA},
 } 
 
 @inproceedings{Gimenez2004,
@@ -620,8 +663,8 @@ publisher={Northern European Association for Language Technology}
 
 @article{Liu1989,
  author = {Liu, D. C. and Nocedal, J.},
- title = {On the Limited Memory BFGS Method for Large Scale Optimization},
- journal = {Math. Program.},
+ title = {On the Limited Memory {BFGS} Method for Large Scale Optimization},
+ journal = {Mathematical Programming},
  issue_date = {Dec. 1989},
  volume = {45},
  number = {3},
@@ -634,7 +677,6 @@ publisher={Northern European Association for Language Technology}
  doi = {10.1007/BF01589116},
  acmid = {83726},
  publisher = {Springer-Verlag New York, Inc.},
- address = {Secaucus, NJ, USA},
 } 
 
 @article{Tibshirani1996,
@@ -655,14 +697,17 @@ publisher={Northern European Association for Language Technology}
 @inproceedings{Huang2009a, 
 author = {Fei Huang and Alexander Yates}, 
 title = {Distributional Representations for Handling Sparsity in Supervised Sequence Labeling}, 
-booktitle = {Proceedings of the Annual Meeting of the Association for Computational Linguistics (ACL)}, 
-year = {2009} 
+booktitle = {Proceedings of the Annual Meeting of the Association for Computational Linguistics},
+series = {ACL2009}, 
+year = {2009}, 
+publisher = {Association of Computational Linguistics},
+pages = {495--503}
 }
 
 @article{Ostling2013,
    author = {{\"O}stling, Robert},
    institution = {Stockholm University, Computational Linguistics},
-   journal = {Northern European Journal of Language Technology (NEJLT)},
+   journal = {Northern European Journal of Language Technology},
    pages = {1--18},
    title = {Stagger: an Open-Source Part of Speech Tagger for Swedish},
    volume = {3},
@@ -671,23 +716,20 @@ year = {2009}
 
 @InProceedings{Chrupala2008,
   author = {Grzegorz Chrupala and Georgiana Dinu and Josef van Genabith},
-  title = {Learning Morphology with Morfette},
-  booktitle = {Proceedings of the Sixth International Conference on Language Resources and Evaluation (LREC'08)},
+  title = {Learning Morphology with {Morfette}},
+  booktitle = {Proceedings of the Sixth International Conference on Language Resources and Evaluation (LREC2008)},
   year = {2008},
   month = {may},
   date = {28-30},
-  address = {Marrakech, Morocco},
-  editor = {Nicoletta Calzolari and Khalid Choukri and Bente Maegaard and Joseph Mariani and Jan Odijk and Stelios Piperidis and Daniel Tapias},
   publisher = {European Language Resources Association (ELRA)},
   isbn = {2-9517408-4-0},
-  note = {http://www.lrec-conf.org/proceedings/lrec2008/},
   language = {english}
   }
 
 @Book{Francis1964,
 author = { Francis, W. N.},
 title = { A standard sample of present-day English for use with digital computers },
-publisher = { Distributed by ERIC Clearinghouse [Washington, D.C.] },
+publisher = {  Department of Linguistics, Brown University},
 pages = { 196 p. },
 year = { 1964 },
 type = { Book, Microform },
@@ -700,18 +742,20 @@ catalogue-url = { http://nla.gov.au/nla.cat-vn5180998 },
 @inproceedings{Horsmann2015,
 author = {Horsmann, Tobias and Erbs, Nicolai and Zesch, Torsten},
 year= {2015},
-title = {Fast or Accurate ? – A Comparative Evaluation of PoS Tagging Models},
-booktitle={Proceedings of the International Conference of the German Society for Computational Linguistics and Language Technology (GSCL-2015)},
-address={Essen, Germany}
+title = {Fast or Accurate? – {A} Comparative Evaluation of {PoS} Tagging Models},
+booktitle={Proceedings of the International Conference of the German Society for Computational Linguistics and Language Technology},
+series={GSCL2015},
+publisher = {German Society for Computational Linguistics and Language Technology},
+pages={22--30}
 }
 
 @InProceedings{Hulden2013,
 title={Finite state applications with Javascript},
 author={Mans Hulden and Miikka Silfverberg and Jerid Francom},
-booktitle={Proceedings of the 19th Nordic Conference of Computational Linguistics (NODALIDA 2013)},
+booktitle={Proceedings of the 19th Nordic Conference of Computational Linguistics},
+series = {NODALIDA 2013},
 month={May},
 year={2013},
-address={Oslo, Norway},
 publisher={LiU Electronic Press},
 pages={441--446}
 }
@@ -729,16 +773,17 @@ pages={441--446}
   added-at = {2014-01-28T00:00:00.000+0100},
   author = {Orosz, György and Novák, Attila},
   biburl = {http://www.bibsonomy.org/bibtex/2c88bdf97c24bbbbacdba03b23cd9827a/dblp},
-  booktitle = {RANLP},
-  editor = {Angelova, Galia and Bontcheva, Kalina and Mitkov, Ruslan},
+  booktitle = {Proceedings of the Ninth International Conference on Recent Advances in
+Natural Language Processing},
   ee = {http://aclweb.org/anthology/R/R13/R13-1071.pdf},
   interhash = {b6efd47a60c47b9e249f5cb5cef17afa},
   intrahash = {c88bdf97c24bbbbacdba03b23cd9827a},
   keywords = {dblp},
   pages = {539-545},
-  publisher = {RANLP 2013 Organising Committee / ACL},
+  series = "RANLP2013",
+  publisher = {RANLP 2013 Organising Committee / Association for Computational Linguistics},
   timestamp = {2016-01-26T11:46:10.000+0100},
-  title = {PurePos 2.0: a hybrid tool for morphological disambiguation.},
+  title = {{PurePos} 2.0: a hybrid tool for morphological disambiguation.},
   url = {http://dblp.uni-trier.de/db/conf/ranlp/ranlp2013.html#OroszN13},
   year = 2013
 }
@@ -746,13 +791,11 @@ pages={441--446}
 @InProceedings{Hulden2012,
   author = {Mans Hulden and Jerid Francom},
   title = {Boosting statistical tagger accuracy with simple rule-based grammars},
-  booktitle = {Proceedings of the Eight International Conference on Language Resources and Evaluation (LREC'12)},
+  booktitle = {Proceedings of the Eight International Conference on Language Resources and Evaluation (LREC2012)},
   year = {2012},
   month = {may},
   date = {23-25},
-  address = {Istanbul, Turkey},
-  editor = {Nicoletta Calzolari (Conference Chair) and Khalid Choukri and Thierry Declerck and Mehmet Uğur Doğan and Bente Maegaard and Joseph Mariani and Asuncion Moreno and Jan Odijk and Stelios Piperidis},
-  publisher = {European Language Resources Association (ELRA)},
+  publisher = {European Language Resources Association},
   isbn = {978-2-9517408-7-7},
   language = {english}
  }
@@ -763,7 +806,6 @@ pages={441--446}
   booktitle = {Proceedings of the 14th Conference of the European Chapter of the Association for Computational Linguistics},
   month     = {April},
   year      = {2014},
-  address   = {Gothenburg, Sweden},
   publisher = {Association for Computational Linguistics},
   pages     = {569--578},
   url       = {http://www.aclweb.org/anthology/E14-1060}
@@ -773,7 +815,7 @@ pages={441--446}
  author = {Vishwanathan, S. V. N. and Schraudolph, Nicol N. and Schmidt, Mark W. and Murphy, Kevin P.},
  title = {Accelerated Training of Conditional Random Fields with Stochastic Gradient Methods},
  booktitle = {Proceedings of the 23rd International Conference on Machine Learning},
- series = {ICML '06},
+ series = {ICML2006},
  year = {2006},
  isbn = {1-59593-383-2},
  location = {Pittsburgh, Pennsylvania},
@@ -782,8 +824,7 @@ pages={441--446}
  url = {http://doi.acm.org/10.1145/1143844.1143966},
  doi = {10.1145/1143844.1143966},
  acmid = {1143966},
- publisher = {ACM},
- address = {New York, NY, USA},
+ publisher = {Association for Computing Machinery},
 } 
 
 
@@ -791,7 +832,7 @@ pages={441--446}
  author = {Toutanova, Kristina and Klein, Dan and Manning, Christopher D. and Singer, Yoram},
  title = {Feature-rich part-of-speech tagging with a cyclic dependency network},
  booktitle = {Proceedings of the 2003 Conference of the North American Chapter of the Association for Computational Linguistics on Human Language Technology - Volume 1},
- series = {NAACL '03},
+ series = {NAACL2003},
  year = {2003},
  location = {Edmonton, Canada},
  pages = {173--180},
@@ -800,7 +841,6 @@ pages={441--446}
  doi = {10.3115/1073445.1073478},
  acmid = {1073478},
  publisher = {Association for Computational Linguistics},
- address = {Stroudsburg, PA, USA},
 } 
 
 @book{Carr1993,
@@ -808,14 +848,13 @@ author = {Philip Carr},
 title={Phonology},
 year={1993},
 publisher={The Macmillan Press LTD},
-address={London}
 }
 
 @inproceedings{Creutz2002,
  author = {Creutz, Mathias and Lagus, Krista},
  title = {Unsupervised Discovery of Morphemes},
- booktitle = {Proceedings of the ACL-02 Workshop on Morphological and Phonological Learning - Volume 6},
- series = {MPL '02},
+ booktitle = {Proceedings of the ACL2002 Workshop on Morphological and Phonological Learning},
+ series = {MPL2002},
  year = {2002},
  pages = {21--30},
  numpages = {10},
@@ -823,13 +862,12 @@ address={London}
  doi = {10.3115/1118647.1118650},
  acmid = {1118650},
  publisher = {Association for Computational Linguistics},
- address = {Stroudsburg, PA, USA},
 } 
  
 
 @article{Kettunen2005,
 author = {Kimmo Kettunen and Tuomas Kunttu and Kalervo Järvelin},
-title = {To stem or lemmatize a highly inflectional language in a probabilistic IR environment?},
+title = {To stem or lemmatize a highly inflectional language in a probabilistic {IR} environment?},
 journal = {Journal of Documentation},
 volume = {61},
 number = {4},
@@ -853,13 +891,14 @@ author="Silfverberg, Miikka
 and Ruokolainen, Teemu
 and Lind{\'e}n, Krister
 and Kurimo, Mikko",
-title="FinnPos: an open-source morphological tagging and lemmatization toolkit for Finnish",
+title="{FinnPos}: an open-source morphological tagging and lemmatization toolkit for {Finnish}",
 journal="Language Resources and Evaluation",
 year="2015",
 pages="1--16",
 issn="1574-0218",
 doi="10.1007/s10579-015-9326-3",
-url="http://dx.doi.org/10.1007/s10579-015-9326-3"
+url="http://dx.doi.org/10.1007/s10579-015-9326-3",
+note={Online first article not yet assigned to an issue.}
 }
 
 @article{Wilcoxon45,
@@ -884,8 +923,8 @@ url="http://dx.doi.org/10.1007/s10579-015-9326-3"
 
 @incollection{Porter1997,
  author = {Porter, M. F.},
- chapter = {An Algorithm for Suffix Stripping},
- title = {Readings in Information Retrieval},
+ title = {An Algorithm for Suffix Stripping},
+ booktitle = {Readings in Information Retrieval},
  editor = {Sparck Jones, Karen and Willett, Peter},
  year = {1997},
  isbn = {1-55860-454-5},
@@ -894,7 +933,6 @@ url="http://dx.doi.org/10.1007/s10579-015-9326-3"
  url = {http://dl.acm.org/citation.cfm?id=275537.275705},
  acmid = {275705},
  publisher = {Morgan Kaufmann Publishers Inc.},
- address = {San Francisco, CA, USA},
 } 
 
 @article{Jaynes1957,
@@ -916,22 +954,22 @@ url="http://dx.doi.org/10.1007/s10579-015-9326-3"
 @inproceedings{Muller2013,
   title={Efficient Higher-Order {CRFs} for Morphological Tagging},
   author={M{\"u}ller, Thomas and Schmid, Helmut and Sch{\"u}tze, Hinrich},
-  booktitle={Proceedings of 2013 Empirical Methods in Natural Language Processing (EMNLP 2013)},
+  booktitle={Proceedings of 2013 Empirical Methods in Natural Language Processing},
+  series={EMNLP2013},
   year={2013},
-  address = {Seattle, Washington, USA},
   pages = {322-332}
 }
 
 @inproceedings{Muller2015,
   author = {M{\"u}ller, Thomas and Cotterell, Ryan and Fraser, Alexander M. and Schütze, Hinrich},
-  booktitle = {EMNLP},
-  editor = {Màrquez, Lluís and Callison-Burch, Chris and Su, Jian and Pighin, Daniele and Marton, Yuval},
+  booktitle = {Proceedings of the 2015 Joint Conference on Empirical Methods in Natural Language Processing},
   isbn = {978-1-941643-32-7},
   keywords = {dblp},
   pages = {2268-2274},
-  publisher = {The Association for Computational Linguistics},
+  series="EMNLP2015",
+  publisher = {Association for Computational Linguistics},
   timestamp = {2015-10-15T11:34:28.000+0200},
-  title = {Joint Lemmatization and Morphological Tagging with Lemming.},
+  title = {Joint Lemmatization and Morphological Tagging with {Lemming}},
   url = {http://dblp.uni-trier.de/db/conf/emnlp/emnlp2015.html#0009CFS15},
   year = 2015
 }
@@ -957,7 +995,7 @@ url="http://dx.doi.org/10.1007/s10579-015-9326-3"
  author = {Huang, Liang and Fayong, Suphan and Guo, Yang},
  title = {Structured Perceptron with Inexact Search},
  booktitle = {Proceedings of the 2012 Conference of the North American Chapter of the Association for Computational Linguistics: Human Language Technologies},
- series = {NAACL HLT '12},
+ series = {NAACL HLT2012},
  year = {2012},
  isbn = {978-1-937284-20-6},
  location = {Montreal, Canada},
@@ -966,29 +1004,26 @@ url="http://dx.doi.org/10.1007/s10579-015-9326-3"
  url = {http://dl.acm.org/citation.cfm?id=2382029.2382049},
  acmid = {2382049},
  publisher = {Association for Computational Linguistics},
- address = {Stroudsburg, PA, USA}
 } 
 
 @inproceedings{Church1988,
  author = {Church, Kenneth Ward},
  title = {A stochastic parts program and noun phrase parser for unrestricted text},
  booktitle = {Proceedings of the second conference on Applied natural language processing},
- series = {ANLC '88},
+ series = {ANLC1988},
  year = {1988},
- location = {Austin, Texas},
  pages = {136--143},
  numpages = {8},
  url = {http://dx.doi.org/10.3115/974235.974260},
  doi = {10.3115/974235.974260},
  acmid = {974260},
- publisher = {Association for Computational Linguistics},
- address = {Stroudsburg, PA, USA},
+ publisher = {Association for Computational Linguistics}
 } 
 
 @article{DeRose1988,
  author = {DeRose, Steven J.},
  title = {Grammatical category disambiguation by statistical optimization},
- journal = {Comput. Linguist.},
+ journal = {Computational Linguistics},
  issue_date = {Winter 1988},
  volume = {14},
  number = {1},
@@ -1000,14 +1035,13 @@ url="http://dx.doi.org/10.1007/s10579-015-9326-3"
  url = {http://dl.acm.org/citation.cfm?id=49084.49087},
  acmid = {49087},
  publisher = {MIT Press},
- address = {Cambridge, MA, USA},
 } 
 
 @inproceedings{Brill1992,
  author = {Brill, Eric},
  title = {A simple rule-based part of speech tagger},
  booktitle = {Proceedings of the third conference on Applied natural language processing},
- series = {ANLC '92},
+ series = {ANLC1992},
  year = {1992},
  location = {Trento, Italy},
  pages = {152--155},
@@ -1016,26 +1050,23 @@ url="http://dx.doi.org/10.1007/s10579-015-9326-3"
  doi = {10.3115/974499.974526},
  acmid = {974526},
  publisher = {Association for Computational Linguistics},
- address = {Stroudsburg, PA, USA},
 } 
 
 @inproceedings{Weiss2010,
   added-at = {2014-01-06T00:00:00.000+0100},
   author = {Weiss, David J. and Taskar, Benjamin},
   biburl = {http://www.bibsonomy.org/bibtex/2f6bbdf20bce0a505522752307929ab94/dblp},
-  booktitle = {AISTATS},
-  editor = {Teh, Yee Whye and Titterington, D. Mike},
+    Booktitle = {Proceedings of the Thirteenth International Conference on Artificial Intelligence and Statistics} ,
+  series = {AISTATS2010},
   ee = {http://www.jmlr.org/proceedings/papers/v9/weiss10a.html},
   interhash = {a26d1c5d779a664cfb2f19a0a8f93317},
   intrahash = {f6bbdf20bce0a505522752307929ab94},
   keywords = {dblp},
   pages = {916-923},
-  publisher = {JMLR.org},
-  series = {JMLR Proceedings},
+  publisher = {JMLR},
   timestamp = {2014-01-06T00:00:00.000+0100},
   title = {Structured Prediction Cascades.},
   url = {http://dblp.uni-trier.de/db/journals/jmlr/jmlrp9.html#WeissT10},
-  volume = 9,
   year = 2010
 }
 
@@ -1043,7 +1074,7 @@ url="http://dx.doi.org/10.1007/s10579-015-9326-3"
  author = {Charniak, Eugene and Johnson, Mark},
  title = {Coarse-to-fine N-best Parsing and MaxEnt Discriminative Reranking},
  booktitle = {Proceedings of the 43rd Annual Meeting on Association for Computational Linguistics},
- series = {ACL '05},
+ series = {ACL2005},
  year = {2005},
  location = {Ann Arbor, Michigan},
  pages = {173--180},
@@ -1052,7 +1083,6 @@ url="http://dx.doi.org/10.1007/s10579-015-9326-3"
  doi = {10.3115/1219840.1219862},
  acmid = {1219862},
  publisher = {Association for Computational Linguistics},
- address = {Stroudsburg, PA, USA},
 } 
 
 @book{Durbin1998,
@@ -1066,38 +1096,60 @@ url="http://dx.doi.org/10.1007/s10579-015-9326-3"
 }
 
 @inproceedings{Pirinen2011,
- title     = {Modularisation of Finnish Finite-State Language Description---Towards Wide Collaboration in Open Source Development of a Morphological Analyser},
+ title     = {Modularisation of {Finnish} Finite-State Language Description---{Towards} Wide Collaboration in Open Source Development of a Morphological Analyser},
  author    = {Tommi A Pirinen},
  year      = {2011},
- booktitle = {Nodalida 2011},
+booktitle={Proceedings of the 18th Conference of Computational Linguistics},
+ series = {NODALIDA2011},
  pages     = {299---302},
- url       = {http://www.helsinki.fi/\%7Etapirine/publications/Pirinen-nodalida2011.pdf}
+ url       = {http://www.helsinki.fi/\%7Etapirine/publications/Pirinen-nodalida2011.pdf},
+publisher={Northern European Association for Language Technology}
 }
 
 @inproceedings{Pirinen2012,
 title = {Improving Finite-State Spell-Checker Suggestions with Part of Speech N-Grams},
 author = {Tommi Pirinen and Miikka Silfverberg and Krister Lind\'{e}n},
 year = {2012},
-booktitle = {13th International Conference on Intelligent Text Processing and Computational Linguistics CICLing 2014},
+booktitle = {Proceedings of the 13th International Conference on Intelligent Text Processing and Computational Linguistics},
+series = {CICLing2012},
+publisher="Springer Berlin Heidelberg",
 location={Delhi, India},
 }
 
 @inproceedings{Silfverberg2011,
 author={Miikka Silfverberg and Krister Lind{\'e}n},
 title={Combining Statistical Models for {POS} Tagging using Finite-State Calculus},
-booktitle={Proceedings of the 18th Conference of Computational Linguistics NODALIDA 2011},
-series={NEALT Proceedings Series},
+booktitle={Proceedings of the 18th Conference of Computational Linguistics},
+series={NODALIDA{\-}2011},
 year={2011},
+pages={183--190},
 location={Riga, Latvia},
 publisher={Northern European Association for Language Technology}
 }
 
+@article{Knuth1977,
+  added-at = {2009-08-29T18:11:31.000+0200},
+  author = {Knuth, Donald E. and Morris, James H. and Pratt, Vaughan R.},
+  biburl = {http://www.bibsonomy.org/bibtex/2600ad29c57ff0368b9f70f173c4e89c6/n770},
+  interhash = {00bb834b0f7f5215345f106ef734c1cc},
+  intrahash = {600ad29c57ff0368b9f70f173c4e89c6},
+  issn = {0097-5397},
+  journal = {SIAM Journal on Computing},
+  keywords = {imported},
+  language = {english},
+  month = {March},
+  number = 2,
+  pages = {323--350},
+  timestamp = {2009-08-29T18:12:13.000+0200},
+  title = {{Fast Pattern Matching in Strings}},
+  volume = 6,
+  year = 1977
+}
+
 @book{Beesley2003,
   added-at = {2009-03-26T18:54:30.000+0100},
-  address = {Stanford, Calif.},
   author = {Beesley, Kenneth R. and Karttunen, Lauri},
   biburl = {http://www.bibsonomy.org/bibtex/2d157c31e4bd5b10d2ed0b1f534615fda/unhammer},
-  description = {Helsinki/Stuttgart/Xerox Finite State Tools},
   interhash = {e74d27af6744e7a386abd0538dd05b3a},
   intrahash = {d157c31e4bd5b10d2ed0b1f534615fda},
   isbn = {1-57586-433-9},
@@ -1112,10 +1164,10 @@ publisher={Northern European Association for Language Technology}
 @InProceedings{Silfverberg2014,
   author    = {Silfverberg, Miikka  and  Ruokolainen, Teemu  and  Lind\'{e}n, Krister  and  Kurimo, Mikko},
   title     = {Part-of-Speech Tagging using Conditional Random Fields: Exploiting Sub-Label Dependencies for Improved Accuracy},
-  booktitle = {Proceedings of the 52nd Annual Meeting of the Association for Computational Linguistics (Volume 2: Short Papers)},
+  booktitle = {Proceedings of the 52nd Annual Meeting of the Association for Computational Linguistics},
+  series = {ACL2014},
   month     = {June},
   year      = {2014},
-  address   = {Baltimore, Maryland},
   publisher = {Association for Computational Linguistics},
   pages     = {259--264},
   url       = {http://www.aclweb.org/anthology/P14-2043}
@@ -1123,11 +1175,10 @@ publisher={Northern European Association for Language Technology}
 
 @InProceedings{Zhang2014,
   author    = {Zhang, Kaixu  and  Su, Jinsong  and  Zhou, Changle},
-  title     = {Regularized Structured Perceptron: A Case Study on Chinese Word Segmentation, POS Tagging and Parsing},
+  title     = {Regularized Structured Perceptron: A Case Study on Chinese Word Segmentation, {POS} Tagging and Parsing},
   booktitle = {Proceedings of the 14th Conference of the European Chapter of the Association for Computational Linguistics},
   month     = {April},
   year      = {2014},
-  address   = {Gothenburg, Sweden},
   publisher = {Association for Computational Linguistics},
   pages     = {164--173},
   url       = {http://www.aclweb.org/anthology/E14-1018}
@@ -1135,7 +1186,6 @@ publisher={Northern European Association for Language Technology}
 
 @article{Rosenblatt1958,
   added-at = {2015-01-31T19:27:17.000+0100},
-  address = {US},
   author = {Rosenblatt, F.},
   biburl = {http://www.bibsonomy.org/bibtex/2fccddb695dd9e65baa69c97838217cc9/jil},
   description = {PsycNET - Display Record},
@@ -1169,7 +1219,7 @@ publisher={Northern European Association for Language Technology}
   keywords = {Likelihood Likelihood:composite spatial},
   language = {English},
   number = 3,
-  pages = {pp. 179-195},
+  pages = {179--195},
   publisher = {Blackwell Publishing for the Royal Statistical Society},
   timestamp = {2011-08-10T11:58:25.000+0200},
   title = {Statistical Analysis of Non-Lattice Data},
@@ -1179,21 +1229,28 @@ publisher={Northern European Association for Language Technology}
 }
 
 @inproceedings{Linden2009hfst,
- title = {HFST Tools for Morphology---An Efficient Open-Source Package for Construction of Morphological Analyzers},
- author = {Krister Lind\'{e}n and Miikka Silfverberg and Tommi Pirinen},
- year = {2009},
- booktitle = {sfcm 2009},
- pages = {28---47},
- uri = {http://www.helsinki.fi/\%7Etapirine/publications/Pirinen-sfcm-2009.pdf}
+author="Lind{\'e}n, Krister
+and Silfverberg, Miikka
+and Pirinen, Tommi",
+title="{HFST} Tools for Morphology -- An Efficient Open-Source Package for Construction of Morphological Analyzers",
+booktitle="State of the Art in Computational Morphology: Workshop on Systems and Frameworks for Computational Morphology. Proccedings",
+series= "SFCM2009",
+year="2009",
+publisher="Springer Berlin Heidelberg",
+pages="28--47",
+isbn="978-3-642-04131-0",
+doi="10.1007/978-3-642-04131-0_3",
+url="http://dx.doi.org/10.1007/978-3-642-04131-0_3"
 }
 
+
 @InProceedings{Ruokolainen2014,
-  author    = {Ruokolainen, Teemu  and  Silfverberg, Miikka  and  kurimo, mikko  and  Linden, Krister},
+  author    = {Ruokolainen, Teemu  and  Silfverberg, Miikka  and  Kurimo, Mikko  and  Linden, Krister},
   title     = {Accelerated Estimation of Conditional Random Fields using a Pseudo-Likelihood-inspired Perceptron Variant},
-  booktitle = {Proceedings of the 14th Conference of the European Chapter of the Association for Computational Linguistics, volume 2: Short Papers},
+  booktitle = {Proceedings of the 14th Conference of the European Chapter of the Association for Computational Linguistics},
+  series = {EACL2014},
   month     = {April},
   year      = {2014},
-  address   = {Gothenburg, Sweden},
   publisher = {Association for Computational Linguistics},
   pages     = {74--78},
   url       = {http://www.aclweb.org/anthology/E14-4015}
@@ -1216,11 +1273,10 @@ author = "Mehryar Mohri and Fernando Pereira and Michael Riley"
 @incollection{Silfverberg2010,
 year={2010},
 isbn={978-3-642-14769-2},
-booktitle={Proceedings of the 7th International Conference on NLP,
-                  IceTAL 2010},
-editor={Loftsson, Hrafn and Rögnvaldsson, Eiríkur and Helgadóttir, Sigrún},
+booktitle={Proceedings of the 7th International Conference on NLP},
+series={IceTAL2010},
 doi={10.1007/978-3-642-14770-8_40},
-title={Part-of-Speech Tagging Using Parallel Weighted Finite-State Transducers},
+title={Part-of-Speech Tagging using Parallel Weighted Finite-State Transducers},
 url={http://dx.doi.org/10.1007/978-3-642-14770-8_40},
 publisher={Springer Berlin Heidelberg},
 author={Silfverberg, Miikka and Lindén, Krister},
@@ -1232,8 +1288,9 @@ language={English}
 title={Conflict resolution using weighted rules in {HFST-TWOLC}},
 author={Miikka Silfverberg and Krister Lind\'{e}n},
 year={2009},
-booktitle={Proceedings of the 17th Nordic Conference of Computational Linguistics (NODALIDA 2009)},
-publisher={},
+booktitle={Proceedings of the 17th Nordic Conference of Computational Linguistics},
+series = {NODALIDA2009},
+publisher={Northern European Association for Language Technology},
 pages={174--181}
 }
 
@@ -1243,16 +1300,15 @@ title={Modeling OOV Words With Letter N-Grams in Statistical Taggers: Preliminar
 booktitle={Proceedings of the 19th Nordic Conference of Computational Linguistics (NODALIDA 2013)},
 month={May},
 year={2013},
-address={Oslo, Norway},
 publisher={LiU Electronic Press},
 pages={181--193}
 }
 
 @inproceedings{Spoustova2009,
  author = {Spoustov\'{a}, Drahom\'{\i}ra "johanka" and Haji\v{c}, Jan and Raab, Jan and Spousta, Miroslav},
- title = {Semi-supervised Training for the Averaged Perceptron POS Tagger},
+ title = {Semi-supervised Training for the Averaged Perceptron {POS} Tagger},
  booktitle = {Proceedings of the 12th Conference of the European Chapter of the Association for Computational Linguistics},
- series = {EACL '09},
+ series = {EACL2009},
  year = {2009},
  location = {Athens, Greece},
  pages = {763--771},
@@ -1260,14 +1316,13 @@ pages={181--193}
  url = {http://dl.acm.org/citation.cfm?id=1609067.1609152},
  acmid = {1609152},
  publisher = {Association for Computational Linguistics},
- address = {Stroudsburg, PA, USA},
 } 
 
 @inproceedings{Spoustova2007,
  author = {Spoustov\'{a}, Drahom\'{\i}ra "johanka" and Haji\v{c}, Jan and Votrubec, Jan and Krbec, Pavel and Kv\v{e}to\v{n}, Pavel},
- title = {The Best of Two Worlds: Cooperation of Statistical and Rule-based Taggers for Czech},
+ title = {The Best of Two Worlds: Cooperation of Statistical and Rule-based Taggers for {Czech}},
  booktitle = {Proceedings of the Workshop on Balto-Slavonic Natural Language Processing: Information Extraction and Enabling Technologies},
- series = {ACL '07},
+ series = {ACL2007},
  year = {2007},
  location = {Prague, Czech Republic},
  pages = {67--74},
@@ -1275,46 +1330,41 @@ pages={181--193}
  url = {http://dl.acm.org/citation.cfm?id=1567545.1567558},
  acmid = {1567558},
  publisher = {Association for Computational Linguistics},
- address = {Stroudsburg, PA, USA},
-} 
+}
 
 @inproceedings{Sogaard2011,
  author = {S{\o}gaard, Anders},
  title = {Semisupervised Condensed Nearest Neighbor for Part-of-speech Tagging},
- booktitle = {Proceedings of the 49th Annual Meeting of the Association for Computational Linguistics: Human Language Technologies: Short Papers - Volume 2},
- series = {HLT '11},
+ booktitle = {Proceedings of the 49th Annual Meeting of the Association for Computational Linguistics: Human Language Technologies},
+ series = {HLT2011},
  year = {2011},
  isbn = {978-1-932432-88-6},
- location = {Portland, Oregon},
  pages = {48--52},
  numpages = {5},
  url = {http://dl.acm.org/citation.cfm?id=2002736.2002748},
  acmid = {2002748},
  publisher = {Association for Computational Linguistics},
- address = {Stroudsburg, PA, USA},
 } 
 
 @inproceedings{Baker1998,
  author = {Baker, Collin F. and Fillmore, Charles J. and Lowe, John B.},
- title = {The Berkeley FrameNet Project},
+ title = {The Berkeley {FrameNet} Project},
  booktitle = {Proceedings of the 36th Annual Meeting of the Association for Computational Linguistics and 17th International Conference on Computational Linguistics - Volume 1},
- series = {ACL '98},
+ series = {ACL1998},
  year = {1998},
- location = {Montreal, Quebec, Canada},
  pages = {86--90},
  numpages = {5},
  url = {http://dx.doi.org/10.3115/980845.980860},
  doi = {10.3115/980845.980860},
  acmid = {980860},
  publisher = {Association for Computational Linguistics},
- address = {Stroudsburg, PA, USA},
 } 
 
 @inproceedings{Brill2000,
  author = {Brill, Eric and Moore, Robert C.},
  title = {An Improved Error Model for Noisy Channel Spelling Correction},
  booktitle = {Proceedings of the 38th Annual Meeting on Association for Computational Linguistics},
- series = {ACL '00},
+ series = {ACL2000},
  year = {2000},
  location = {Hong Kong},
  pages = {286--293},
@@ -1323,23 +1373,17 @@ pages={181--193}
  doi = {10.3115/1075218.1075255},
  acmid = {1075255},
  publisher = {Association for Computational Linguistics},
- address = {Stroudsburg, PA, USA},
 } 
 
 @inproceedings{Brants2000,
 author = {Brants, Thorsten},
-  address = {Seattle, WA},
-  booktitle = {Proceedings of the Sixth Applied Natural Language Processing ({ANLP}-2000)},
-  interhash = {6dd30baa0609147c6cdf7d2a5817b236},
-  intrahash = {713b672cf5d64e89fb1e5b0fe20df316},
-  title = {TnT - A Statistical Part-of-Speech Tagger},
+  booktitle = {Proceedings of the Sixth Conference on Applied Natural Language Processing ({ANLP}2000)},
+  title = {{TnT} - A Statistical Part-of-Speech Tagger},
   year = 2000,
   timestamp = {2009-11-30T17:48:31.000+0100},
   keywords = {POS Tagging},
   added-at = {2009-11-30T17:48:31.000+0100},
-  file = {:POS Tagging\\[Brants, Thorsten] Tnt - A Statistical Part-of-Speech Tagger.pdf:PDF},
-  owner = {CHAENIG},
-  biburl = {http://www.bibsonomy.org/bibtex/2713b672cf5d64e89fb1e5b0fe20df316/fluctuator}
+  publisher = {Association for Computational Linguistics}
 }
 
 @article{Hinton2002,
@@ -1350,7 +1394,6 @@ author = {Brants, Thorsten},
  number = 8,
  year = 2002,
  publisher = {MIT Press},
- address = {Cambridge, MA, USA}
 } 
 
 @book{Jelinek1998,
@@ -1359,23 +1402,21 @@ author = {Brants, Thorsten},
  year = {1997},
  isbn = {0-262-10066-5},
  publisher = {MIT Press},
- address = {Cambridge, MA, USA},
 } 
 
 
 @inproceedings{Collins2002,
  author = {Collins, Michael},
- title = {Discriminative Training Methods for Hidden Markov Models: Theory and Experiments with Perceptron Algorithms},
- booktitle = {Proceedings of the ACL-02 conference on Empirical methods in natural language processing - Volume 10},
- series = {EMNLP '02},
+ title = {Discriminative Training Methods for Hidden {Markov} Models: Theory and Experiments with Perceptron Algorithms},
+ booktitle = {Proceedings of the Conference on Empirical methods in natural language processing},
+ series = {EMNLP2002},
  year = {2002},
  pages = {1--8},
  numpages = {8},
  url = {http://dx.doi.org/10.3115/1118693.1118694},
  doi = {10.3115/1118693.1118694},
  acmid = {1118694},
- publisher = {Association for Computational Linguistics},
- address = {Stroudsburg, PA, USA},
+ publisher = {Association for Computational Linguistics}
 } 
 
 @techreport{Ratnaparkhi1997,
@@ -1400,8 +1441,7 @@ author = {Brants, Thorsten},
  year   = {1996},
  title  = {A Maximum Entropy Model for Part-Of-Speech Tagging},
  booktitle = {Proceedings of the Conference on Empirical Methods in Natural Language Processing},
- series = {EMNLP}, 
- address = {Pennsylvania, USA},
+ series = {EMNLP1996}, 
  publisher = {Association for Computational Linguistics}
 }
 
@@ -1417,7 +1457,6 @@ author = {Brants, Thorsten},
  doi = {10.3115/1118853.1118871},
  acmid = {1118871},
  publisher = {Association for Computational Linguistics},
- address = {Stroudsburg, PA, USA},
 } 
 
 @InProceedings{Zhihui2010,
@@ -1425,7 +1464,6 @@ author = {Brants, Thorsten},
   title = {On Accelerating Iterative Algorithms with CUDA: A Case Study on Conditional Random Fields Training Algorithm for Biological Sequence Alignment},
   booktitle = {Proceedings of The International Conference on Bioinformatics and Biomedicine Workshops},
   year = {2010},
-  address = {Hong Kong, China},
   publisher = {IEEE},
   pages = {545--548}
 }
@@ -1436,7 +1474,6 @@ author = {Brants, Thorsten},
   booktitle = {Proceedings of the 2013 Conference of the North American Chapter of the Association for Computational Linguistics: Human Language Technologies},
   month     = {June},
   year      = {2013},
-  address   = {Atlanta, Georgia},
   publisher = {Association for Computational Linguistics},
   pages     = {370--379},
   url       = {http://www.aclweb.org/anthology/N13-1038}
@@ -1458,7 +1495,6 @@ author = {Brants, Thorsten},
  doi = {10.1162/coli_a_00037},
  acmid = {1970425},
  publisher = {MIT Press},
- address = {Cambridge, MA, USA},
 } 
 
 
@@ -1478,14 +1514,13 @@ author = {Brants, Thorsten},
  doi = {10.1109/34.588021},
  acmid = {251709},
  publisher = {IEEE Computer Society},
- address = {Washington, DC, USA},
  keywords = {Random field, Kullback-Leibler divergence, iterative scaling, maximum entropy, EM algorithm, statistical learning, clustering, word morphology, natural language processing.},
 } 
 
 @article{Geman1992,
  author = {Geman, Stuart and Bienenstock, Elie and Doursat, Ren{\'e}},
  title = {Neural Networks and the Bias/Variance Dilemma},
- journal = {Neural Comput.},
+ journal = {Neural Computing},
  issue_date = {Jan. 1992},
  volume = {4},
  number = {1},
@@ -1498,14 +1533,13 @@ author = {Brants, Thorsten},
  doi = {10.1162/neco.1992.4.1.1},
  acmid = {148062},
  publisher = {MIT Press},
- address = {Cambridge, MA, USA},
 } 
 
 @inproceedings{Lafferty2001,
  author = {Lafferty, John D. and McCallum, Andrew and Pereira, Fernando C. N.},
  title = {Conditional Random Fields: Probabilistic Models for Segmenting and Labeling Sequence Data},
  booktitle = {Proceedings of the Eighteenth International Conference on Machine Learning},
- series = {ICML '01},
+ series = {ICML2001},
  year = {2001},
  isbn = {1-55860-778-1},
  pages = {282--289},
@@ -1513,7 +1547,6 @@ author = {Brants, Thorsten},
  url = {http://dl.acm.org/citation.cfm?id=645530.655813},
  acmid = {655813},
  publisher = {Morgan Kaufmann Publishers Inc.},
- address = {San Francisco, CA, USA}
 } 
 
 @article{Freund1999,
@@ -1532,7 +1565,7 @@ author = {Brants, Thorsten},
  doi = {10.1023/A:1007662407062},
  acmid = {337869},
  publisher = {Kluwer Academic Publishers},
- address = {Hingham, MA, USA}
+
 } 
 
 
@@ -1542,14 +1575,13 @@ Title = {Practical Structured Learning Techniques for Natural Language Processin
 School = {University of Southern California},
 Year = 2006,
 Type = {Doctor of Philosophy in Computer Science},
-Address = {University of Southern California}
 }
 
 @inproceedings{Cutting1992,
  author = {Cutting, Doug and Kupiec, Julian and Pedersen, Jan and Sibun, Penelope},
- title = {A Practical Part-of-speech Tagger},
+ title = {A Practical Part-of-Speech Tagger},
  booktitle = {Proceedings of the Third Conference on Applied Natural Language Processing},
- series = {ANLC '92},
+ series = {ANLC1992},
  year = {1992},
  location = {Trento, Italy},
  pages = {133--140},
@@ -1558,7 +1590,6 @@ Address = {University of Southern California}
  doi = {10.3115/974499.974523},
  acmid = {974523},
  publisher = {Association for Computational Linguistics},
- address = {Stroudsburg, PA, USA},
 } 
 
 @book{Koller2009,
@@ -1566,14 +1597,13 @@ author = {Daphne Koller and Nir Friedman},
 title  = {Probabilistic Graphical Models: Principles and Techniques},
 year   = 2009,
 publisher = {The MIT Press},
-address = {Cambridge, Massachusetts, USA}
 }
 
 @inproceedings{Zhou2002,
  author = {Zhou, GuoDong and Su, Jian},
  title = {Named entity recognition using an HMM-based chunk tagger},
  booktitle = {Proceedings of the 40th Annual Meeting on Association for Computational Linguistics},
- series = {ACL '02},
+ series = {ACL2002},
  year = 2002,
  location = {Philadelphia, Pennsylvania},
  pages = {473--480},
@@ -1582,14 +1612,13 @@ address = {Cambridge, Massachusetts, USA}
  doi = {10.3115/1073083.1073163},
  acmid = 1073163,
  publisher = {Association for Computational Linguistics},
- address = {Stroudsburg, PA, USA},
 } 
 
 @inproceedings{Klein2002,
  author = {Klein, Dan and Manning, Christopher D.},
  title = {Conditional structure versus conditional estimation in NLP models},
- booktitle = {Proceedings of the ACL-02 conference on Empirical methods in natural language processing - Volume 10},
- series = {EMNLP '02},
+ booktitle = {Proceedings of the Conference on Empirical methods in natural language processing},
+ series = {EMNLP2002},
  year = {2002},
  pages = {9--16},
  numpages = {8},
@@ -1597,6 +1626,5 @@ address = {Cambridge, Massachusetts, USA}
  doi = {10.3115/1118693.1118695},
  acmid = {1118695},
  publisher = {Association for Computational Linguistics},
- address = {Stroudsburg, PA, USA},
 } 
 

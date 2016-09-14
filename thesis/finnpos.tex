@@ -37,12 +37,14 @@ numerical overview of both data sets.
 \begin{table}[htb!]
 %\begin{small}
 \begin{center}
-\begin{tabular}{lcc} 
+\begin{tabular}{l|c|c} 
+\hline
  & TDT & FTB \\
 \hline
-size & 13,572 sent. (183,118 tok.) & 19,121 sent. (162,028 tok.) \\
-\# labels & 2,014 & 1,399 \\
-OMorFi coverage & 94.2\% & 99.0\% \\
+\parbox{0.25\textwidth}{Sentence Count} & \parbox[c]{0.25\textwidth}{~~~~~~~~~~~~~~~~13,572} & \parbox[c]{0.25\textwidth}{~~~~~~~~~~~~~~~~19,121} \\
+Token Count    &  183,118 & 162,028 \\
+Label Count & 2,014 & 1,399 \\
+OMorFi Coverage & 94.2\% & 99.0\% \\
 \end{tabular}
 \end{center}
 %\end{small}
@@ -107,8 +109,8 @@ development set and the tenth one to the test set.
 %omitted from the paper in favor of clarity.
 
 Exhaustive experiments on the effect and interactions of the different
-hyper-parameters used by the FinnPos tagger would require hundreds of
-experiments because FinnPos incorporates a variety of optimizations to
+hyper-parameters used by the Finn\-Pos tagger would require hundreds of
+experiments because FinnPos incorporates a variety of optimi\-zations to
 accuracy and speed governed by different
 hyper-parameters.\footnote{Experiments should vary beam width, the
   settings of the label guesser, model order and order of sub-label
@@ -207,19 +209,23 @@ that have improved results.
 
 \begin{table}[htb!]
 \begin{center}
-\begin{tabular}{cccc}
-\multicolumn{4}{c}{Adaptive Guess Count}\\
+\begin{tabular}{c|c|c|c}
+\multicolumn{4}{c}{{\small\uppercase{Adaptive Guess Count}}}\\
+\noalign{\smallskip}
+\hline
 Guess Mass & Tagging Accuracy (\%) & Training time & Dec. Speed (KTok/s)\\
 \hline
-0.9        & 93.21 (OOV: 77.68) & 3 min, 3 epochs &   7          \\
-0.99       & 93.11 (OOV: 77.14) & 3 min, 3 epochs & 7            \\
-0.999      & 93.23 (OOV: 78.49) & 4 min, 4 epochs            & 8            \\
+0.9\phantom{999}        & 93.21 (OOV: 77.68) & 3 min, 3 epochs &   7          \\
+0.99\phantom{99}       & 93.11 (OOV: 77.14) & 3 min, 3 epochs & 7            \\
+0.999\phantom{9}      & 93.23 (OOV: 78.49) & 4 min, 4 epochs            & 8            \\
 0.9999      & 93.41 (OOV: 78.55) & 2 min, 2 epochs            & 7            \\
-           &                  &               &               \\
-\multicolumn{4}{c}{Fixed Guess Count}\\
+\multicolumn{4}{c}{ }\\%           &                  &               &               \\
+\multicolumn{4}{c}{{\small\uppercase{Fixed Guess Count}}}\\
+\noalign{\smallskip}
+\hline
 Guess Count & Tagging Accuracy (\%) & Training time (min) & Dec. Speed (KTok/s) \\
 \hline
-1        & 91.48 (OOV: 69.81)           & 1 min, 3 epochs            & 8            \\
+1\phantom{0}        & 91.48 (OOV: 69.81)           & 1 min, 3 epochs            & 8            \\
 10       & 93.23 (OOV: 77.56)           & 2 min, 2 epochs            & 7            \\
 20       & 93.18 (OOV: 77.89)           & 3 min, 3 epochs            & 7            \\
 30       & 93.22 (OOV: 77.62)           & 4 min, 3 epochs            & 6            \\
@@ -232,19 +238,23 @@ Guess Count & Tagging Accuracy (\%) & Training time (min) & Dec. Speed (KTok/s) 
 
 \begin{table}[htb!]
 \begin{center}
-\begin{tabular}{cccc}
-\multicolumn{4}{c}{Adaptive Guess Count}\\
+\begin{tabular}{c|c|c|c}
+\multicolumn{4}{c}{{\small\uppercase{Adaptive Guess Count}}}\\
+\noalign{\smallskip}
+\hline
 Guess Mass & Tagging Accuracy (\%) & Training time (min) & Dec. Speed (KTok/s)\\
 \hline
-0.9        & 92.69 (OOV: 74.10)           & 8 min, 8 epochs           & 5            \\
-0.99       & 92.66 (OOV: 74.13)           & 9 min, 8 epochs           & 5            \\
-0.999      & 92.76 (OOV: 74.65)           & 8 min, 7 epochs            & 5            \\
+0.9\phantom{999}        & 92.69 (OOV: 74.10)           & 8 min, 8 epochs           & 5            \\
+0.99\phantom{99}       & 92.66 (OOV: 74.13)           & 9 min, 8 epochs           & 5            \\
+0.999\phantom{9}      & 92.76 (OOV: 74.65)           & 8 min, 7 epochs            & 5            \\
 0.9999      & 92.75 (OOV: 74.30)           & 6 min, 5 epochs            & 5            \\
-           &                  &               &               \\
-\multicolumn{4}{c}{Fixed Guess Count}\\
+\multicolumn{4}{c}{ }\\%           &                  &               &               \\
+\multicolumn{4}{c}{{\small\uppercase{Fixed Guess Count}}}\\
+\noalign{\smallskip}
+\hline
 Guess Count & Tagging Accuracy (\%) & Training time (min) & Dec. Speed (KTok/s) \\
 \hline
-1        & 89.85  (OOV: 61.33)          & 2 min, 5 epochs            & 6            \\
+1\phantom{0}        & 89.85  (OOV: 61.33)          & 2 min, 5 epochs            & 6            \\
 10       & 92.35  (OOV: 72.55)          & 5 min, 7 epochs            & 6            \\
 20       & 92.61  (OOV: 73.88)          & 5 min, 4 epochs            & 6            \\
 30       & 92.81  (OOV: 74.87)          & 12 min, 9 epochs          & 5            \\
@@ -282,7 +292,7 @@ The training time per epoch is clearly related to the amount of label
 guesses, however, the number of epochs seems to fluctuate somewhat
 from two to four for FTB and from five to eleven for TDT. Therefore,
 it is difficult to see a clear trend for the total training time. It
-is also not possible to say that mass based pruning always leas to a
+is also not possible to say that mass based pruning always leads to a
 faster training time when compared to a fixed number of guesses which
 yield similar accuracy.
 
@@ -328,18 +338,22 @@ width is used during in training and when tagging the test set.
 
 \begin{table}[htb!]
 \begin{center}
-\begin{tabular}{cccc}
-\multicolumn{4}{c}{Adaptive Beam}\\
+\begin{tabular}{c|c|c|c}
+\multicolumn{4}{c}{{\small\uppercase{Adaptive Beam}}}\\
+\noalign{\smallskip}
+\hline
 Beam Width & Tagging Accuracy (\%) & Training time (min) & Dec. Speed (KTok/s)\\
 \hline
-0.9        & 93.08 (OOV: 76.99)           & 3 min, 3 epochs & 6           \\
-0.99       & 93.14 (OOV: 77.44)           & 3 min, 3 epochs & 8            \\
+0.9\phantom{99}        & 93.08 (OOV: 76.99)           & 3 min, 3 epochs & 6           \\
+0.99\phantom{9}       & 93.14 (OOV: 77.44)           & 3 min, 3 epochs & 8            \\
 0.999      & 93.28 (OOV: 80.49)           & 2 min, 2 epochs & 8            \\
-           &                  &               &               \\
-\multicolumn{4}{c}{Fixed Beam}\\
+\multicolumn{4}{c}{ }\\%           &                  &               &               \\
+\multicolumn{4}{c}{{\small\uppercase{Fixed Beam}}}\\
+\noalign{\smallskip}
+\hline
 Beam Width & Tagging Accuracy (\%) & Training time & Dec. Speed (KTok/s) \\
 \hline
-1        & 92.32 (OOV: 75.07)            & 2 min, 2 epochs & 7          \\
+1\phantom{0}        & 92.32 (OOV: 75.07)            & 2 min, 2 epochs & 7          \\
 10       & 93.33 (OOV: 78.28)           & 2 min, 2 epochs &  7            \\
 20       & 93.11 (OOV: 77.29)           & 4 min, 3 epochs &  7             \\
 $\infty$ & 93.31 (OOV: 78.19)           & 20 min, 2 epochs            & 6            \\
@@ -350,18 +364,22 @@ $\infty$ & 93.31 (OOV: 78.19)           & 20 min, 2 epochs            & 6       
 
 \begin{table}[htb!]
 \begin{center}
-\begin{tabular}{cccc}
-\multicolumn{4}{c}{Adaptive Beam}\\
+\begin{tabular}{c|c|c|c}
+\multicolumn{4}{c}{{\small\uppercase{Adaptive Beam}}}\\
+\noalign{\smallskip}
+\hline
 Beam Width & Tagging Accuracy (\%) & Training time (min) & Dec. Speed (KTok/s)\\
 \hline
-0.9       & 92.55 (OOV: 73.73)           & 5 min, 5 epochs           & 6            \\
-0.99       & 92.87 (OOV: 74.88)           & 7 min, 7 epochs            & 6            \\
+0.9\phantom{99}       & 92.55 (OOV: 73.73)           & 5 min, 5 epochs           & 6            \\
+0.99\phantom{9}       & 92.87 (OOV: 74.88)           & 7 min, 7 epochs            & 6            \\
 0.999       & 92.76 (OOV: 74.65)            & 8 min, 7 epochs            & 6            \\
-           &                  &               &               \\
-\multicolumn{4}{c}{Fixed Beam}\\
+\multicolumn{4}{c}{ }\\%           &                  &               &               \\
+\multicolumn{4}{c}{{\small\uppercase{Fixed Beam}}}\\
+\noalign{\smallskip}
+\hline
 Beam Width & Tagging Accuracy (\%) & Training time (min) & Dec. Speed (KTok/s) \\
 \hline
-1        & 91.80 (OOV: 71.26)           & 6 min, 9 epochs            & 6            \\
+1\phantom{0}        & 91.80 (OOV: 71.26)           & 6 min, 9 epochs            & 6            \\
 10       & 92.83 (OOV: 74.85)           &  7 min, 6 epochs           & 6            \\
 20       & 92.60 (OOV: 73.98)           & 10 min, 7 epochs            & 6            \\
 $\infty$       & 91.58  (OOV: 69.46)          & 199 min, 8 epochs            & 6            \\
@@ -442,15 +460,19 @@ tagging. I have no explanation for this at the current time.
 
 \begin{table}[htb!]
 \begin{center}
-\begin{tabular}{cccc}
-\multicolumn{4}{c}{Without a Morphological Analyzer}\\
+\begin{tabular}{c|c|c|c}
+\multicolumn{4}{c}{{\small\uppercase{Without a Morphological Analyzer}}}\\
+\noalign{\smallskip}
+\hline
 Model Order & Tagging Accuracy (\%) & Training time & Dec. Speed (KTok/s)\\
 \hline
 0        & 91.91            & 3 min, 3 epochs            & 8            \\
 1        & 92.49            & 3 min, 4 epochs            & 8            \\
 2        & 92.49            & 4 min, 5 epochs            & 7            \\
-                &                       &                  &            \\
-\multicolumn{4}{c}{Using a Morphological Analyzer}\\
+\multicolumn{4}{c}{ }\\%                &                       &                  &            \\
+\multicolumn{4}{c}{{\small\uppercase{Using a Morphological Analyzer}}}\\
+\noalign{\smallskip}
+\hline
 Model Order & Tagging Accuracy (\%) & Training time & Dec. Speed (KTok/s)\\
 \hline
 0        & 95.35            & 5 min, 9 epochs            & 25            \\
@@ -463,15 +485,20 @@ Model Order & Tagging Accuracy (\%) & Training time & Dec. Speed (KTok/s)\\
 
 \begin{table}[htb!]
 \begin{center}
-\begin{tabular}{cccc}
-\multicolumn{4}{c}{Without a Morphological Analyzer}\\
+\begin{tabular}{c|c|c|c}
+\multicolumn{4}{c}{{\small\uppercase{Without a Morphological Analyzer}}}\\
+\noalign{\smallskip}
+\hline
 Model Order & Tagging Accuracy (\%) & Training time (min) & Dec. Speed (KTok/s)\\
 \hline
 0        & 91.15            & 6 min, 4 epochs            & 6            \\
 1        & 91.17            & 8 min, 8 epochs            & 5            \\
 2        & 91.83            & 5 min, 3 epochs            & 5            \\
-                &                       &                  &            \\
-\multicolumn{4}{c}{Using a Morphological Analyzer}\\
+\multicolumn{4}{c}{ }\\%                &                       &                  &            \\
+\multicolumn{4}{c}{{\small\uppercase{Using a Morphological Analyzer}}}\\
+\noalign{\smallskip}
+\hline
+Model Order & Tagging Accuracy (\%) & Training time (min) & Dec. Speed (KTok/s)\\
 \hline
 0        & 95.53            & 5 min, 4 epochs            & 21            \\
 1        & 96.05            & 5 min, 7 epochs            & 22            \\
@@ -546,16 +573,20 @@ sub-label dependencies.
 
 \begin{table}[htb!]
 \begin{center}
-\begin{tabular}{cccc}
-\multicolumn{4}{c}{Without a Morphological Analyzer}\\
+\begin{tabular}{c|c|c|c}
+\multicolumn{4}{c}{{\small\uppercase{Without a Morphological Analyzer}}}\\
+\noalign{\smallskip}
+\hline
 Sub-Label Order & Tagging Accuracy (\%) & Training time    & Dec. Speed (KTok/s)\\
 \hline
 None            & 92.49 (OOV: 74.68)    & 3 min, 5 epochs  & 6                       \\
 0               & 93.05 (OOV: 77.74)    & 1 min, 2 epochs  & 5                       \\
 1               & 93.29 (OOV: 78.40)    & 1 min, 2 epochs  & 4                       \\
 2               & 92.68 (OOV: 75.22)    & 5 min, 4 epochs  & 6                       \\
-                &                       &                  &                          \\
-\multicolumn{4}{c}{Using a Morphological Analyzer}\\
+\multicolumn{4}{c}{ }\\%                &                       &                  &                          \\
+\multicolumn{4}{c}{{\small\uppercase{Using a Morphological Analyzer}}}\\
+\noalign{\smallskip}
+\hline
 Sub-Label Order & Tagging Accuracy (\%) & Training time    & Dec. Speed (KTok/s)\\
 \hline
 None     & 95.98 (OOV: 91.41)           & 3 min, 8 epochs  & 25                       \\
@@ -570,16 +601,20 @@ None     & 95.98 (OOV: 91.41)           & 3 min, 8 epochs  & 25                 
 
 \begin{table}[htb!]
 \begin{center}
-\begin{tabular}{cccc}
-\multicolumn{4}{c}{Without a Morphological Analyzer}\\
+\begin{tabular}{c|c|c|c}
+\multicolumn{4}{c}{{\small\uppercase{Without a Morphological Analyzer}}}\\
+\noalign{\smallskip}
+\hline
 Sub-Label Order & Tagging Accuracy (\%) & Training time    & Dec. Speed (KTok/s)\\
 \hline
 None            & 91.89 (OOV: 70.63)    & 2 min, 3 epochs  & 5                       \\
 0               &  92.59 (OOV: 73.98)   & 2 min, 4 epochs  & 5                       \\
 1               &  92.69 (OOV: 74.35)   & 5 min, 7 epochs  & 3                       \\
 2               &  92.31 (OOV: 72.31)   & 13 min, 8 epochs  & 5                       \\
-                &                       &                  &                          \\
-\multicolumn{4}{c}{Using a Morphological Analyzer}\\
+\multicolumn{4}{c}{ }\\%                &                       &                  &                          \\
+\multicolumn{4}{c}{{\small USING A MORPHOLOGICAL ANALYZER}}\\
+\noalign{\smallskip}
+\hline
 Sub-Label Order & Tagging Accuracy (\%) & Training time    & Dec. Speed (KTok/s)\\
 \hline
 None            &  96.12 (OOV: 91.12)   & 3 min, 5 epochs  & 19                       \\
@@ -677,14 +712,18 @@ data-driven lemmatizer.
 
 \begin{table}[htb!]
 \begin{center}
-\begin{tabular}{c|ccccc}
-\multicolumn{1}{c}{}        & \multicolumn{5}{c}{Update Count Threshold}\\
+\begin{tabular}{c|c|c|c|c|c}
+\multicolumn{1}{c}{}        & \multicolumn{5}{c}{{\small\uppercase{Update Count Threshold}}}\\
+\noalign{\smallskip}
+\hline
 MA                     & None           & $< 2$        & $< 3$        & $< 4$        & $< 5$       \\
 \hline
 no                     & 93.2\%, 4.8M   & 93.2\%, 3.9M & 93.2\%, 3.6M & 93.2\%, 3.0M & 93.1\%, 1.0M \\
 yes                    & 96.3\%, 4.3M   & 96.2\%, 3.9M & 96.2\%, 3.7M & 96.2\%, 3.3M & 96.1\%, 1.0M \\
-                       &                &              &              &              &              \\
-\multicolumn{1}{c}{}                        & \multicolumn{5}{c}{Parameter Mass Threshold}\\
+\multicolumn{6}{c}{ }\\%                       &                &              &              &              &              \\
+\multicolumn{1}{c}{}                        & \multicolumn{5}{c}{{\small\uppercase{Parameter Mass Threshold}}}\\
+\noalign{\smallskip}
+\hline
 MA                     & None         & $< 2.0$      & $< 2.5$      & $< 3$      & $< 3.5$        \\
 \hline
 no                     & 93.2\%, 4.8M & 93.3\%, 1.8M & 93.2\%, 1.4M & 93.2\%, 1.2M & 93.2\%, 0.9M \\
@@ -696,14 +735,19 @@ yes                    & 96.3\%, 4.3M & 96.3\%, 0.9M & 96.3\%, 0.7M & 96.2\%, 0.
 
 \begin{table}[htb!]
 \begin{center}
-\begin{tabular}{c|ccccc}
-\multicolumn{1}{c}{}                       & \multicolumn{5}{c}{Update Count Threshold}\\
+\begin{tabular}{c|c|c|c|c|c}
+\multicolumn{1}{c}{}                       & \multicolumn{5}{c}{{\small\uppercase{Update Count Threshold}}}\\
+\noalign{\smallskip}
+\noalign{\smallskip}
+\hline
 MA                     & None            & $< 2$        & $< 3$        & $< 4$        & $< 5$       \\
 \hline
 no                     & 92.8\%, 6.4M    & 92.7\%, 5.2M & 92.7\%, 5.0M & 92.8\%, 4.9M & 92.6\%, 4.9M \\
 yes                    & 96.3\%, 5.5M    & 96.4\%, 5.0M & 96.3\%, 4.9M & 96.4\%, 4.9M & 96.3\%, 4.9M \\
-                       &                 &              &              &              &              \\
-\multicolumn{1}{c}{}     & \multicolumn{5}{c}{Parameter Mass Threshold}\\
+\multicolumn{6}{c}{ }\\%                       &                 &              &              &              &              \\
+\multicolumn{1}{c}{}     & \multicolumn{5}{c}{{\small\uppercase{Parameter Mass Threshold}}}\\
+\noalign{\smallskip}
+\hline
 MA                     & None           & $< 4.0$        & $< 5.0$      & $< 6.0$      & $< 7.0$     \\
 \hline
 no                     & 92.8\%, 6.4M   & 92.8\%, 2.9M   & 92.7\%, 2.8M & 92.7\%, 2.6M & 92.6\%, 2.1M \\

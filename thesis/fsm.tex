@@ -27,11 +27,12 @@ components of a finite-state automaton $M$
 \item An alphabet $\Sigma_M$ (the POS labels in Penn Treebank in Figure \ref{fig:np-fsm}).
 \item A unique initial state $I_M$ ($0$ in Figure \ref{fig:np-fsm}).\footnote{Some formulations allow for several initial states with initial weights. This does, however, not increase the expressiveness of the formalism.}
 \item A set of final states $F_M = \{r_1, ..., r_m\} \subset Q_M$ with associated final weights ${\rm f}(r_i)$ ($\{2\}$ and $1.0$ in Figure \ref{fig:np-fsm}).\footnote{Alternatively, we could also specify a final weight for every state. Then the actual final states would be the ones wit non-zero weight.}
-\item A transition function $\tau_M$, which specifies a, possibly empty, set $\tau_M(q,x) = \{(q_1,w_1),\ ...,\ (q_n,w_n)\}$ of target states and transition weights for each symbol $x\in \Sigma_M$ in each state $q \in Q_M$ (in Figure, \ref{fig:np-fsm} the relation is represented by the arrows in the graph).
+\item A transition function $\tau_M$, which specifies a, possibly empty, set 
+$$\tau_M(q,x) = \{(q_1,w_1),\ ...,\ (q_n,w_n)\}$$ of target states and transition weights for each symbol $x\in \Sigma_M$ in each state $q \in Q_M$ (in Figure, \ref{fig:np-fsm} the relation is represented by the arrows in the graph).
 \end{enumerate}
 \begin{figure}[!ftb]
 \begin{center}
-\includegraphics[scale=.7]{np}
+\includegraphics[scale=.65]{np}
 \end{center}
 \caption{A finite-state machine accepting a subset of the singular noun phrases in Penn Treebank.}\label{fig:np-fsm}
 \end{figure}
@@ -104,10 +105,11 @@ in the machine.
 
 \begin{table}[!ftb]
 \begin{center}
-\begin{tabular}{lll}
+\begin{tabular}{l|l|l}
+\hline
 Operation & Symbol & Definition \\
 \hline
-Power & $M^n$ & $\w_{M^n}(s) = \bigoplus_{s_1 ... s_n = s} \w_{M}(s_1) \otimes ... \otimes \w_{M}(s_n)$\\ 
+{Power} & {$M^n$} & $\w_{M^n}(s) = \bigoplus_{s_1 ... s_n = s} \w_{M}(s_1) \otimes ... \otimes \w_{M}(s_n)$\\ 
 Closure & $\bigoplus_{n = 0}^\infty M^n$ &  \\
 Union & $M_1 \oplus M_2$ & $\w_{M_1 \oplus M_2}(s) = \w_{M_1}(s) \oplus \w_{M_2}(s)$\\ 
 Concatenation & $M_1.M_2$ & $\w_{M_1.M_2}(s) = \bigoplus_{s_1s_2 = s} \w_{M_1}(s_1) \otimes \w_{M_2}(s_2)$\\
@@ -189,7 +191,7 @@ model using concatenation as shown in Figure
 correspond to the possible label assignments of sentence $x$.
 
 \begin{figure}[!htb]
-\includegraphics[scale=0.5]{sentence_model}
+\includegraphics[scale=0.49]{sentence_model}
 \caption{An example of a sentence model. The weights on the arcs are
   negative logarithms of emission probabilities. Only a subset of the
   possible labels are shown in the picture.}\label{fig:sentence-model}
@@ -252,14 +254,16 @@ transitions. When using add one smoothing for label n-grams missing in
 the training corpus, most paths will have the same weight. This fact allows for an optimization which substantially reduces the size of $T$.
 
 In order to, reduce the size of the model, so called {\it failure
-  transitions} can be used \citep{someone}. A failure transition in a
-state $q$, will match any symbol which does not have another outgoing
-transition in $q$. The failure transitions will go to sink states,
-which encode the penalty weight for unseen label n-grams. When failure
-transitions are used to encode label n-grams that are missing from the
-training corpus, most states will only have a few outgoing transitions.
-Figure \ref{fig:fail_t} illustrates a bigram model with failure
-transitions.
+  transitions} can be used \citep{Knuth1977,Mohri1997}.\footnote{The failure
+  transitions used by \cite{Mohri1997} differ from the ones used in
+  this thesis because they do not consume input.} A failure transition
+in a state $q$, will match any symbol which does not have another
+outgoing transition in $q$. The failure transitions will go to sink
+states, which encode the penalty weight for unseen label n-grams. When
+failure transitions are used to encode label n-grams that are missing
+from the training corpus, most states will only have a few outgoing
+transitions.  Figure \ref{fig:fail_t} illustrates a bigram model with
+failure transitions.
 
 \begin{figure}
 \begin{center}

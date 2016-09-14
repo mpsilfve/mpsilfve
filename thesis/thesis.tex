@@ -5,9 +5,13 @@
 \usepackage{float}
 \usepackage{amsmath}
 \usepackage{amssymb}
+\usepackage{layout}
 \usepackage{graphicx}
 \usepackage{caption}
+\usepackage{tabularx}
 \usepackage{xltxtra}
+\usepackage{background}
+\usetikzlibrary{calc}
 \usepackage[bb=boondox]{mathalfa}
 %\usepackage{utf8}[inputenc]
 \usepackage{xunicode}
@@ -58,7 +62,7 @@
 
 \renewcommand{\bibsection}{\chapter*{\refname}}
 
-\setmainfont[Mapping=tex-text]{Liberation Serif}
+\setmainfont[Mapping=tex-text,SmallCapsFeatures={Letters=SmallCaps}]{Liberation Serif}
 
 \def\ci{\perp\!\!\!\perp}
 
@@ -82,6 +86,43 @@
 \newcommand{\w}{\mbox{${\rm w}$}}
 \renewcommand{\epsilon}{\varepsilon}
 \include{title_tktla}
+
+\SetBgScale{1}
+\SetBgAngle{0}
+\SetBgOpacity{1}
+\SetBgContents{}
+
+% auxiliary counter
+\newcounter{chapshift}
+%\addtocounter{chapshift}{-1}
+
+% the list of colors to be used (add more if needed)
+\newcommand\BoxColor{%
+black}
+
+% the main command; the mandatory argument sets the color of the vertical box
+\makeatletter
+\newcommand\ChapFrame{%
+%\AddEverypageHook{%
+%\ifthenelse{\isodd{\thepage}}
+\BgThispage{
+\SetBgContents{%
+  \begin{tikzpicture}[overlay,remember picture]
+  \node[fill=\BoxColor,inner sep=0pt,rectangle,text width=2cm,
+    text height=0.1667*29.7cm,align=center,anchor=north east] 
+  at ($ (current page.north east) + (-0cm,-0.16667*29.7*\thechapshift cm) $) 
+  {\rotatebox{90}{\hspace*{.3cm}\parbox[c][1.5cm][t]{3.4cm}{%
+    \raggedright\textcolor{black}{\scshape\leftmark}}}};
+  \end{tikzpicture}%
+}
+\bg@material%}%
+  \stepcounter{chapshift}
+}}
+\makeatother
+
+% redefinition of \chaptermark to contain only the title
+\renewcommand\chaptermark[1]{\markboth{\thechapter.~#1}{}} 
+
 
 \begin{document}
 \bibstyle{apa}
@@ -128,9 +169,10 @@
 \chapter*{Notation}
 \addcontentsline{toc}{chapter}{Notation}
 \markboth{}{}
-\begin{tabular*}{\columnwidth}{@{\extracolsep{\stretch{1}}}*{2}{l}@{}}
+\begin{tabularx}{\textwidth}{ll}
 \multicolumn{2}{c}{{\bf Acronyms}}\\
-CRF  & Conditional Random Field                          \\
+ & \\
+\parbox{0.4\textwidth}{CRF}  & Conditional Random Field                          \\
 HMM  & Hidden Markov Model                               \\
 MEMM & Maximum-Entropy Markov Model                      \\
 NB   & Na\"{i}ve Bayes                                   \\
@@ -139,11 +181,12 @@ PGM  & Probabilistic Graphical Model                     \\
 POS  & Part-of-Speech                                    \\
 MAP  & Maximum a posteriori                              \\
      & \\
-\end{tabular*}
+%\end{tabularx}
 
-\begin{tabular*}{\columnwidth}{@{\extracolsep{\stretch{1}}}*{2}{l}@{}}
+%\begin{tabularx}{\textwidth}{ll}
 \multicolumn{2}{c}{{\bf Mathematical Notation}}\\
-$x[i]$ & The element at index $i$ in vector (or sequence) $x$.\\
+ & \\
+\parbox{0.4\textwidth}{$x[i]$} & \parbox{0.55\textwidth}{The element at index $i$ in vector (or sequence) $x$.}\\
 $\R^m_n$ & The space of $m \times n$ real valued matrices.\\
 $x[s:t]$ & Sub-sequence $(x_s,\ ...,\ x_t)$ of sequence $x = (x_1,\ ...,\ x_T)$.\\
 $X^t$    & The cartesian product of $t$ copies of the set $X$.\\
@@ -152,7 +195,7 @@ $f(x\parcond\theta)$ & Function $f$, paramerized by vector $\theta$, applied to 
 $x \mapsto f(x),\ x \overset{f}{\ \mapsto\ } f(x)$ & A mapping of values $x$ to expressions $f(x)$.\\
 $\|v\|$ & Norm of vector $v$.\\
 $\hat{p}$ & Estimate of probability $p$.
-\end{tabular*}
+\end{tabularx}
 
 \include{acknowl}
 
@@ -181,11 +224,59 @@ $\hat{p}$ & Estimate of probability $p$.
 \bibliography{mythesis}
 \addcontentsline{toc}{chapter}{Publications}
 \includepdfset{pagecommand={}}
-\includepdf[scale=1,pages=-,pagecommand=\thispagestyle{empty}]{Silfverberg_Linden_2010.pdf}
+\chapter*{Publication \ref{pub:1}}
+\thispagestyle{empty}
+\pagestyle{empty}
+\ChapFrame
+\phantom{a}\\
+{\bf \noindent\bibentry{Silfverberg2010}}\\[1cm]
+\copyright\ 2010 Springer\\
+Reprinted with permission.
+\includepdf[scale=1.19,pages=-,pagecommand=\thispagestyle{empty}]{Silfverberg_Linden_2010.pdf}
+\chapter*{Publication \ref{pub:2}}
+\pagestyle{empty}
+\thispagestyle{empty}
+\ChapFrame
+\phantom{a}\\
+{\bf \noindent\bibentry{Silfverberg2011}}\\[1cm]
+\copyright\ 2011 NEALT\\
+Reprinted with permission.
 \includepdf[scale=1,pages=-,pagecommand=\thispagestyle{empty}]{Silfverberg_Linden_2011.pdf}
-\includepdf[scale=1,pages=-,pagecommand=\thispagestyle{empty}]{Pirinen_Silfverberg_Linden_2012.pdf}
+\chapter*{Publication \ref{pub:3}}
+\pagestyle{empty}
+\thispagestyle{empty}
+\ChapFrame
+\phantom{a}\\
+{\bf \noindent\bibentry{Pirinen2012}}\\[1cm]
+\copyright\ 2012 Springer\\
+Reprinted with permission.
+\includepdf[scale=1.19,pages=-,pagecommand=\thispagestyle{empty}]{Pirinen_Silfverberg_Linden_2012.pdf}
+\chapter*{Publication \ref{pub:4}}
+\pagestyle{empty}
+\thispagestyle{empty}
+\ChapFrame
+\phantom{a}\\
+{\bf \noindent\bibentry{Ruokolainen2014}}\\[1cm]
+\copyright\ 2014 ACL\\
+Reprinted with permission.
 \includepdf[scale=1,pages=-,pagecommand=\thispagestyle{empty}]{ruokolainen_silfverberg_kurimo_linden_2014.pdf}
+\chapter*{Publication \ref{pub:5}}
+\pagestyle{empty}
+\thispagestyle{empty}
+\ChapFrame
+\phantom{a}\\
+{\bf \noindent\bibentry{Silfverberg2014}}\\[1cm]
+\copyright\ 2014 ACL\\
+Reprinted with permission.
 \includepdf[scale=1,pages=-,pagecommand=\thispagestyle{empty}]{silfverberg_ruokolainen_linden_kurimo2014.pdf}
-\includepdf[scale=1,pages=-,pagecommand=\thispagestyle{empty}]{finnpos_second_submission.pdf}
+\chapter*{Publication \ref{pub:6}}
+\pagestyle{empty}
+\thispagestyle{empty}
+\ChapFrame
+\phantom{a}\\
+{\bf \noindent\bibentry{Silfverberg2015}}\\[1cm]
+\copyright\ 2015 Springer\\
+Reprinted with permission.
+\includepdf[scale=1.1,trim=0mm 30mm 30mm 0mm,pages=-,pagecommand=\thispagestyle{empty}]{finnpos_second_submission.pdf}
 
 \end{document}
