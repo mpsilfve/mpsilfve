@@ -70,7 +70,7 @@ void weight_string_pair(const StringVector &fields,
 
   //  HfstOneLevelPaths * paths = fst.lookup_fd(inputstr);
   HfstTwoLevelPaths paths;
-  bfst.lookup_fd(tok.tokenize_one_level(inputstr), paths);
+  bfst.lookup(tok.tokenize_one_level(inputstr), paths, NULL, NULL, true);
   HfstOneLevelPath match;
 
   if (not get_first_match(paths, outputstr, match) and MISSING)
