@@ -28,7 +28,7 @@ The utility `weight_fst` reads `word_form<TAB>analysis` string pairs from `STDIN
 
 Usage of `weight_fst`:
 
-`USAGE: cat string_pairs | ./weight_fst input_fst_file output_fst_file`
+`USAGE: cat string_pairs | ./weight_fst input_fst_file output_fst_file [PLAIN | PERCEPTRON | AVG_PERCEPTRON]`
 
 In case the argument transducer is non-deterministic, `weight_fst` will weight the *first path that it finds* corresponding the a string pair. 
 
@@ -58,7 +58,7 @@ This is an example where a small analyzer is transformed into a weighted transdu
     dog	dog+N
     dog	dog+V
 
-    $ cat dog_pairs | ./weight_fst dog.hfst dog.weighted.hfst 
+    $ cat dog_pairs | ./weight_fst dog.hfst dog.weighted.hfst PLAIN
     Reading input fst from dog.hfst.
     Reading string pairs from STDIN.
     Writing weighted fst to dog.weighted.hfst
